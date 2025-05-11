@@ -43,6 +43,19 @@ namespace ClassMangement.Controllers
 		{
 			return service.AddItem(value);
 		}
+		[HttpPost("login")]
+		public string Login([FromBody] UserLogin value)
+		{
+			var user = service.Authenticate()
+				//Authenticate(value);
+			if (user != null)
+			{
+				var token = Generate(user);
+				return token;
+			}
+			return "user not found";
+		}
+
 
 		// PUT api/<TeacherController>/5
 		[HttpPut("{id}")]

@@ -28,6 +28,7 @@ namespace Service.Services
 			services.AddScoped<IService<SubjectDto, int>, SubjectService>();
 			services.AddScoped<IService<SurveyAnswerDto, int>, SurveyAnswerService>();
 			services.AddScoped<IService<SurveyDto, int>, SurveyService>();
+			services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService>();
 
 			//
 			//services.AddScoped<IService<UserDto, string>, UserService>();
