@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Common.Dto;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Repository.Entities;
 using Repository.Interfaces;
 using Service.Interfaces;
@@ -11,16 +13,15 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-	public class StudentService : UserService<StudentDto>
+	public class StudentService : UserService<Student, StudentDto>
 	{
 		//service מכיר גם את common וגם , ריפוזיטורי?
 		//לשנות את סדר הכרת השכבות - קומון, ריפו, סרביס
-		private readonly IRepository<Student, string> repository;
-		private readonly IMapper mapper;
-		public StudentService(IRepository<Student, string> repository, IMapper mapper)
+		
+		public StudentService(IRepository<Student, string> repository, IHttpContextAccessor httpContextAccessor, IMapper mapper, ISecurity<UserDto, UserLogin> security, IConfiguration config)
+			: base(repository, httpContextAccessor, mapper, security, config)
 		{
-			this.repository = repository;
-			this.mapper = mapper;
+
 		}
 		public override StudentDto AddItem(StudentDto item)
 		{

@@ -17,16 +17,16 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-	public abstract class UserService<TUserDto> : IService<TUserDto, string> where TUserDto : UserDto
+	public abstract class UserService<TUser, TUserDto> : IService<TUserDto, string> where TUser : User where TUserDto : UserDto
 	{
-		private readonly IRepository<User, string> repository;
-		private readonly IHttpContextAccessor _httpContextAccessor;
-		private readonly IMapper mapper;
-		private readonly ISecurity<UserDto, UserLogin> _security;
-		private readonly IConfiguration config;
+		protected readonly IRepository<TUser, string> repository;
+		protected readonly IHttpContextAccessor _httpContextAccessor;
+		protected readonly IMapper mapper;
+		protected readonly ISecurity<UserDto, UserLogin> _security;
+		protected readonly IConfiguration config;
 
 
-		public UserService(IRepository<User, string> repository, IHttpContextAccessor httpContextAccessor, IMapper mapper, ISecurity<UserDto, UserLogin> security, IConfiguration config)
+		public UserService(IRepository<TUser, string> repository, IHttpContextAccessor httpContextAccessor, IMapper mapper, ISecurity<UserDto, UserLogin> security, IConfiguration config)
 		{
 			this.repository = repository;
 			_httpContextAccessor = httpContextAccessor;

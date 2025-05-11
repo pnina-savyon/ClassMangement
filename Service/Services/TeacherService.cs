@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Common.Dto;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Repository.Entities;
 using Repository.Interfaces;
 using Service.Interfaces;
@@ -11,14 +13,13 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-	public class TeacherService: UserService<TeacherDto>
+	public class TeacherService: UserService<Teacher,TeacherDto>
 	{
-		private readonly IRepository<Teacher, string> repository;
-		private readonly IMapper mapper;
-		public TeacherService(IRepository<Teacher, string> repository, IMapper mapper)
+
+		public TeacherService(IRepository<Teacher, string> repository, IHttpContextAccessor httpContextAccessor, IMapper mapper, ISecurity<UserDto, UserLogin> security, IConfiguration config)
+			:base(repository,httpContextAccessor,mapper,security,config)
 		{
-			this.repository = repository;
-			this.mapper = mapper;
+
 		}
 		public override TeacherDto AddItem(TeacherDto item)
 		{
