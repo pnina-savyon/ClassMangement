@@ -18,8 +18,8 @@ namespace Service.Services
 		//service מכיר גם את common וגם , ריפוזיטורי?
 		//לשנות את סדר הכרת השכבות - קומון, ריפו, סרביס
 		
-		public StudentService(IRepository<Student, string> repository, IHttpContextAccessor httpContextAccessor, IMapper mapper, ISecurity<UserDto, UserLogin> security, IConfiguration config)
-			: base(repository, httpContextAccessor, mapper, security, config)
+		public StudentService(IRepository<Student, string> repository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IConfiguration config)
+			: base(repository, httpContextAccessor, mapper, config)
 		{
 
 		}

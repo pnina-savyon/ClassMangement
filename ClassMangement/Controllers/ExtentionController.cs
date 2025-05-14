@@ -1,6 +1,4 @@
-﻿using ClassMangement.Interfaces;
-using ClassMangement.Security;
-using Common.Dto;
+﻿using Common.Dto;
 using Service.Interfaces;
 using Service.Services;
 
@@ -16,7 +14,7 @@ namespace ClassMangement.Controllers
             //services.AddScoped<ISecurity<TeacherDto, UserLogin>, TeacherSecurity>();
             //services.AddScoped<ISecurity<UserDto, UserLogin>, UserSecurity>();
 
-			return services;
+            return services;
         }
     }
 }

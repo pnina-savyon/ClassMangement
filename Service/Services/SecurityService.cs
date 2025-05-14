@@ -16,16 +16,17 @@ using System.Text;
 using System.Threading.Tasks;
 namespace Service.Services
 {
-	public class SecurityService : ISecurity<UserDto,UserLogin>
-	{
+    public class SecurityService<TUser, TUserDto> : ISecurity<TUserDto,UserLogin> 
+		where TUser : User, new() where TUserDto : UserDto, new()
+    {
 		
-		protected readonly IRepository<User, string> repository;
+		protected readonly IRepository<TUser, string> repository;
 		protected readonly IMapper mapper;
 		protected readonly IConfiguration config;
 		protected readonly IHttpContextAccessor _httpContextAccessor;
 
 
-		public SecurityService(IRepository<User, string> repository, IMapper mapper, IConfiguration config, IHttpContextAccessor httpContextAccessor)
+		public SecurityService(IRepository<TUser, string> repository, IMapper mapper, IConfiguration config, IHttpContextAccessor httpContextAccessor)
 		{
 			this.repository = repository;
 			this.mapper = mapper;
@@ -33,15 +34,15 @@ namespace Service.Services
 			_httpContextAccessor = httpContextAccessor;
 		}
 
-		public virtual UserDto Authenticate(UserLogin value)
+		public virtual TUserDto Authenticate(UserLogin value)
 		{
-			UserDto user = mapper.Map<User, UserDto>(repository.GetAll().FirstOrDefault(x => x.Password == value.Password && x.Email == value.Email));
+			TUserDto user = mapper.Map<TUser, TUserDto>(repository.GetAll().FirstOrDefault(x => x.Password == value.Password && x.Email == value.Email));
 			if (user != null)
 				return user;
 			return null;
 		}
 
-		public virtual string Generate(UserDto user)
+		public virtual string Generate(TUserDto user)
 		{
 			var securitykey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
 			var credentials = new SigningCredentials(securitykey, SecurityAlgorithms.HmacSha256);
@@ -59,13 +60,13 @@ namespace Service.Services
 			return new JwtSecurityTokenHandler().WriteToken(token);
 		}
 
-		public virtual UserDto GetCurrentUser()
+		public virtual TUserDto GetCurrentUser()
 		{
 			var identity = _httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity;
 			if (identity != null)
 			{
 				var UserClaim = identity.Claims;
-				return new StudentDto()
+				return new TUserDto()
 				{
 					Name = UserClaim.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value,
 					Email = UserClaim.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
@@ -76,5 +77,16 @@ namespace Service.Services
 			}
 			return null;
 		}
-	}
+
+        public string Login(UserLogin value)
+        {
+            var user = Authenticate(value);	
+            if (user != null)
+            {
+                var token = Generate(user);
+                return token;
+            }
+            return "user not found";
+        }
+    }
 }

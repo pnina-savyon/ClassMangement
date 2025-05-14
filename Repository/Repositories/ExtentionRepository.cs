@@ -14,6 +14,7 @@ namespace Repository.Repositories
     {
         public static IServiceCollection AddRepository(this IServiceCollection services)
         {
+            //services.AddScoped<IRepository<User, string>, UserRepository<User>>();
             services.AddScoped<IRepository<Student, string>, StudentRepository>();
             services.AddScoped<IRepository<Teacher, string>, TeacherRepository>();
             services.AddScoped<IRepository<Chair, int>, ChairRepository>();
@@ -23,14 +24,14 @@ namespace Repository.Repositories
             services.AddScoped<IRepository<Subject, int>, SubjectRepository>();
             services.AddScoped<IRepository<SurveyAnswer, int>, SurveyAnswerRepository>();
             services.AddScoped<IRepository<Survey, int>, SurveyRepository>();
+            //services.AddScoped<IRepository<User, string>, >();
 
             //
-			//services.AddScoped<IRepository<User, string>, UserRepository>();
+            //services.AddScoped<IRepository<User, string>, UserRepository>();
 
-
-			//...כאן נגדיר את כל התלויות של הrepository
-			// services.AddScoped < IRepository < Product > ProductRepository > ();
-			return services;
+            //...כאן נגדיר את כל התלויות של הrepository
+            // services.AddScoped < IRepository < Product > ProductRepository > ();
+            return services;
         }
     }
 }

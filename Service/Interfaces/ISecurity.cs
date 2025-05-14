@@ -11,5 +11,6 @@ namespace Service.Interfaces
 		string Generate(T user);
 		T Authenticate(Y value);
 		T GetCurrentUser();
-	}
+        string Login(Y value);
+    }
 }

@@ -22,16 +22,14 @@ namespace Service.Services
 		protected readonly IRepository<TUser, string> repository;
 		protected readonly IHttpContextAccessor _httpContextAccessor;
 		protected readonly IMapper mapper;
-		protected readonly ISecurity<UserDto, UserLogin> _security;
 		protected readonly IConfiguration config;
 
 
-		public UserService(IRepository<TUser, string> repository, IHttpContextAccessor httpContextAccessor, IMapper mapper, ISecurity<UserDto, UserLogin> security, IConfiguration config)
+		public UserService(IRepository<TUser, string> repository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IConfiguration config)
 		{
 			this.repository = repository;
 			_httpContextAccessor = httpContextAccessor;
 			this.mapper = mapper;
-			_security = security;
 			this.config = config;
 		}
 		
@@ -46,5 +44,6 @@ namespace Service.Services
 		public abstract TUserDto UpdateItem(string id, TUserDto item);
 		
 
+	
 	}
 }

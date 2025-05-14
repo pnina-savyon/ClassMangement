@@ -1,5 +1,6 @@
 ﻿using Common.Dto;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Identity.Client;
 using Repository.Entities;
 using Repository.Interfaces;
 using Repository.Repositories;
@@ -28,14 +29,18 @@ namespace Service.Services
 			services.AddScoped<IService<SubjectDto, int>, SubjectService>();
 			services.AddScoped<IService<SurveyAnswerDto, int>, SurveyAnswerService>();
 			services.AddScoped<IService<SurveyDto, int>, SurveyService>();
-			services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService>();
+			services.AddScoped<ISecurity<TeacherDto, UserLogin>, SecurityService<Teacher,TeacherDto>>();
+            services.AddScoped<ISecurity<StudentDto, UserLogin>, SecurityService<Student, StudentDto>>();
+            //services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService>();
+            
+			//services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService<User, UserDto>>();
 
-			//
-			//services.AddScoped<IService<UserDto, string>, UserService>();
 
+            //
+            //services.AddScoped<IService<UserDto, string>, UserService>();
 
-			//...כאן נגדיר את תלויות הservice
-			services.AddAutoMapper(typeof(DtoEntityMapper));
+            //...כאן נגדיר את תלויות הservice
+            services.AddAutoMapper(typeof(DtoEntityMapper));
 			return services;
 		}
 	}

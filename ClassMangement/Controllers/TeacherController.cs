@@ -1,6 +1,4 @@
-﻿using ClassMangement.Interfaces;
-using ClassMangement.Security;
-using Common.Dto;
+﻿using Common.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repository.Entities;
@@ -16,15 +14,18 @@ namespace ClassMangement.Controllers
 	public class TeacherController : ControllerBase
 	{
 		private readonly IService<TeacherDto,string> service;
-		private readonly IConfiguration config;
+        private readonly ISecurity<TeacherDto, UserLogin> securityService;
+        private readonly IConfiguration config;
 
-		public TeacherController(IService<TeacherDto, string> service, IConfiguration config)
-		{
-			this.service = service;
-			this.config = config;
-		}
-		// GET: api/<TeacherController>
-		[HttpGet]
+        public TeacherController(IService<TeacherDto, string> service, IConfiguration config, ISecurity<TeacherDto, UserLogin> securityService)
+        {
+            this.service = service;
+            this.config = config;
+            this.securityService = securityService;
+        }
+
+        // GET: api/<TeacherController>
+        [HttpGet]
 		public List<TeacherDto> Get()
 		{
 			return service.GetAll();
@@ -46,16 +47,8 @@ namespace ClassMangement.Controllers
 		[HttpPost("login")]
 		public string Login([FromBody] UserLogin value)
 		{
-			var user = service.Authenticate()
-				//Authenticate(value);
-			if (user != null)
-			{
-				var token = Generate(user);
-				return token;
-			}
-			return "user not found";
+			return securityService.Login(value);
 		}
-
 
 		// PUT api/<TeacherController>/5
 		[HttpPut("{id}")]

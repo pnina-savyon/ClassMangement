@@ -16,8 +16,8 @@ namespace Service.Services
 	public class TeacherService: UserService<Teacher,TeacherDto>
 	{
 
-		public TeacherService(IRepository<Teacher, string> repository, IHttpContextAccessor httpContextAccessor, IMapper mapper, ISecurity<UserDto, UserLogin> security, IConfiguration config)
-			:base(repository,httpContextAccessor,mapper,security,config)
+		public TeacherService(IRepository<Teacher, string> repository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IConfiguration config)
+			:base(repository,httpContextAccessor,mapper,config)
 		{
 
 		}
