@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Repository.Entities;
 using Repository.Entities.Enums;
 using Service.Interfaces;
+using System.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,13 +27,15 @@ namespace ClassMangement.Controllers
 
         // GET: api/<TeacherController>
         [HttpGet]
-		public List<TeacherDto> Get()
-		{
+        [Authorize(Roles = $"{nameof(Roles.Master)}")]
+        public List<TeacherDto> Get()
+        {
 			return service.GetAll();
 		}
 
 		// GET api/<TeacherController>/5
 		[HttpGet("{id}")]
+		[Authorize(Roles = $"{nameof(Roles.Master)}")]
 		public TeacherDto Get(string id)
 		{
 			return service.GetById(id);
@@ -40,7 +43,7 @@ namespace ClassMangement.Controllers
 
 		// POST api/<TeacherController>
 		[HttpPost]
-		public TeacherDto Post([FromBody] TeacherDto value)
+        public TeacherDto Post([FromBody] TeacherDto value)
 		{
 			return service.AddItem(value);
 		}
@@ -50,18 +53,46 @@ namespace ClassMangement.Controllers
 			return securityService.Login(value);
 		}
 
-		// PUT api/<TeacherController>/5
-		[HttpPut("{id}")]
-		public void Put(string id, [FromBody] TeacherDto value)
-		{
-			service.UpdateItem(id, value);
-		}
+        [HttpPut("{id}")]
+        [Authorize(Roles = $"{nameof(Roles.Master)},{nameof(Roles.Admin)}")]
+        public IActionResult Put(string id, [FromBody] TeacherDto value)
+        {
+            string userId = securityService.GetCurrentUser().Id;
+            Roles userRole = securityService.GetCurrentUser().Role;
 
-		// DELETE api/<TeacherController>/5
-		[HttpDelete("{id}")]
-		public TeacherDto Delete(string id)
+            if (userRole == Roles.Admin && userId != id)
+            {
+                return Forbid(); 
+            }
+
+            TeacherDto updated = service.UpdateItem(id, value);
+
+            if (updated == null)
+                return NotFound(); 
+
+            return Ok(updated); 
+        }
+
+        // DELETE api/<TeacherController>/5
+        [HttpDelete("{id}")]
+        [Authorize]
+        [Authorize(Roles = $"{nameof(Roles.Master)},{nameof(Roles.Admin)}")]
+        public IActionResult Delete(string id)
 		{
-			return service.DeleteItem(id);
+            string userId = securityService.GetCurrentUser().Id;
+            Roles userRole = securityService.GetCurrentUser().Role;
+
+            if (userRole == Roles.Admin && userId != id)
+            {
+                return Forbid();
+            }
+
+            TeacherDto deleted = service.DeleteItem(id);
+
+            if (deleted == null)
+                return NotFound();
+
+            return Ok(deleted);
 		}
 	}
 }
