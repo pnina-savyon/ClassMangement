@@ -11,5 +11,8 @@ namespace Repository.Entities
 	public class Teacher:User
 	{
 		public virtual ICollection<Class>? Classes { get; set; }
-	}
+
+        public override Roles Role { get; set; } = Roles.Admin;
+
+    }
 }
