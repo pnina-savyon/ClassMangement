@@ -30,5 +30,8 @@ namespace Repository.Entities
 		public virtual ICollection<Mark>? Marks { get; set; }
 
 		public virtual ICollection<DailyAttendance>? DailyAttendances { get; set; }
-	}
+
+        public override Roles Role { get; set; } = Roles.User;
+
+    }
 }

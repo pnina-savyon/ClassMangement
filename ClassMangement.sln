@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassMangement", "ClassMangement\ClassMangement.csproj", "{E9BE65CA-63F0-44CB-B1B5-E237F60FE447}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassMangement", "ClassMangement\ClassMangement.csproj", "{E9BE65CA-63F0-44CB-B1B5-E237F60FE447}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{10A3FBD6-A119-4C51-8E41-A69AF9CDDFE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repository\Repository.csproj", "{10A3FBD6-A119-4C51-8E41-A69AF9CDDFE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{A5994F10-C25A-486F-B791-18FE9F0B9751}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{A5994F10-C25A-486F-B791-18FE9F0B9751}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mock", "Mock\Mock.csproj", "{9F98AAAE-15F9-424F-9FCC-72C3E75EC19C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mock", "Mock\Mock.csproj", "{9F98AAAE-15F9-424F-9FCC-72C3E75EC19C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{0610067C-D280-4F35-8D92-C38F4899C475}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{0610067C-D280-4F35-8D92-C38F4899C475}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -15,14 +15,14 @@ namespace ClassMangement.Controllers
 	public class TeacherController : ControllerBase
 	{
 		private readonly IService<TeacherDto,string> service;
-        private readonly ISecurity<TeacherDto, UserLogin> securityService;
+        private readonly ISecurity<Teacher, UserLogin> securityServiceTeacher;
         private readonly IConfiguration config;
 
-        public TeacherController(IService<TeacherDto, string> service, IConfiguration config, ISecurity<TeacherDto, UserLogin> securityService)
+        public TeacherController(IService<TeacherDto, string> service, IConfiguration config, ISecurity<Teacher, UserLogin> securityServiceTeacher)
         {
             this.service = service;
             this.config = config;
-            this.securityService = securityService;
+            this.securityServiceTeacher = securityServiceTeacher;
         }
 
         // GET: api/<TeacherController>
@@ -43,22 +43,22 @@ namespace ClassMangement.Controllers
 
 		// POST api/<TeacherController>
 		[HttpPost]
-        public TeacherDto Post([FromBody] TeacherDto value)
+        public TeacherDto Post([FromForm] TeacherDto value)
 		{
 			return service.AddItem(value);
 		}
 		[HttpPost("login")]
 		public string Login([FromBody] UserLogin value)
 		{
-			return securityService.Login(value);
+			return securityServiceTeacher.Login(value);
 		}
 
         [HttpPut("{id}")]
         [Authorize(Roles = $"{nameof(Roles.Master)},{nameof(Roles.Admin)}")]
         public IActionResult Put(string id, [FromBody] TeacherDto value)
         {
-            string userId = securityService.GetCurrentUser().Id;
-            Roles userRole = securityService.GetCurrentUser().Role;
+            string userId = securityServiceTeacher.GetCurrentUser().Id;
+            Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
 
             if (userRole == Roles.Admin && userId != id)
             {
@@ -79,8 +79,8 @@ namespace ClassMangement.Controllers
         [Authorize(Roles = $"{nameof(Roles.Master)},{nameof(Roles.Admin)}")]
         public IActionResult Delete(string id)
 		{
-            string userId = securityService.GetCurrentUser().Id;
-            Roles userRole = securityService.GetCurrentUser().Role;
+            string userId = securityServiceTeacher.GetCurrentUser().Id;
+            Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
 
             if (userRole == Roles.Admin && userId != id)
             {

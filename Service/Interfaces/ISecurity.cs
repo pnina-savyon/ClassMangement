@@ -8,6 +8,7 @@ namespace Service.Interfaces
 {
 	public interface ISecurity<T,Y>
 	{
+		//dto,login?
 		string Generate(T user);
 		T Authenticate(Y value);
 		T GetCurrentUser();

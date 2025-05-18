@@ -14,6 +14,6 @@ namespace Common.Dto
 		public string StudentId { get; set; }
 		public Levels StatusSocial { get; set; }
 		public Levels AttentionLevel { get; set; }
-		//public Roles Role { get; set; }
+		public Roles Role { get; set; }
 	}
 }
