@@ -90,7 +90,7 @@ namespace Service.Services
                 var token = Generate(user);
                 return token;
             }
-            return "user not found";
+            return null;
         }
     }
 }

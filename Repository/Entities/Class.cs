@@ -18,7 +18,6 @@ namespace Repository.Entities
 		public string TeacherId { get; set; }
 		[ForeignKey("TeacherId")]
 		public virtual Teacher Teacher { get; set; }
-
 		public int CountOfStudents { get; set; }
 		public virtual ICollection<Chair>? Chairs { get; set; }
 		public virtual ICollection<Student>? Students { get; set; }

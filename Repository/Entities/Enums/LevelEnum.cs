@@ -8,7 +8,7 @@ namespace Repository.Entities.Enums
 {
 	public enum Levels
 	{
-		A, B, C, D, E
+		None, A, B, C, D, E
 	}
 	public class LevelEnum
 	{

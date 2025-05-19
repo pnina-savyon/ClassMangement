@@ -31,9 +31,11 @@ namespace Service.Services
 			services.AddScoped<IService<SurveyDto, int>, SurveyService>();
 			services.AddScoped<ISecurity<Teacher, UserLogin>, SecurityService<Teacher,TeacherDto>>();
             services.AddScoped<ISecurity<Student, UserLogin>, SecurityService<Student, StudentDto>>();
+            services.AddScoped<IStudentQueryLogic, StudentService>();
+
             //services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService>();
-            
-			//services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService<User, UserDto>>();
+
+            //services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService<User, UserDto>>();
 
 
             //
