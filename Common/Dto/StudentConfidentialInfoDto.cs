@@ -11,9 +11,9 @@ namespace Common.Dto
 	{
 		//set...?
 		//אולי דרך הרשאות?
-		public string StudentId { get; set; }
-		public Levels StatusSocial { get; set; }
-		public Levels AttentionLevel { get; set; }
-		public Roles Role { get; set; }
+		public string? StudentId { get; set; }
+		public Levels? StatusSocial { get; set; }
+		public Levels? AttentionLevel { get; set; }
+		public Roles? Role { get; set; }
 	}
 }

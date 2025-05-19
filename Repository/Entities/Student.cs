@@ -19,8 +19,8 @@ namespace Repository.Entities
 		[ForeignKey("ChairId")]
 		public virtual Chair? CurrentChair { get; set; }
 
-		public Levels StatusSocial { get; set; }
-		public Levels AttentionLevel { get; set; }
+		public Levels StatusSocial { get; set; } 
+		public Levels AttentionLevel { get; set; } 
 		public string? ImageUrl { get; set; }
 		public int? Priority { get; set; }
 		[NotMapped]

@@ -50,11 +50,11 @@ namespace Repository.Repositories
 
             Student student = GetById(id);
             student.Password = item.Password !=null ?  item.Password : student.Password;
-            student.Name = item.Password != null ? item.Password : student.Password; ;
+            student.Name = item.Name != null ? item.Name : student.Name; ;
             student.Marks = item.Marks != null ? item.Marks : student.Marks;
             student.ChairId = item.ChairId != 0 ? item.ChairId : student.ChairId;
             student.Phone = item.Phone != null ? item.Phone : student.Phone;
-            student.Address = item.Password != null ? item.Password : student.Password;
+            student.Address = item.Address != null ? item.Address : student.Address;
             student.Priority = item.Priority != 0 ? item.Priority : student.Priority;
             student.StatusSocial = item.StatusSocial != 0 ? item.StatusSocial : student.StatusSocial;
             student.FavoriteFriends = item.FavoriteFriends != null ? item.FavoriteFriends : student.FavoriteFriends;
