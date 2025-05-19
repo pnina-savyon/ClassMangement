@@ -11,6 +11,13 @@ using Service.Interfaces;
 using Service.Services;
 using System.Text;
 
+// TODO: סימני שאלה לדיטיאו
+// וכן אסינכרוני
+// כל פונקציות העדכון בריפוזיטורי
+//S חתך עומק על שאר הקונטרולרים כולל מעבר על טיצ'ר - למשל החזרת אובייקט לסטטוס וכדומה.
+//וכן תוספות שליפה נוספים לקונטרולרס
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
