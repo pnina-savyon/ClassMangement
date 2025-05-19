@@ -23,7 +23,7 @@ namespace Service.Services
         {
 
         }
-        public bool IsStudentBelongsToTeacher(string idStudent, string userId)
+        private bool IsStudentBelongsToTeacher(string idStudent, string userId)
         {
             Student s = repository.GetById(idStudent);
             if (s == null || s.Class == null || s.Class.Teacher == null)
@@ -33,7 +33,7 @@ namespace Service.Services
                 return false;
             return true;
         }
-        public bool IsSpecificAuthorization(string id, Roles role, string userId)
+        private bool IsSpecificAuthorization(string id, Roles role, string userId)
         {
             if (((role == Roles.User || role == Roles.AuthorizedUser) && userId != id) || role == Roles.None)
                 return false;
@@ -43,11 +43,22 @@ namespace Service.Services
 
             return true;
         }
+        private void UploadImage(IFormFile file)
+        {
+            //ניתוב לתמונה
+            var path = Path.Combine(Environment.CurrentDirectory, "Images/", file.FileName);
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+
+                file.CopyTo(stream);
+            }
+        }
         public override StudentDto AddItem(StudentDto item)
         {
+            if (item.fileImage != null)
+                UploadImage(item.fileImage);
             return mapper.Map<Student, StudentDto>(repository.AddItem(mapper.Map<StudentDto, Student>(item)));
         }
-
         public override StudentDto DeleteItem(string id)
         {
             return mapper.Map<Student, StudentDto>(repository.DeleteItem(id));
@@ -57,7 +68,7 @@ namespace Service.Services
         {
             if (!IsSpecificAuthorization(id, role, userId))
                 return null;
-     
+
             return DeleteItem(id);
         }
 

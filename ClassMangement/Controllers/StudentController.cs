@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Repository.Entities;
 using Repository.Entities.Enums;
 using Service.Interfaces;
+using System.Collections.Generic;
 
 namespace ClassMangement.Controllers
 {
@@ -31,8 +32,8 @@ namespace ClassMangement.Controllers
         [Authorize(Roles = $"{nameof(Roles.Master)}")]
         public ActionResult<List<StudentDto>> Get()
         {
-            var students = service.GetAll();
-            return Ok(students);
+           List<StudentDto> students = service.GetAll();
+           return Ok(students);
         }
 
         // GET api/<StudentController>/5
@@ -55,7 +56,7 @@ namespace ClassMangement.Controllers
         [HttpPost]
         public ActionResult<StudentDto> Post([FromForm] StudentDto value)
         {
-            var created = service.AddItem(value);
+            StudentDto created = service.AddItem(value);
 
             if (created == null)
                 return BadRequest();
@@ -66,7 +67,7 @@ namespace ClassMangement.Controllers
         [HttpPost("login")]
         public ActionResult<string> Login([FromBody] UserLogin value)
         {
-            var token = securityServiceStudent.Login(value);
+            string token = securityServiceStudent.Login(value);
             if (string.IsNullOrEmpty(token))
                 return Unauthorized();
 
@@ -86,7 +87,7 @@ namespace ClassMangement.Controllers
                 return Forbid();
             }
 
-            var updated = service.UpdateItem(id, value);
+            StudentDto updated = service.UpdateItem(id, value);
 
             if (updated == null)
                 return NotFound();
@@ -94,13 +95,13 @@ namespace ClassMangement.Controllers
             return Ok(updated);
         }
 
-        [HttpPost("putTeacher")]
+        [HttpPut("putTeacher")]
         [Authorize(Roles = $"{nameof(Roles.Admin)}")]
         public ActionResult<StudentConfidentialInfoDto> PutForTeacher(string id, [FromBody] StudentConfidentialInfoDto value)
         {
             string userId = securityServiceTeacher.GetCurrentUser().Id;
 
-            var updated = serviceQueryLogic.UpdateLogicForTeacher(id, userId, value);
+            StudentConfidentialInfoDto updated = serviceQueryLogic.UpdateLogicForTeacher(id, userId, value);
 
             if (updated == null)
                 return NotFound();
@@ -116,7 +117,7 @@ namespace ClassMangement.Controllers
             string userId = securityServiceTeacher.GetCurrentUser().Id;
             Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
 
-            var deleted = serviceQueryLogic.DeleteLogic(id, userRole, userId);
+            StudentDto deleted = serviceQueryLogic.DeleteLogic(id, userRole, userId);
 
             if (deleted == null)
                 return NotFound();

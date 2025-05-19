@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 namespace Common.Dto
 {
 	public class StudentDto:UserDto
-	{
-		
+	{	
 		public int ClassId { get; set; }
-		public ClassDto classItem { get; set; }
+		//public ClassDto classItem { get; set; }
 		public int? ChairId { get; set; }
 		
 		//public Levels StatusSocial { get; set; }

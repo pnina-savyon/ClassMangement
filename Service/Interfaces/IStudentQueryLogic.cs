@@ -10,8 +10,6 @@ namespace Service.Interfaces
 {
     public interface IStudentQueryLogic
     {
-        bool IsSpecificAuthorization(string id, Roles role, string userId);
-        bool IsStudentBelongsToTeacher(string idStudent, string userId);
         StudentDto GetByIdLogic(string id,Roles role, string userId);
 
         StudentDto DeleteLogic(string id,Roles role, string userId);

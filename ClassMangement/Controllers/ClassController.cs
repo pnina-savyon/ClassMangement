@@ -12,60 +12,56 @@ namespace ClassMangement.Controllers
     public class ClassController : ControllerBase
     {
         private readonly IService<ClassDto, int> service;
-        private readonly ISecurity<Teacher, UserLogin> securityServiceTeacher;
+        private readonly IStudentQueryLogic serviceQueryLogic;
         private readonly ISecurity<Student, UserLogin> securityServiceStudent;
+        private readonly ISecurity<Teacher, UserLogin> securityServiceTeacher;
         private readonly IConfiguration config;
 
-        public ClassController(IService<ClassDto, int> service, IConfiguration config, ISecurity<Teacher, UserLogin> securityServiceTeacher, ISecurity<Student, UserLogin> securityServiceStudent)
+        public ClassController(IService<ClassDto, int> service, IConfiguration config, ISecurity<Teacher, UserLogin> securityServiceTeacher, ISecurity<Student, UserLogin> securityServiceStudent, IStudentQueryLogic serviceQueryLogic)
         {
             this.service = service;
             this.config = config;
-            this.securityServiceTeacher = securityServiceTeacher;
             this.securityServiceStudent = securityServiceStudent;
+            this.securityServiceTeacher = securityServiceTeacher;
+            this.serviceQueryLogic = serviceQueryLogic;
         }
         // GET: api/<ClassController>
         [HttpGet]
-        public List<ClassDto> Get()
+        public ActionResult<List<ClassDto>> Get()
         {
-            return service.GetAll();
+            List<ClassDto> classes = service.GetAll();
+            return Ok(classes);
         }
 
-        // GET api/<ClassController>/
+        // GET api/<ClassController>/5
         [HttpGet("{id}")]
-        public ClassDto Get(int id)
+        public string Get(int id)
         {
-            return service.GetById(id);
+            return "value";
         }
 
         // POST api/<ClassController>
         [HttpPost]
-        public ClassDto Post([FromBody] ClassDto value)
+        public ActionResult<ClassDto> Post([FromForm] ClassDto value)
         {
-            return service.AddItem(value);
+            ClassDto created = service.AddItem(value);
+
+            if (created == null)
+                return BadRequest();
+
+            return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
         }
 
         // PUT api/<ClassController>/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] ClassDto value)
+        public void Put(int id, [FromBody] string value)
         {
-            ClassDto updated = service.UpdateItem(id, value);
-
-            if (updated == null)
-                return NotFound();
-
-            return Ok(updated);
         }
 
         // DELETE api/<ClassController>/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public void Delete(int id)
         {
-            ClassDto deleted = service.DeleteItem(id);
-
-            if (deleted == null)
-                return NotFound();
-
-            return Ok(deleted);
         }
     }
 }
