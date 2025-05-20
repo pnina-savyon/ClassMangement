@@ -21,29 +21,29 @@ namespace Service.Services
             this.mapper = mapper;
 
         }
-        public DailyAttendanceDto AddItem(DailyAttendanceDto item)
+        public async Task<DailyAttendanceDto> AddItem(DailyAttendanceDto item)
         {
-            return mapper.Map<DailyAttendance, DailyAttendanceDto>(repository.AddItem(mapper.Map<DailyAttendanceDto, DailyAttendance>(item)));
+            return mapper.Map<DailyAttendance, DailyAttendanceDto>(await repository.AddItem(mapper.Map<DailyAttendanceDto, DailyAttendance>(item)));
         }
 
-        public DailyAttendanceDto DeleteItem(int id)
+        public async Task<DailyAttendanceDto> DeleteItem(int id)
         {
-            return mapper.Map<DailyAttendance, DailyAttendanceDto>(repository.DeleteItem(id));
+            return mapper.Map<DailyAttendance, DailyAttendanceDto>(await repository.DeleteItem(id));
         }
 
-        public List<DailyAttendanceDto> GetAll()
+        public async Task<List<DailyAttendanceDto>>  GetAll()
         {
-            return mapper.Map<List<DailyAttendance>, List<DailyAttendanceDto>>(repository.GetAll());
+            return mapper.Map<List<DailyAttendance>, List<DailyAttendanceDto>>(await repository.GetAll());
         }
 
-        public DailyAttendanceDto GetById(int id)
+        public async Task<DailyAttendanceDto> GetById(int id)
         {
-            return mapper.Map<DailyAttendance, DailyAttendanceDto>(repository.GetById(id));
+            return mapper.Map<DailyAttendance, DailyAttendanceDto>(await repository.GetById(id));
         }
 
-        public DailyAttendanceDto UpdateItem(int id, DailyAttendanceDto item)
+        public async Task<DailyAttendanceDto> UpdateItem(int id, DailyAttendanceDto item)
         {
-            return mapper.Map<DailyAttendance, DailyAttendanceDto>(repository.UpdateItem(id, mapper.Map<DailyAttendanceDto, DailyAttendance>(item)));
+            return mapper.Map<DailyAttendance, DailyAttendanceDto>(await repository.UpdateItem(id, mapper.Map<DailyAttendanceDto, DailyAttendance>(item)));
         }
     }
 }
