@@ -10,8 +10,8 @@ namespace Service.Interfaces
 	{
 		//dto,login?
 		string Generate(T user);
-		T Authenticate(Y value);
+		Task<T> Authenticate(Y value);
 		T GetCurrentUser();
-        string Login(Y value);
+        Task<string> Login(Y value);
     }
 }

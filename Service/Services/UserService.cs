@@ -33,15 +33,15 @@ namespace Service.Services
 			this.config = config;
 		}
 		
-		public abstract TUserDto AddItem(TUserDto item);
+		public abstract Task<TUserDto> AddItem(TUserDto item);
 
-		public abstract TUserDto DeleteItem(string id);
+		public abstract Task<TUserDto> DeleteItem(string id);
 
-		public abstract List<TUserDto> GetAll();
+		public abstract Task<List<TUserDto>> GetAll();
 
-		public abstract TUserDto GetById(string id);
+		public abstract Task<TUserDto> GetById(string id);
 
-		public abstract TUserDto UpdateItem(string id, TUserDto item);
+		public  abstract Task<TUserDto> UpdateItem(string id, TUserDto item);
 		
 
 	

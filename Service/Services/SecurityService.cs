@@ -34,9 +34,10 @@ namespace Service.Services
 			_httpContextAccessor = httpContextAccessor;
 		}
 		//מזהה משתמש ע"י login
-		public virtual TUser Authenticate(UserLogin value)
+		public virtual async Task<TUser> Authenticate(UserLogin value)
 		{
-			TUser user = repository.GetAll().FirstOrDefault(x => x.Password == value.Password && x.Email == value.Email);
+			List<TUser> users = await repository.GetAll();
+			TUser user = users.FirstOrDefault(x => x.Password == value.Password && x.Email == value.Email);
 			if (user != null)
 				return user;
 			return null;
@@ -82,9 +83,9 @@ namespace Service.Services
 			return null;
 		}
 
-        public string Login(UserLogin value)
+        public async Task<string> Login(UserLogin value)
         {
-            var user = Authenticate(value);	
+            var user = await Authenticate(value);	
             if (user != null)
             {
                 var token = Generate(user);

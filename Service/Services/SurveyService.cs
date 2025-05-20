@@ -23,29 +23,29 @@ namespace Service.Services
 			this.mapper = mapper;
 
 		}
-		public SurveyDto AddItem(SurveyDto item)
+		public async Task<SurveyDto> AddItem(SurveyDto item)
 		{
-			return mapper.Map<Survey, SurveyDto>(repository.AddItem(mapper.Map<SurveyDto, Survey>(item)));
+			return mapper.Map<Survey, SurveyDto>(await repository.AddItem(mapper.Map<SurveyDto, Survey>(item)));
 		}
 
-		public SurveyDto DeleteItem(int id)
+		public async Task<SurveyDto> DeleteItem(int id)
 		{
-			return mapper.Map<Survey, SurveyDto>(repository.DeleteItem(id));
+			return mapper.Map<Survey, SurveyDto>(await repository.DeleteItem(id));
 		}
 
-		public List<SurveyDto> GetAll()
+		public async Task<List<SurveyDto>> GetAll()
 		{
-			return mapper.Map<List<Survey>, List<SurveyDto>>(repository.GetAll());
+			return mapper.Map<List<Survey>, List<SurveyDto>>(await repository.GetAll());
 		}
 
-		public SurveyDto GetById(int id)
+		public async Task<SurveyDto> GetById(int id)
 		{
-			return mapper.Map<Survey, SurveyDto>(repository.GetById(id));
+			return mapper.Map<Survey, SurveyDto>(await repository.GetById(id));
 		}
 
-		public SurveyDto UpdateItem(int id, SurveyDto item)
+		public async Task<SurveyDto> UpdateItem(int id, SurveyDto item)
 		{
-			return mapper.Map<Survey, SurveyDto>(repository.UpdateItem(id, mapper.Map<SurveyDto, Survey>(item)));
+			return mapper.Map<Survey, SurveyDto>(await repository.UpdateItem(id, mapper.Map<SurveyDto, Survey>(item)));
 		}
 	}
 }

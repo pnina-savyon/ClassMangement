@@ -23,9 +23,9 @@ namespace Service.Services
         {
 
         }
-        private bool IsStudentBelongsToTeacher(string idStudent, string userId)
+        private async Task<bool> IsStudentBelongsToTeacher(string idStudent, string userId)
         {
-            Student s = repository.GetById(idStudent);
+            Student s = await repository.GetById(idStudent);
             if (s == null || s.Class == null || s.Class.Teacher == null)
                 return false;
             Teacher t = s.Class.Teacher;
@@ -33,79 +33,79 @@ namespace Service.Services
                 return false;
             return true;
         }
-        private bool IsSpecificAuthorization(string id, Roles role, string userId)
+        private async Task<bool> IsSpecificAuthorization(string id, Roles role, string userId)
         {
             if (((role == Roles.User || role == Roles.AuthorizedUser) && userId != id) || role == Roles.None)
                 return false;
 
-            if (role == Roles.Admin && !IsStudentBelongsToTeacher(id, userId))
+            if (role == Roles.Admin && !await IsStudentBelongsToTeacher(id, userId))
                 return false;
 
             return true;
         }
-        private void UploadImage(IFormFile file)
+        private async Task UploadImage(IFormFile file)
         {
             //ניתוב לתמונה
             var path = Path.Combine(Environment.CurrentDirectory, "Images/", file.FileName);
             using (var stream = new FileStream(path, FileMode.Create))
             {
-
-                file.CopyTo(stream);
+                //
+                await file.CopyToAsync(stream);
             }
         }
-        public override StudentDto AddItem(StudentDto item)
+        public override async Task<StudentDto> AddItem(StudentDto item)
         {
             if (item.fileImage != null)
-                UploadImage(item.fileImage);
-            return mapper.Map<Student, StudentDto>(repository.AddItem(mapper.Map<StudentDto, Student>(item)));
+                await UploadImage(item.fileImage);
+            return mapper.Map<Student, StudentDto>(await repository.AddItem(mapper.Map<StudentDto, Student>(item)));
         }
-        public override StudentDto DeleteItem(string id)
+        public override async Task<StudentDto> DeleteItem(string id)
         {
-            return mapper.Map<Student, StudentDto>(repository.DeleteItem(id));
+            return mapper.Map<Student, StudentDto>(await repository.DeleteItem(id));
         }
 
-        public StudentDto DeleteLogic(string id, Roles role, string userId)
+        public async Task<StudentDto> DeleteLogic(string id, Roles role, string userId)
         {
-            if (!IsSpecificAuthorization(id, role, userId))
+            if (!await IsSpecificAuthorization(id, role, userId))
                 return null;
 
-            return DeleteItem(id);
+            return await DeleteItem(id);
         }
 
-        public override List<StudentDto> GetAll()
+        public override async Task<List<StudentDto>> GetAll()
         {
-            return mapper.Map<List<Student>, List<StudentDto>>(repository.GetAll());
+            return mapper.Map<List<Student>, List<StudentDto>>(await repository.GetAll());
         }
 
-        public override StudentDto GetById(string id)
+        public override async Task<StudentDto> GetById(string id)
         {
-            return mapper.Map<Student, StudentDto>(repository.GetById(id));
+            return mapper.Map<Student, StudentDto>(await repository.GetById(id));
         }
 
-        public StudentDto GetByIdLogic(string id, Roles role, string userId)
+        public async Task<StudentDto> GetByIdLogic(string id, Roles role, string userId)
         {
-            if (!IsSpecificAuthorization(id, role, userId))
+            if (!await IsSpecificAuthorization(id, role, userId))
                 return null;
 
-            return GetById(id);
+            return await GetById(id);
         }
 
-        public override StudentDto UpdateItem(string id, StudentDto item)
+        public override async Task<StudentDto> UpdateItem(string id, StudentDto item)
         {
-            return mapper.Map<Student, StudentDto>(repository.UpdateItem(id, mapper.Map<StudentDto, Student>(item)));
+            return mapper.Map<Student, StudentDto>(await repository.UpdateItem(id, mapper.Map<StudentDto, Student>(item)));
         }
 
-        public StudentConfidentialInfoDto UpdateItemForTeacher(string id, StudentConfidentialInfoDto item)
+        public async Task<StudentConfidentialInfoDto> UpdateItemForTeacher(string id, StudentConfidentialInfoDto item)
         {
-            return mapper.Map<Student, StudentConfidentialInfoDto>(repository.UpdateItem(id, mapper.Map<StudentConfidentialInfoDto, Student>(item)));
+            return mapper.Map<Student, StudentConfidentialInfoDto>(await repository.UpdateItem(id, mapper.Map<StudentConfidentialInfoDto, Student>(item)));
         }
 
-        public StudentConfidentialInfoDto UpdateLogicForTeacher(string id, string userId, StudentConfidentialInfoDto value)
+        public async Task<StudentConfidentialInfoDto> UpdateLogicForTeacher(string id, string userId, StudentConfidentialInfoDto value)
         {
-            if (!IsStudentBelongsToTeacher(id, userId))
+            if (!await IsStudentBelongsToTeacher(id, userId))
                 return null;
 
-            return UpdateItemForTeacher(id,value);
+            return await UpdateItemForTeacher(id,value);
         }
     }
 }

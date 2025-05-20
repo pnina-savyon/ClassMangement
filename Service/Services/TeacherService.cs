@@ -21,29 +21,29 @@ namespace Service.Services
 		{
 
 		}
-		public override TeacherDto AddItem(TeacherDto item)
+		public override async Task<TeacherDto> AddItem(TeacherDto item)
 		{
-			return mapper.Map<Teacher, TeacherDto>(repository.AddItem(mapper.Map<TeacherDto, Teacher>(item)));
+			return mapper.Map<Teacher, TeacherDto>(await repository.AddItem(mapper.Map<TeacherDto, Teacher>(item)));
 		}
 
-		public override TeacherDto DeleteItem(string id)
+		public override async Task<TeacherDto> DeleteItem(string id)
 		{
-			return mapper.Map<Teacher, TeacherDto>(repository.DeleteItem(id));
+			return mapper.Map<Teacher, TeacherDto>(await repository.DeleteItem(id));
 		}
 
-		public override List<TeacherDto> GetAll()
+		public override async Task<List<TeacherDto>> GetAll()
 		{
-			return mapper.Map<List<Teacher>, List<TeacherDto>>(repository.GetAll());
+			return mapper.Map<List<Teacher>, List<TeacherDto>>(await repository.GetAll());
 		}
 
-		public override TeacherDto GetById(string id)
+		public override async Task<TeacherDto> GetById(string id)
 		{
-			return mapper.Map<Teacher, TeacherDto>(repository.GetById(id));
+			return mapper.Map<Teacher, TeacherDto>(await repository.GetById(id));
 		}
 
-		public override TeacherDto UpdateItem(string id, TeacherDto item)
+		public override async Task<TeacherDto> UpdateItem(string id, TeacherDto item)
 		{
-			return mapper.Map<Teacher, TeacherDto>(repository.UpdateItem(id, mapper.Map<TeacherDto, Teacher>(item)));
+			return mapper.Map<Teacher, TeacherDto>(await repository.UpdateItem(id, mapper.Map<TeacherDto, Teacher>(item)));
 		}
 	}
 }

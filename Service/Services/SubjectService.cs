@@ -23,29 +23,29 @@ namespace Service.Services
 			this.mapper = mapper;
 
 		}
-		public SubjectDto AddItem(SubjectDto item)
+		public async Task<SubjectDto> AddItem(SubjectDto item)
 		{
-			return mapper.Map<Subject, SubjectDto>(repository.AddItem(mapper.Map<SubjectDto, Subject>(item)));
+			return mapper.Map<Subject, SubjectDto>(await repository.AddItem(mapper.Map<SubjectDto, Subject>(item)));
 		}
 
-		public SubjectDto DeleteItem(int id)
+		public async Task<SubjectDto> DeleteItem(int id)
 		{
-			return mapper.Map<Subject, SubjectDto>(repository.DeleteItem(id));
+			return mapper.Map<Subject, SubjectDto>(await repository.DeleteItem(id));
 		}
 
-		public List<SubjectDto> GetAll()
+		public async Task<List<SubjectDto>> GetAll()
 		{
-			return mapper.Map<List<Subject>, List<SubjectDto>>(repository.GetAll());
+			return mapper.Map<List<Subject>, List<SubjectDto>>(await repository.GetAll());
 		}
 
-		public SubjectDto GetById(int id)
+		public async Task<SubjectDto> GetById(int id)
 		{
-			return mapper.Map<Subject, SubjectDto>(repository.GetById(id));
+			return mapper.Map<Subject, SubjectDto>(await repository.GetById(id));
 		}
 
-		public SubjectDto UpdateItem(int id, SubjectDto item)
+		public async Task<SubjectDto> UpdateItem(int id, SubjectDto item)
 		{
-			return mapper.Map<Subject, SubjectDto>(repository.UpdateItem(id, mapper.Map<SubjectDto, Subject>(item)));
+			return mapper.Map<Subject, SubjectDto>(await repository.UpdateItem(id, mapper.Map<SubjectDto, Subject>(item)));
 		}
 	}
 }
