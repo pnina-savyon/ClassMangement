@@ -10,13 +10,13 @@ namespace Service.Interfaces
 {
     public interface IStudentQueryLogic
     {
-        StudentDto GetByIdLogic(string id,Roles role, string userId);
+        Task<StudentDto> GetByIdLogic(string id,Roles role, string userId);
 
-        StudentDto DeleteLogic(string id,Roles role, string userId);
+        Task<StudentDto> DeleteLogic(string id,Roles role, string userId);
 
-        StudentConfidentialInfoDto UpdateItemForTeacher(string id, StudentConfidentialInfoDto value);
+        Task<StudentConfidentialInfoDto> UpdateItemForTeacher(string id, StudentConfidentialInfoDto value);
 
-        StudentConfidentialInfoDto UpdateLogicForTeacher(string id, string userId
+        Task<StudentConfidentialInfoDto> UpdateLogicForTeacher(string id, string userId
             , StudentConfidentialInfoDto value);
     }
 }
