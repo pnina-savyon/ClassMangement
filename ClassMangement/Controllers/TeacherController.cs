@@ -28,9 +28,9 @@ namespace ClassMangement.Controllers
         // GET: api/<TeacherController>
         [HttpGet]
         [Authorize(Roles = $"{nameof(Roles.Master)}")]
-        public ActionResult<List<TeacherDto>> Get()
+        public async Task<ActionResult<List<TeacherDto>>> Get()
         {
-            List<TeacherDto> teachers = service.GetAll();
+            List<TeacherDto> teachers = await service.GetAll();
             return Ok(teachers);
 
 		}
@@ -38,9 +38,9 @@ namespace ClassMangement.Controllers
 		// GET api/<TeacherController>/5
 		[HttpGet("{id}")]
 		[Authorize(Roles = $"{nameof(Roles.Master)}")]
-		public ActionResult<TeacherDto> Get(string id)
+		public async Task<ActionResult<TeacherDto>> Get(string id)
 		{
-            TeacherDto teacherDto = service.GetById(id);
+            TeacherDto teacherDto = await service.GetById(id);
 
             if(teacherDto == null)
                 return NotFound();
@@ -50,9 +50,9 @@ namespace ClassMangement.Controllers
 
 		// POST api/<TeacherController>
 		[HttpPost]
-        public ActionResult<TeacherDto> Post([FromForm] TeacherDto value)
+        public async Task<ActionResult<TeacherDto>> Post([FromForm] TeacherDto value)
 		{
-            TeacherDto created = service.AddItem(value);
+            TeacherDto created = await service.AddItem(value);
 
             if (created == null)
                 return BadRequest();
@@ -60,9 +60,9 @@ namespace ClassMangement.Controllers
             return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
         }
 		[HttpPost("login")]
-		public ActionResult<string> Login([FromBody] UserLogin value)
+		public async Task<ActionResult<string>> Login([FromBody] UserLogin value)
 		{
-            string token = securityServiceTeacher.Login(value);
+            string token = await securityServiceTeacher.Login(value);
             if (string.IsNullOrEmpty(token))
                 return Unauthorized();
 
@@ -71,7 +71,7 @@ namespace ClassMangement.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = $"{nameof(Roles.Master)},{nameof(Roles.Admin)}")]
-        public ActionResult<TeacherDto> Put(string id, [FromBody] TeacherDto value)
+        public async Task<ActionResult<TeacherDto>> Put(string id, [FromBody] TeacherDto value)
         {
             string userId = securityServiceTeacher.GetCurrentUser().Id;
             Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
@@ -81,7 +81,7 @@ namespace ClassMangement.Controllers
                 return Forbid(); 
             }
 
-            TeacherDto updated = service.UpdateItem(id, value);
+            TeacherDto updated = await service.UpdateItem(id, value);
 
             if (updated == null)
                 return NotFound(); 
@@ -93,7 +93,7 @@ namespace ClassMangement.Controllers
         [HttpDelete("{id}")]
         [Authorize]
         [Authorize(Roles = $"{nameof(Roles.Master)},{nameof(Roles.Admin)}")]
-        public ActionResult<TeacherDto> Delete(string id)
+        public async Task<ActionResult<TeacherDto>> Delete(string id)
 		{
             string userId = securityServiceTeacher.GetCurrentUser().Id;
             Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
@@ -103,7 +103,7 @@ namespace ClassMangement.Controllers
                 return Forbid();
             }
 
-            TeacherDto deleted = service.DeleteItem(id);
+            TeacherDto deleted = await service.DeleteItem(id);
 
             if (deleted == null)
                 return NotFound();

@@ -30,21 +30,22 @@ namespace ClassMangement.Controllers
         // GET: api/<StudentController>
         [HttpGet]
         [Authorize(Roles = $"{nameof(Roles.Master)}")]
-        public ActionResult<List<StudentDto>> Get()
+        public async Task<ActionResult<List<StudentDto>>> Get()
         {
-           List<StudentDto> students = service.GetAll();
+           List<StudentDto> students = await service.GetAll();
             return Ok(students);
         }
 
         // GET api/<StudentController>/5
         [HttpGet("{id}")]
         [Authorize]
-        public ActionResult<StudentDto> Get(string id)
+        public async Task<ActionResult<StudentDto>> Get(string id)
         {
             string userId = securityServiceTeacher.GetCurrentUser().Id;
             Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
 
-            var studentDto = serviceQueryLogic.GetByIdLogic(id, userRole, userId);
+            //
+            var studentDto = await serviceQueryLogic.GetByIdLogic(id, userRole, userId);
 
             if (studentDto == null)
                 return NotFound();
@@ -54,9 +55,9 @@ namespace ClassMangement.Controllers
 
         // POST api/<StudentController>
         [HttpPost]
-        public ActionResult<StudentDto> Post([FromForm] StudentDto value)
+        public async Task<ActionResult<StudentDto>> Post([FromForm] StudentDto value)
         {
-            StudentDto created = service.AddItem(value);
+            StudentDto created = await service.AddItem(value);
 
             if (created == null)
                 return BadRequest();
@@ -65,9 +66,9 @@ namespace ClassMangement.Controllers
         }
 
         [HttpPost("login")]
-        public ActionResult<string> Login([FromBody] UserLogin value)
+        public async Task<ActionResult<string>> Login([FromBody] UserLogin value)
         {
-            string token = securityServiceStudent.Login(value);
+            string token = await securityServiceStudent.Login(value);
             if (string.IsNullOrEmpty(token))
                 return Unauthorized();
 
@@ -77,7 +78,7 @@ namespace ClassMangement.Controllers
         // PUT api/<StudentController>/5
         [HttpPut("{id}")]
         [Authorize(Roles = $"{nameof(Roles.AuthorizedUser)},{nameof(Roles.User)}")]
-        public ActionResult<StudentDto> Put(string id, [FromBody] StudentDto value)
+        public async Task<ActionResult<StudentDto>> Put(string id, [FromBody] StudentDto value)
         {
             string userId = securityServiceTeacher.GetCurrentUser().Id;
             Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
@@ -87,7 +88,7 @@ namespace ClassMangement.Controllers
                 return Forbid();
             }
 
-            StudentDto updated = service.UpdateItem(id, value);
+            StudentDto updated = await service.UpdateItem(id, value);
 
             if (updated == null)
                 return NotFound();
@@ -97,11 +98,11 @@ namespace ClassMangement.Controllers
 
         [HttpPut("putTeacher")]
         [Authorize(Roles = $"{nameof(Roles.Admin)}")]
-        public ActionResult<StudentConfidentialInfoDto> PutForTeacher(string id, [FromBody] StudentConfidentialInfoDto value)
+        public async Task<ActionResult<StudentConfidentialInfoDto>> PutForTeacher(string id, [FromBody] StudentConfidentialInfoDto value)
         {
             string userId = securityServiceTeacher.GetCurrentUser().Id;
 
-            StudentConfidentialInfoDto updated = serviceQueryLogic.UpdateLogicForTeacher(id, userId, value);
+            StudentConfidentialInfoDto updated = await serviceQueryLogic.UpdateLogicForTeacher(id, userId, value);
 
             if (updated == null)
                 return NotFound();
@@ -112,12 +113,12 @@ namespace ClassMangement.Controllers
         // DELETE api/<StudentController>/5
         [HttpDelete("{id}")]
         [Authorize]
-        public ActionResult<StudentDto> Delete(string id)
+        public async Task<ActionResult<StudentDto>> Delete(string id)
         {
             string userId = securityServiceTeacher.GetCurrentUser().Id;
             Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
 
-            StudentDto deleted = serviceQueryLogic.DeleteLogic(id, userRole, userId);
+            StudentDto deleted = await serviceQueryLogic.DeleteLogic(id, userRole, userId);
 
             if (deleted == null)
                 return NotFound();
