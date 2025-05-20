@@ -1,4 +1,5 @@
-﻿using Repository.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Entities;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -16,40 +17,40 @@ namespace Repository.Repositories
 		{
 			this.context = context;
 		}
-		public Survey AddItem(Survey item)
+		public async Task<Survey> AddItem(Survey item)
 		{
-			this.context.Surveys.Add(item);
-			this.context.Save();
+			await this.context.Surveys.AddAsync(item);
+			await this.context.Save();
 			return item;
 		}
 
-		public Survey DeleteItem(int id)
+		public async Task<Survey> DeleteItem(int id)
 		{
-			Survey item = GetById(id);
+			Survey item = await GetById(id);
 			this.context.Surveys.Remove(item);
-			this.context.Save();
+			await this.context.Save();
 			return item;
 		}
 
-		public List<Survey> GetAll()
+		public async Task<List<Survey>> GetAll()
 		{
-			return this.context.Surveys.ToList();
+			return await this.context.Surveys.ToListAsync();
 		}
 
-		public Survey GetById(int id)
+		public async Task<Survey> GetById(int id)
 		{
-			return this.context.Surveys.FirstOrDefault(s => s.Id.Equals(id));
+			return await this.context.Surveys.FirstOrDefaultAsync(s => s.Id.Equals(id));
 		}
 
-		public Survey UpdateItem(int id, Survey item)
+		public async Task<Survey> UpdateItem(int id, Survey item)
 		{
 			//האם לעדכן גם את ה-class כולו???
-			Survey survey = GetById(id);
+			Survey survey = await GetById(id);
 			survey.ClassId = item.ClassId;
 			survey.QuestionContent = item.QuestionContent;
 			survey.Answers = item.Answers;
 
-			this.context.Save();
+			await this.context.Save();
 			return survey;
 		}
 	}

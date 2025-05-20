@@ -1,4 +1,5 @@
-﻿using Repository.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Entities;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -16,36 +17,36 @@ namespace Repository.Repositories
 		{
 			this.context = context;
 		}
-		public Subject AddItem(Subject item)
+		public async Task<Subject> AddItem(Subject item)
 		{
-			this.context.Subjects.Add(item);
-			this.context.Save();
+			await this.context.Subjects.AddAsync(item);
+			await this.context.Save();
 			return item;
 		}
 
-		public Subject DeleteItem(int id)
+		public async Task<Subject> DeleteItem(int id)
 		{
-			Subject item = GetById(id);
+			Subject item = await GetById(id);
 			this.context.Subjects.Remove(item);
-			this.context.Save();
+			await this.context.Save();
 			return item;
 		}
 
-		public List<Subject> GetAll()
+		public async Task<List<Subject>> GetAll()
 		{
-			return this.context.Subjects.ToList();
+			return await this.context.Subjects.ToListAsync();
 		}
 
-		public Subject GetById(int id)
+		public async Task<Subject> GetById(int id)
 		{
-			return this.context.Subjects.FirstOrDefault(s => s.Id == id);
+			return await this.context.Subjects.FirstOrDefaultAsync(s => s.Id == id);
 		}
 
-		public Subject UpdateItem(int id, Subject item)
+		public async Task<Subject> UpdateItem(int id, Subject item)
 		{
-			Subject subject = GetById(id);
+			Subject subject = await GetById(id);
 			subject.Name = item.Name;
-			this.context.Save();
+			await this.context.Save();
 			return subject;
 		}
 	}

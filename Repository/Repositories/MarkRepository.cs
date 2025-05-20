@@ -1,4 +1,5 @@
-﻿using Repository.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Entities;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -16,37 +17,37 @@ namespace Repository.Repositories
 		{
 			this.context = context;
 		}
-		public Mark AddItem(Mark item)
+		public async Task<Mark> AddItem(Mark item)
 		{
-			this.context.Marks.Add(item);
-			this.context.Save();
+			await this.context.Marks.AddAsync(item);
+			await this.context.Save();
 			return item;
 		}
 
-		public Mark DeleteItem(int id)
+		public async Task<Mark> DeleteItem(int id)
 		{
-			Mark item = GetById(id);
+			Mark item = await GetById(id);
 			this.context.Marks.Remove(item);
-			this.context.Save();
+			await this.context.Save();
 			return item;
 		}
 
-		public List<Mark> GetAll()
+		public async Task<List<Mark>> GetAll()
 		{
-			return this.context.Marks.ToList();
+			return await this.context.Marks.ToListAsync();
 		}
 
-		public Mark GetById(int id)
+		public async Task<Mark> GetById(int id)
 		{
-			return this.context.Marks.FirstOrDefault(x => x.Id == id);
+			return await this.context.Marks.FirstOrDefaultAsync(x => x.Id == id);
 		}
 
-		public Mark UpdateItem(int id, Mark item)
+		public async Task<Mark> UpdateItem(int id, Mark item)
 		{
-			Mark mark = GetById(id);
+			Mark mark = await GetById(id);
 			mark.MarkPercent = item.MarkPercent;
 			mark.DateOfTest = item.DateOfTest;
-			this.context.Save();
+			await this.context.Save();
 			return mark;
 		}
 	}
