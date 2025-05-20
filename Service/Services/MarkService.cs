@@ -21,29 +21,29 @@ namespace Service.Services
             this.mapper = mapper;
 
         }
-        public MarkDto AddItem(MarkDto item)
+        public async Task<MarkDto> AddItem(MarkDto item)
         {
-            return mapper.Map<Mark, MarkDto>(repository.AddItem(mapper.Map<MarkDto, Mark>(item)));
+            return mapper.Map<Mark, MarkDto>(await repository.AddItem(mapper.Map<MarkDto, Mark>(item)));
         }
 
-        public MarkDto DeleteItem(int id)
+        public async Task<MarkDto> DeleteItem(int id)
         {
-            return mapper.Map<Mark, MarkDto>(repository.DeleteItem(id));
+            return mapper.Map<Mark, MarkDto>(await repository.DeleteItem(id));
         }
 
-        public List<MarkDto> GetAll()
+        public async Task<List<MarkDto>> GetAll()
         {
-            return mapper.Map<List<Mark>, List<MarkDto>>(repository.GetAll());
+            return mapper.Map<List<Mark>, List<MarkDto>>(await repository.GetAll());
         }
 
-        public MarkDto GetById(int id)
+        public async Task<MarkDto> GetById(int id)
         {
-            return mapper.Map<Mark, MarkDto>(repository.GetById(id));
+            return mapper.Map<Mark, MarkDto>(await repository.GetById(id));
         }
 
-        public MarkDto UpdateItem(int id, MarkDto item)
+        public async Task<MarkDto> UpdateItem(int id, MarkDto item)
         {
-            return mapper.Map<Mark, MarkDto>(repository.UpdateItem(id, mapper.Map<MarkDto, Mark>(item)));
+            return mapper.Map<Mark, MarkDto>(await repository.UpdateItem(id, mapper.Map<MarkDto, Mark>(item)));
         }
     }
 }

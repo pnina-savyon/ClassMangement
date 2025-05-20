@@ -22,29 +22,29 @@ namespace Service.Services
 			this.mapper = mapper;
 
 		}
-		public ChairDto AddItem(ChairDto item)
+		public async Task<ChairDto> AddItem(ChairDto item)
 		{
-			return mapper.Map<Chair, ChairDto>(repository.AddItem(mapper.Map<ChairDto, Chair>(item)));
+			return mapper.Map<Chair, ChairDto>(await repository.AddItem(mapper.Map<ChairDto, Chair>(item)));
 		}
 
-		public ChairDto DeleteItem(int id)
+		public async Task<ChairDto> DeleteItem(int id)
 		{
-			return mapper.Map<Chair, ChairDto>(repository.DeleteItem(id));
+			return mapper.Map<Chair, ChairDto>(await repository.DeleteItem(id));
 		}
 
-		public List<ChairDto> GetAll()
+		public async Task<List<ChairDto>> GetAll()
 		{
-			return mapper.Map<List<Chair>, List<ChairDto>>(repository.GetAll());
+			return mapper.Map<List<Chair>, List<ChairDto>>(await repository.GetAll());
 		}
 
-		public ChairDto GetById(int id)
+		public async Task<ChairDto> GetById(int id)
 		{
-			return mapper.Map<Chair, ChairDto>(repository.GetById(id));
+			return mapper.Map<Chair, ChairDto>(await repository.GetById(id));
 		}
 
-		public ChairDto UpdateItem(int id, ChairDto item)
+		public async Task<ChairDto> UpdateItem(int id, ChairDto item)
 		{
-			return mapper.Map<Chair, ChairDto>(repository.UpdateItem(id, mapper.Map<ChairDto, Chair>(item)));
+			return mapper.Map<Chair, ChairDto>(await repository.UpdateItem(id, mapper.Map<ChairDto, Chair>(item)));
 		}
 	}
 }
