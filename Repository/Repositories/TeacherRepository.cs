@@ -1,4 +1,5 @@
-﻿using Repository.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Entities;
 using Repository.Entities.Enums;
 using Repository.Interfaces;
 using System;
@@ -17,38 +18,38 @@ namespace Repository.Repositories
 		{
 			this.context = context;
 		}
-		public override Teacher AddItem(Teacher item)
+		public override async Task<Teacher> AddItem(Teacher item)
 		{
-			this.context.Teachers.Add(item);
-			this.context.Save();
+            await this.context.Teachers.AddAsync(item);
+            await this.context.Save();
 			return item;
 		}	
-		public override Teacher DeleteItem(string id)
+		public override async Task<Teacher> DeleteItem(string id)
 		{
-			Teacher item = GetById(id);
+			Teacher item = await GetById(id);
 			if(item !=null)
 			{
                 this.context.Teachers.Remove(item);
-                this.context.Save();
+                await this.context.Save();
             }		
 			return item;
 		}
 
 		
-		public override List<Teacher> GetAll()
+		public override async Task<List<Teacher>> GetAll()
 		{
-			return this.context.Teachers.ToList();
+            return await this.context.Teachers.ToListAsync();
 		}
 
 		
-		public override Teacher GetById(string id)
+		public override async Task<Teacher> GetById(string id)
 		{
-			return this.context.Teachers.FirstOrDefault(t => t.Id.Equals(id));
+			return await this.context.Teachers.FirstOrDefaultAsync(t => t.Id.Equals(id));
 		}
 
-		public override Teacher UpdateItem(string id, Teacher item)
+		public override async Task<Teacher> UpdateItem(string id, Teacher item)
 		{
-			Teacher teacher = GetById(id);
+			Teacher teacher = await GetById(id);
 
             if (teacher == null)
 				return null;
@@ -61,7 +62,7 @@ namespace Repository.Repositories
 			teacher.Role = item.Role != Roles.None ? item.Role : teacher.Role;
 			teacher.Phone = item.Phone != null ? item.Phone : teacher.Phone;
 
-			this.context.Save();
+			await this.context.Save();
 			return teacher;
 		}
 

@@ -1,4 +1,5 @@
-﻿using Repository.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Entities;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -17,41 +18,41 @@ namespace Repository.Repositories
 		{
 			this.context = context;
 		}
-		public Chair AddItem(Chair item)
+		public async Task<Chair> AddItem(Chair item)
 		{
-			this.context.Chairs.Add(item);
-			this.context.Save();
+			await this.context.Chairs.AddAsync(item);
+			await this.context.Save();
 			return item;
 		}
 
-		public Chair DeleteItem(int id)
+		public async Task<Chair> DeleteItem(int id)
 		{
-			Chair item = GetById(id);
+			Chair item = await GetById(id);
 			this.context.Chairs.Remove(item);
-			this.context.Save();
+			await this.context.Save();
 			return item;
 		}
 
-		public List<Chair> GetAll()
+		public async Task<List<Chair>> GetAll()
 		{
-			return this.context.Chairs.ToList();
+			return await this.context.Chairs.ToListAsync();
 		}
 
-		public Chair GetById(int id)
+		public async Task<Chair> GetById(int id)
 		{
-			return this.context.Chairs.FirstOrDefault(x => x.Id == id);
+			return await this.context.Chairs.FirstOrDefaultAsync(x => x.Id == id);
 		}
 
-		public Chair UpdateItem(int id, Chair item)
+		public async Task<Chair> UpdateItem(int id, Chair item)
 		{
-			Chair chair = GetById(id);
+			Chair chair = await GetById(id);
 			chair.StudentId = item.StudentId;
 			chair.CurrentStudent = item.CurrentStudent;
 			chair.Row = item.Row;
 			chair.Column = item.Column;
 			chair.IsNearTheDoor = item.IsNearTheDoor;
 			chair.IsNearTheWindow = item.IsNearTheWindow;
-			this.context.Save();
+			await this.context.Save();
 			return chair;
 		}
 	}

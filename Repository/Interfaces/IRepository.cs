@@ -8,12 +8,10 @@ namespace Repository.Interfaces
 {
 	public interface IRepository<T, TKey>
 	{
-		T GetById(TKey id);
-		List<T> GetAll();
-
-		T AddItem(T item);
-
-		T DeleteItem(TKey id);
-		T UpdateItem(TKey id, T item);
+		Task<T> GetById(TKey id);
+        Task<List<T>> GetAll();
+        Task<T> AddItem(T item);
+        Task<T> DeleteItem(TKey id);
+        Task<T> UpdateItem(TKey id, T item);
 	}
 }

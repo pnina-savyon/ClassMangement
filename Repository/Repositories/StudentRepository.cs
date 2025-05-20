@@ -17,41 +17,41 @@ namespace Repository.Repositories
         {
             this.context = context;
         }
-        public override Student AddItem(Student item)
+        public override async Task<Student> AddItem(Student item)
         {
-            this.context.Students.Add(item);
-            this.context.Save();
+            await this.context.Students.AddAsync(item);
+            await this.context.Save();
             return item;
         }
 
-        public override Student DeleteItem(string id)
+        public override async Task<Student> DeleteItem(string id)
         {
-            Student item = GetById(id);
+            Student item = await GetById(id);
             if (item != null)
             {
                 this.context.Students.Remove(item);
-                this.context.Save();
+                await this.context.Save();
             }
             return item;
         }
 
-        public override List<Student> GetAll()
+        public override async Task<List<Student>> GetAll()
         {
-            return this.context.Students.ToList();
+            return await this.context.Students.ToListAsync();
         }
 
-        public override Student GetById(string id)
+        public override async Task<Student> GetById(string id)
         {
-            return this.context.Students
+            return await this.context.Students
                 .Include(s => s.Class)
                 .ThenInclude(c => c.Teacher)
-                .FirstOrDefault(s => s.Id == id);
+                .FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public override Student UpdateItem(string id, Student item)
+        public override async Task<Student> UpdateItem(string id, Student item)
         {
 
-            Student student = GetById(id);
+            Student student = await GetById(id);
             if (student == null)
                 return null;
             student.Password = item.Password != null ? item.Password : student.Password;
@@ -70,7 +70,7 @@ namespace Repository.Repositories
             student.HistoryChairs = item.HistoryChairs != null ? item.HistoryChairs : student.HistoryChairs;
             student.DailyAttendances = item.DailyAttendances != null ? item.DailyAttendances : student.DailyAttendances;
 
-            this.context.Save();
+            await this.context.Save();
             return student;
         }
     }

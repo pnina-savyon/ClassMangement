@@ -47,10 +47,10 @@ namespace Mock
 				.OnDelete(DeleteBehavior.Restrict);
 		}
 
-		public void Save()
+		public async Task Save()
 		{
-			SaveChanges();
-		}
+            await SaveChangesAsync();
+        }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{

@@ -1,4 +1,5 @@
-﻿using Repository.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Entities;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -16,34 +17,34 @@ namespace Repository.Repositories
 		{
 			this.context = context;
 		}
-		public Class AddItem(Class item)
+		public async Task<Class> AddItem(Class item)
 		{
-			this.context.Classes.Add(item);
-			this.context.Save();
+			await this.context.Classes.AddAsync(item);
+			await this.context.Save();
 			return item;
 		}
 
-		public Class DeleteItem(int id)
+		public async Task<Class> DeleteItem(int id)
 		{
-			Class item = GetById(id);
+			Class item = await GetById(id);
 			this.context.Classes.Remove(item);
-			this.context.Save();
+			await this.context.Save();
 			return item;
 		}
 
-		public List<Class> GetAll()
+		public async Task<List<Class>> GetAll()
 		{
-			return this.context.Classes.ToList();
+			return await this.context.Classes.ToListAsync();
 		}
 
-		public Class GetById(int id)
+		public async Task<Class> GetById(int id)
 		{
-			return this.context.Classes.FirstOrDefault(c => c.Id.Equals(id));
+			return await this.context.Classes.FirstOrDefaultAsync(c => c.Id.Equals(id));
 		}
 
-		public Class UpdateItem(int id, Class item)
+		public async Task<Class> UpdateItem(int id, Class item)
 		{
-			Class classItem = GetById(id);
+			Class classItem = await GetById(id);
 			classItem.Password = item.Password;
 			classItem.Name = item.Name;
 			classItem.CountOfStudents = item.CountOfStudents;
@@ -51,7 +52,7 @@ namespace Repository.Repositories
 			classItem.Surveys = item.Surveys;
 			classItem.TeacherId = item.TeacherId;
 			classItem.Chairs = item.Chairs;
-			this.context.Save();
+			await this.context.Save();
 			return classItem;
 		}
 	}

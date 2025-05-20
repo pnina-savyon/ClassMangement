@@ -20,6 +20,6 @@ namespace Repository.Interfaces
 		public DbSet<Survey> Surveys { get; set; }
 		public DbSet<SurveyAnswer> SurveyAnswers { get; set; }
 
-		public void Save();
+		public Task Save();
 	}
 }
