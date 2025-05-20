@@ -8,10 +8,10 @@ namespace Common.Dto
 {
 	public class SurveyAnswerDto
 	{
-		public int Id { get; set; }
+		public int? Id { get; set; }
 
-		public int CountOfVotes { get; set; }
+		public int? CountOfVotes { get; set; }
 
-		public string Content { get; set; }
+		public string? Content { get; set; }
 	}
 }
