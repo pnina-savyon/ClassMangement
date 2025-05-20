@@ -27,8 +27,11 @@ namespace Repository.Repositories
         public override Student DeleteItem(string id)
         {
             Student item = GetById(id);
-            this.context.Students.Remove(item);
-            this.context.Save();
+            if (item != null)
+            {
+                this.context.Students.Remove(item);
+                this.context.Save();
+            }
             return item;
         }
 
@@ -49,7 +52,9 @@ namespace Repository.Repositories
         {
 
             Student student = GetById(id);
-            student.Password = item.Password !=null ?  item.Password : student.Password;
+            if (student == null)
+                return null;
+            student.Password = item.Password != null ? item.Password : student.Password;
             student.Name = item.Name != null ? item.Name : student.Name; ;
             student.Marks = item.Marks != null ? item.Marks : student.Marks;
             student.ChairId = item.ChairId != 0 ? item.ChairId : student.ChairId;

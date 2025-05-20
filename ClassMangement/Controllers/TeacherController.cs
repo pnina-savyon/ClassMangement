@@ -28,34 +28,50 @@ namespace ClassMangement.Controllers
         // GET: api/<TeacherController>
         [HttpGet]
         [Authorize(Roles = $"{nameof(Roles.Master)}")]
-        public List<TeacherDto> Get()
+        public ActionResult<List<TeacherDto>> Get()
         {
-			return service.GetAll();
+            List<TeacherDto> teachers = service.GetAll();
+            return Ok(teachers);
+
 		}
 
 		// GET api/<TeacherController>/5
 		[HttpGet("{id}")]
 		[Authorize(Roles = $"{nameof(Roles.Master)}")]
-		public TeacherDto Get(string id)
+		public ActionResult<TeacherDto> Get(string id)
 		{
-			return service.GetById(id);
-		}
+            TeacherDto teacherDto = service.GetById(id);
+
+            if(teacherDto == null)
+                return NotFound();
+
+            return Ok(teacherDto);
+        }
 
 		// POST api/<TeacherController>
 		[HttpPost]
-        public TeacherDto Post([FromForm] TeacherDto value)
+        public ActionResult<TeacherDto> Post([FromForm] TeacherDto value)
 		{
-			return service.AddItem(value);
-		}
+            TeacherDto created = service.AddItem(value);
+
+            if (created == null)
+                return BadRequest();
+
+            return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+        }
 		[HttpPost("login")]
-		public string Login([FromBody] UserLogin value)
+		public ActionResult<string> Login([FromBody] UserLogin value)
 		{
-			return securityServiceTeacher.Login(value);
-		}
+            string token = securityServiceTeacher.Login(value);
+            if (string.IsNullOrEmpty(token))
+                return Unauthorized();
+
+            return Ok(token);
+        }
 
         [HttpPut("{id}")]
         [Authorize(Roles = $"{nameof(Roles.Master)},{nameof(Roles.Admin)}")]
-        public IActionResult Put(string id, [FromBody] TeacherDto value)
+        public ActionResult<TeacherDto> Put(string id, [FromBody] TeacherDto value)
         {
             string userId = securityServiceTeacher.GetCurrentUser().Id;
             Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
@@ -77,7 +93,7 @@ namespace ClassMangement.Controllers
         [HttpDelete("{id}")]
         [Authorize]
         [Authorize(Roles = $"{nameof(Roles.Master)},{nameof(Roles.Admin)}")]
-        public IActionResult Delete(string id)
+        public ActionResult<TeacherDto> Delete(string id)
 		{
             string userId = securityServiceTeacher.GetCurrentUser().Id;
             Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
