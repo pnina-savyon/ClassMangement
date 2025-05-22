@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class StudentService : UserService<Student, StudentDto>, IStudentQueryLogic
+    public class StudentService : UserService<Student, StudentDto>, IQueryLogicUpdate<StudentConfidentialInfoDto,string>,IQueryLogicForFewFunctions<StudentDto,string>
     {
         //service מכיר גם את common וגם , ריפוזיטורי?
         //לשנות את סדר הכרת השכבות - קומון, ריפו, סרביס
@@ -95,17 +95,14 @@ namespace Service.Services
             return mapper.Map<Student, StudentDto>(await repository.UpdateItem(id, mapper.Map<StudentDto, Student>(item)));
         }
 
-        public async Task<StudentConfidentialInfoDto> UpdateItemForTeacher(string id, StudentConfidentialInfoDto item)
-        {
-            return mapper.Map<Student, StudentConfidentialInfoDto>(await repository.UpdateItem(id, mapper.Map<StudentConfidentialInfoDto, Student>(item)));
-        }
 
-        public async Task<StudentConfidentialInfoDto> UpdateLogicForTeacher(string id, string userId, StudentConfidentialInfoDto value)
+        public async Task<StudentConfidentialInfoDto> UpdateLogic(string id, string userId, StudentConfidentialInfoDto value)
         {
             if (!await IsStudentBelongsToTeacher(id, userId))
                 return null;
 
-            return await UpdateItemForTeacher(id,value);
-        }
-    }
+			return mapper.Map<Student, StudentConfidentialInfoDto>(await repository.UpdateItem(id, mapper.Map<StudentConfidentialInfoDto, Student>(value)));
+
+		}
+	}
 }

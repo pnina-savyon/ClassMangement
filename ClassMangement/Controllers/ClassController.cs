@@ -1,6 +1,8 @@
 ﻿using Common.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repository.Entities;
+using Repository.Entities.Enums;
 using Service.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -12,39 +14,51 @@ namespace ClassMangement.Controllers
     public class ClassController : ControllerBase
     {
         private readonly IService<ClassDto, int> service;
-        private readonly IStudentQueryLogic serviceQueryLogic;
+        private readonly IQueryLogicGeneric<ClassDto, int> serviceQueryLogicGeneric;
         private readonly ISecurity<Student, UserLogin> securityServiceStudent;
         private readonly ISecurity<Teacher, UserLogin> securityServiceTeacher;
         private readonly IConfiguration config;
 
-        public ClassController(IService<ClassDto, int> service, IConfiguration config, ISecurity<Teacher, UserLogin> securityServiceTeacher, ISecurity<Student, UserLogin> securityServiceStudent, IStudentQueryLogic serviceQueryLogic)
+        public ClassController(IService<ClassDto, int> service, IConfiguration config, ISecurity<Teacher, UserLogin> securityServiceTeacher, ISecurity<Student, UserLogin> securityServiceStudent,
+            IQueryLogicGeneric<ClassDto, int> serviceQueryLogic)
         {
             this.service = service;
             this.config = config;
             this.securityServiceStudent = securityServiceStudent;
             this.securityServiceTeacher = securityServiceTeacher;
-            this.serviceQueryLogic = serviceQueryLogic;
+            this.serviceQueryLogicGeneric = serviceQueryLogicGeneric;
         }
         // GET: api/<ClassController>
         [HttpGet]
-        public ActionResult<List<ClassDto>> Get()
+        [Authorize(Roles = $"{nameof(Roles.Master)}")]
+        public async Task<ActionResult<List<ClassDto>>> Get()
         {
-            List<ClassDto> classes = service.GetAll();
+            List<ClassDto> classes = await service.GetAll();
             return Ok(classes);
-        }
 
+        }
         // GET api/<ClassController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        [Authorize]
+        public async Task<ActionResult<ClassDto>> Get(int id)
         {
-            return "value";
+            string userId = securityServiceTeacher.GetCurrentUser().Id;
+            Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
+
+            //
+            ClassDto classDto = await serviceQueryLogicGeneric.GetByIdLogic(id, userRole, userId);
+
+            if (classDto == null)
+                return NotFound();
+
+            return Ok(classDto);
         }
 
         // POST api/<ClassController>
         [HttpPost]
-        public ActionResult<ClassDto> Post([FromForm] ClassDto value)
+        public async Task<ActionResult<ClassDto>> Post([FromForm] ClassDto value)
         {
-            ClassDto created = service.AddItem(value);
+            ClassDto created = await service.AddItem(value);
 
             if (created == null)
                 return BadRequest();
@@ -54,14 +68,33 @@ namespace ClassMangement.Controllers
 
         // PUT api/<ClassController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+		[Authorize(Roles = $"{nameof(Roles.Admin)}")]
+		public async Task<ActionResult<ClassDto>> Put(int id, [FromBody] ClassDto value)
         {
-        }
+			string userId = securityServiceTeacher.GetCurrentUser().Id;
+
+			ClassDto updated = await serviceQueryLogicGeneric.UpdateLogic(id,userId, value);
+
+			if (updated == null)
+				return NotFound();
+
+			return Ok(updated);
+		}
 
         // DELETE api/<ClassController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+		[Authorize(Roles = $"{nameof(Roles.Admin)}")]
+		public async Task<ActionResult<ClassDto>> Delete(int id)
         {
-        }
+			string userId = securityServiceTeacher.GetCurrentUser().Id;
+			Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
+
+			ClassDto updated = await serviceQueryLogicGeneric.DeleteLogic(id, userRole, userId);
+
+			if (updated == null)
+				return NotFound();
+
+			return Ok(updated);
+		}
     }
 }

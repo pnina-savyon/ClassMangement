@@ -31,18 +31,24 @@ namespace Service.Services
 			services.AddScoped<IService<SurveyDto, int>, SurveyService>();
 			services.AddScoped<ISecurity<Teacher, UserLogin>, SecurityService<Teacher,TeacherDto>>();
             services.AddScoped<ISecurity<Student, UserLogin>, SecurityService<Student, StudentDto>>();
-            services.AddScoped<IStudentQueryLogic, StudentService>();
 
-            //services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService>();
+			//
+            services.AddScoped<IQueryLogicUpdate<StudentConfidentialInfoDto,string>, StudentService>();
+			services.AddScoped<IQueryLogicForFewFunctions<StudentDto,string>, StudentService>();
 
-            //services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService<User, UserDto>>();
+			services.AddScoped<IQueryLogicGeneric<ClassDto, int>, ClassService>();
 
 
-            //
-            //services.AddScoped<IService<UserDto, string>, UserService>();
+			//services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService>();
 
-            //...כאן נגדיר את תלויות הservice
-            services.AddAutoMapper(typeof(DtoEntityMapper));
+			//services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService<User, UserDto>>();
+
+
+			//
+			//services.AddScoped<IService<UserDto, string>, UserService>();
+
+			//...כאן נגדיר את תלויות הservice
+			services.AddAutoMapper(typeof(DtoEntityMapper));
 			return services;
 		}
 	}

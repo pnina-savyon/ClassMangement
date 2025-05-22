@@ -15,5 +15,6 @@ namespace Service.Interfaces
 
 		Task<T> DeleteItem(TKey id);
 		Task<T> UpdateItem(TKey id, T item);
+
 	}
 }

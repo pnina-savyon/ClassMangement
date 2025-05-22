@@ -13,19 +13,22 @@ namespace ClassMangement.Controllers
     public class StudentController : ControllerBase
     {
         private readonly IService<StudentDto, string> service;
-        private readonly IStudentQueryLogic serviceQueryLogic;
-        private readonly ISecurity<Student, UserLogin> securityServiceStudent;
+        private readonly IQueryLogicForFewFunctions<StudentDto,string> serviceQueryLogicForFewFunctions;
+		private readonly IQueryLogicUpdate<StudentConfidentialInfoDto, string> serviceQueryLogicUpdate;
+		private readonly ISecurity<Student, UserLogin> securityServiceStudent;
         private readonly ISecurity<Teacher, UserLogin> securityServiceTeacher;
         private readonly IConfiguration config;
 
-        public StudentController(IService<StudentDto, string> service, IConfiguration config, ISecurity<Teacher, UserLogin> securityServiceTeacher, ISecurity<Student, UserLogin> securityServiceStudent, IStudentQueryLogic serviceQueryLogic)
+        public StudentController(IService<StudentDto, string> service, IConfiguration config, ISecurity<Teacher, UserLogin> securityServiceTeacher, ISecurity<Student, UserLogin> securityServiceStudent,
+			IQueryLogicUpdate<StudentConfidentialInfoDto, string> serviceQueryLogicUpdate, IQueryLogicForFewFunctions<StudentDto, string> serviceQueryLogicForFewFunctions)
         {
             this.service = service;
             this.config = config;
             this.securityServiceStudent = securityServiceStudent;
             this.securityServiceTeacher = securityServiceTeacher;
-            this.serviceQueryLogic = serviceQueryLogic;
-        }
+            this.serviceQueryLogicUpdate = serviceQueryLogicUpdate;
+            this.serviceQueryLogicForFewFunctions = serviceQueryLogicForFewFunctions;
+		}
 
         // GET: api/<StudentController>
         [HttpGet]
@@ -45,7 +48,7 @@ namespace ClassMangement.Controllers
             Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
 
             //
-            var studentDto = await serviceQueryLogic.GetByIdLogic(id, userRole, userId);
+            StudentDto studentDto = await serviceQueryLogicForFewFunctions.GetByIdLogic(id, userRole, userId);
 
             if (studentDto == null)
                 return NotFound();
@@ -102,7 +105,7 @@ namespace ClassMangement.Controllers
         {
             string userId = securityServiceTeacher.GetCurrentUser().Id;
 
-            StudentConfidentialInfoDto updated = await serviceQueryLogic.UpdateLogicForTeacher(id, userId, value);
+            StudentConfidentialInfoDto updated = await serviceQueryLogicUpdate.UpdateLogic(id, userId, value);
 
             if (updated == null)
                 return NotFound();
@@ -118,7 +121,7 @@ namespace ClassMangement.Controllers
             string userId = securityServiceTeacher.GetCurrentUser().Id;
             Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
 
-            StudentDto deleted = await serviceQueryLogic.DeleteLogic(id, userRole, userId);
+            StudentDto deleted = await serviceQueryLogicForFewFunctions.DeleteLogic(id, userRole, userId);
 
             if (deleted == null)
                 return NotFound();
