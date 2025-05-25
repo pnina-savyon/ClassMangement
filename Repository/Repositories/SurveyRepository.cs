@@ -39,7 +39,10 @@ namespace Repository.Repositories
 
 		public async Task<Survey> GetById(int id)
 		{
-			return await this.context.Surveys.FirstOrDefaultAsync(s => s.Id.Equals(id));
+			return await this.context.Surveys
+				.Include(s => s.Class)
+				.ThenInclude(c => c.TeacherId)
+				.FirstOrDefaultAsync(c => c.Id.Equals(id));
 		}
 
 		public async Task<Survey> UpdateItem(int id, Survey item)
