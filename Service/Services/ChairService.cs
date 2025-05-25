@@ -19,21 +19,21 @@ namespace Service.Services
 
 		private readonly IRepository<Chair, int> repository;
 		private readonly IMapper mapper;
-		public ChairService(IRepository<Chair, int> repository, IMapper mapper)
+        private readonly IRepositoryAllById<Chair, int> repositoryAllById;
+
+        public ChairService(IRepository<Chair, int> repository, IMapper mapper, IRepositoryAllById<Chair, int> repositoryAllById)
 		{
 			this.repository = repository;
 			this.mapper = mapper;
-		}
-		public async Task<ChairDto> AddItem(ChairDto item)
+            this.repositoryAllById = repositoryAllById;
+        }
+        public async Task<ChairDto> AddItem(ChairDto item)
 		{
 			return mapper.Map<Chair, ChairDto>(await repository.AddItem(mapper.Map<ChairDto, Chair>(item)));
 		}
         public async Task<List<ChairDto>> AllChairsOfClass(int classId, Roles role, string userId)
         {
-            List<Chair> chairs = (await repository.GetAll())
-                .Where(ch => ch.ClassId == classId)
-                //
-                .ToList();
+            List<Chair> chairs = await repositoryAllById.GetAllItemOfId(classId);
 
             if (!chairs.Any())
                 return null;

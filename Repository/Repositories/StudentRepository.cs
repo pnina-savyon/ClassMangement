@@ -9,13 +9,14 @@ using System.Threading.Tasks;
 
 namespace Repository.Repositories
 {
-    public class StudentRepository : UserRepository<Student>
+    public class StudentRepository : UserRepository<Student>, IRepositoryAllById<Student, int>
     {
         private readonly IContext context;
 
         public StudentRepository(IContext context)
         {
             this.context = context;
+
         }
         public override async Task<Student> AddItem(Student item)
         {
@@ -38,7 +39,14 @@ namespace Repository.Repositories
         public override async Task<List<Student>> GetAll()
         {
             return await this.context.Students
+                .ToListAsync();
+        }
+
+        public async Task<List<Student>> GetAllItemOfId(int id)
+        {
+            return await context.Students
                 .Include(s => s.Class)
+                .Where(s => s.ClassId == id)
                 .ToListAsync();
         }
 

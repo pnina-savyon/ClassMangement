@@ -17,12 +17,14 @@ namespace Service.Services
     public class StudentService : UserService<Student, StudentDto>, IQueryLogicUpdate<StudentConfidentialInfoDto,string>,
         IQueryLogicForFewFunctions<StudentDto,string>, IServiceStudent
     {
+        private readonly IRepositoryAllById<Student, int> repositoryAllById;
+
         //service מכיר גם את common וגם , ריפוזיטורי?
         //לשנות את סדר הכרת השכבות - קומון, ריפו, סרביס
-        public StudentService(IRepository<Student, string> repository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IConfiguration config)
+        public StudentService(IRepository<Student, string> repository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IConfiguration config, IRepositoryAllById<Student, int> repositoryAllById)
             : base(repository, httpContextAccessor, mapper, config)
         {
-
+            this.repositoryAllById = repositoryAllById;
         }
         private async Task<bool> IsStudentBelongsToTeacher(string idStudent, string userId)
         {
@@ -108,9 +110,7 @@ namespace Service.Services
 
         public async Task<List<StudentDto>> AllStudentsOfClass(int classId, Roles role, string userId)
         {
-            List<Student> students = (await repository.GetAll())
-                .Where(ch => ch.ClassId == classId)
-                .ToList();
+            List<Student> students = await repositoryAllById.GetAllItemOfId(classId);
 
             if (!students.Any())
                 return null;

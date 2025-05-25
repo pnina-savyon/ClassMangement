@@ -9,57 +9,65 @@ using System.Threading.Tasks;
 
 namespace Repository.Repositories
 {
-	public class ChairRepository: IRepository<Chair, int>
-	{
+    public class ChairRepository : IRepository<Chair, int>, IRepositoryAllById<Chair, int>
+    {
 
-		private readonly IContext context;
+        private readonly IContext context;
 
-		public ChairRepository(IContext context)
-		{
-			this.context = context;
-		}
-		public async Task<Chair> AddItem(Chair item)
-		{
-			await this.context.Chairs.AddAsync(item);
-			await this.context.Save();
-			return item;
-		}
+        public ChairRepository(IContext context)
+        {
+            this.context = context;
+        }
+        public async Task<Chair> AddItem(Chair item)
+        {
+            await this.context.Chairs.AddAsync(item);
+            await this.context.Save();
+            return item;
+        }
 
-		public async Task<Chair> DeleteItem(int id)
-		{
-			Chair item = await GetById(id);
-			this.context.Chairs.Remove(item);
-			await this.context.Save();
-			return item;
-		}
+        public async Task<List<Chair>> GetAllItemOfId(int id)
+        {
+            return await context.Chairs
+                .Include(c => c.Class)
+                .ThenInclude(c => c.Students)
+                .Where(c => c.ClassId == id)
+                .ToListAsync();
+        }
 
-		public async Task<List<Chair>> GetAll()
-		{
-			return await this.context.Chairs
-                  .Include(c => c.Class)
-				  .ToListAsync();
-		}
+        public async Task<Chair> DeleteItem(int id)
+        {
+            Chair item = await GetById(id);
+            this.context.Chairs.Remove(item);
+            await this.context.Save();
+            return item;
+        }
 
-		public async Task<Chair> GetById(int id)
-		{
-			return await this.context.Chairs
-				.Include(ch => ch.Class)
-				.ThenInclude(c=>c.Students)
-				.Include(ch => ch.CurrentStudent)
-				.FirstOrDefaultAsync(ch => ch.Id == id);
-		}
+        public async Task<List<Chair>> GetAll()
+        {
+            return await this.context.Chairs
+                  .ToListAsync();
+        }
 
-		public async Task<Chair> UpdateItem(int id, Chair item)
-		{
-			Chair chair = await GetById(id);
-			chair.StudentId = item.StudentId != null ? item.StudentId : chair.StudentId;
-			chair.CurrentStudent = item.CurrentStudent != null ? item.CurrentStudent : chair.CurrentStudent;
-			chair.Row = item.Row != 0 ? item.Row : chair.Row;
-			chair.Column = item.Column != 0 ? item.Column : chair.Column;
-			chair.IsNearTheDoor = item.IsNearTheDoor;
-			chair.IsNearTheWindow = item.IsNearTheWindow;
-			await this.context.Save();
-			return chair;
-		}
-	}
+        public async Task<Chair> GetById(int id)
+        {
+            return await this.context.Chairs
+                .Include(ch => ch.Class)
+                .ThenInclude(c => c.Students)
+                .Include(ch => ch.CurrentStudent)
+                .FirstOrDefaultAsync(ch => ch.Id == id);
+        }
+
+        public async Task<Chair> UpdateItem(int id, Chair item)
+        {
+            Chair chair = await GetById(id);
+            chair.StudentId = item.StudentId != null ? item.StudentId : chair.StudentId;
+            chair.CurrentStudent = item.CurrentStudent != null ? item.CurrentStudent : chair.CurrentStudent;
+            chair.Row = item.Row != 0 ? item.Row : chair.Row;
+            chair.Column = item.Column != 0 ? item.Column : chair.Column;
+            chair.IsNearTheDoor = item.IsNearTheDoor;
+            chair.IsNearTheWindow = item.IsNearTheWindow;
+            await this.context.Save();
+            return chair;
+        }
+    }
 }

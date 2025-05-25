@@ -25,6 +25,9 @@ namespace Repository.Repositories
             services.AddScoped<IRepository<SurveyAnswer, int>, SurveyAnswerRepository>();
             services.AddScoped<IRepository<Survey, int>, SurveyRepository>();
 
+            services.AddScoped<IRepositoryAllById<Student, int>, StudentRepository>();
+            services.AddScoped<IRepositoryAllById<Chair, int>, ChairRepository>();
+
             //services.AddScoped<IRepository<User, string>, >();
 
             //
