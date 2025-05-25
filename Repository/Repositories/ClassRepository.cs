@@ -34,7 +34,9 @@ namespace Repository.Repositories
 
         public async Task<List<Class>> GetAll()
         {
-            return await this.context.Classes.ToListAsync();
+            return await this.context.Classes
+                .Include(c=>c.Students)
+                .ToListAsync();
         }
 
         public async Task<Class> GetById(int id)

@@ -5,6 +5,7 @@ using Repository.Entities;
 using Repository.Entities.Enums;
 using Service.Interfaces;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 
 namespace ClassMangement.Controllers
 {
@@ -17,10 +18,11 @@ namespace ClassMangement.Controllers
 		private readonly IQueryLogicUpdate<StudentConfidentialInfoDto, string> serviceQueryLogicUpdate;
 		private readonly ISecurity<Student, UserLogin> securityServiceStudent;
         private readonly ISecurity<Teacher, UserLogin> securityServiceTeacher;
+        private readonly IServiceStudent serviceStudent;
         private readonly IConfiguration config;
 
         public StudentController(IService<StudentDto, string> service, IConfiguration config, ISecurity<Teacher, UserLogin> securityServiceTeacher, ISecurity<Student, UserLogin> securityServiceStudent,
-			IQueryLogicUpdate<StudentConfidentialInfoDto, string> serviceQueryLogicUpdate, IQueryLogicForFewFunctions<StudentDto, string> serviceQueryLogicForFewFunctions)
+			IQueryLogicUpdate<StudentConfidentialInfoDto, string> serviceQueryLogicUpdate, IQueryLogicForFewFunctions<StudentDto, string> serviceQueryLogicForFewFunctions, IServiceStudent serviceStudent)
         {
             this.service = service;
             this.config = config;
@@ -28,6 +30,7 @@ namespace ClassMangement.Controllers
             this.securityServiceTeacher = securityServiceTeacher;
             this.serviceQueryLogicUpdate = serviceQueryLogicUpdate;
             this.serviceQueryLogicForFewFunctions = serviceQueryLogicForFewFunctions;
+            this.serviceStudent = serviceStudent;
 		}
 
         // GET: api/<StudentController>
@@ -44,8 +47,12 @@ namespace ClassMangement.Controllers
         [Authorize]
         public async Task<ActionResult<StudentDto>> Get(string id)
         {
-            string userId = securityServiceTeacher.GetCurrentUser().Id;
-            Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
+            User? teacherUser = securityServiceTeacher.GetCurrentUser();
+            User? studentUser = securityServiceStudent.GetCurrentUser();
+            User? userDto = teacherUser ?? studentUser;
+
+            string userId = userDto.Id;
+            Roles userRole = userDto.Role;
 
             //
             StudentDto studentDto = await serviceQueryLogicForFewFunctions.GetByIdLogic(id, userRole, userId);
@@ -54,6 +61,24 @@ namespace ClassMangement.Controllers
                 return NotFound();
 
             return Ok(studentDto);
+        }
+
+        [HttpGet("AllStudentsOfClass/{classId}")]
+        [Authorize]
+        public async Task<ActionResult<List<StudentDto>>> GetAllStudentsOfClass(int classId)
+        {
+            User? teacherUser = securityServiceTeacher.GetCurrentUser();
+            User? studentUser = securityServiceStudent.GetCurrentUser();
+            User? userDto = teacherUser ?? studentUser;
+
+            string userId = userDto.Id;
+            Roles userRole = userDto.Role;
+
+            List<StudentDto> studentsDto = await serviceStudent.AllStudentsOfClass(classId, userRole, userId);
+            if (studentsDto == null)
+                return NotFound();
+
+            return Ok(studentsDto);
         }
 
         // POST api/<StudentController>
@@ -83,8 +108,9 @@ namespace ClassMangement.Controllers
         [Authorize(Roles = $"{nameof(Roles.AuthorizedUser)},{nameof(Roles.User)}")]
         public async Task<ActionResult<StudentDto>> Put(string id, [FromBody] StudentDto value)
         {
-            string userId = securityServiceTeacher.GetCurrentUser().Id;
-            Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
+            User user = securityServiceStudent.GetCurrentUser();
+            string userId = user.Id;
+            Roles userRole = user.Role;
 
             if (userId != id)
             {
@@ -118,8 +144,9 @@ namespace ClassMangement.Controllers
         [Authorize]
         public async Task<ActionResult<StudentDto>> Delete(string id)
         {
-            string userId = securityServiceTeacher.GetCurrentUser().Id;
-            Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
+            User user = securityServiceTeacher.GetCurrentUser();
+            string userId = user.Id;
+            Roles userRole = user.Role;
 
             StudentDto deleted = await serviceQueryLogicForFewFunctions.DeleteLogic(id, userRole, userId);
 

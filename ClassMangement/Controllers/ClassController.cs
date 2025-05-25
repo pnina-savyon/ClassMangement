@@ -42,7 +42,10 @@ namespace ClassMangement.Controllers
         [Authorize]
         public async Task<ActionResult<ClassDto>> Get(int id)
         {
-            User userDto = securityServiceTeacher.GetCurrentUser();
+            User? teacherUser = securityServiceTeacher.GetCurrentUser();
+            User? studentUser = securityServiceStudent.GetCurrentUser();
+            User? userDto = teacherUser ?? studentUser;
+
             string userId = userDto.Id;
             Roles userRole = userDto.Role;
 
@@ -87,10 +90,11 @@ namespace ClassMangement.Controllers
 		[Authorize(Roles = $"{nameof(Roles.Admin)}")]
 		public async Task<ActionResult<ClassDto>> Delete(int id)
         {
-			string userId = securityServiceTeacher.GetCurrentUser().Id;
-			Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
+            User user = securityServiceTeacher.GetCurrentUser();
+            string userId = user.Id;
+            Roles userRole = user.Role;
 
-			ClassDto updated = await serviceQueryLogicGeneric.DeleteLogic(id, userRole, userId);
+            ClassDto updated = await serviceQueryLogicGeneric.DeleteLogic(id, userRole, userId);
 
 			if (updated == null)
 				return NotFound();

@@ -73,8 +73,9 @@ namespace ClassMangement.Controllers
         [Authorize(Roles = $"{nameof(Roles.Master)},{nameof(Roles.Admin)}")]
         public async Task<ActionResult<TeacherDto>> Put(string id, [FromBody] TeacherDto value)
         {
-            string userId = securityServiceTeacher.GetCurrentUser().Id;
-            Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
+            User user = securityServiceTeacher.GetCurrentUser();
+            string userId = user.Id;
+            Roles userRole = user.Role;
 
             if (userRole == Roles.Admin && userId != id)
             {
@@ -95,8 +96,9 @@ namespace ClassMangement.Controllers
         [Authorize(Roles = $"{nameof(Roles.Master)},{nameof(Roles.Admin)}")]
         public async Task<ActionResult<TeacherDto>> Delete(string id)
 		{
-            string userId = securityServiceTeacher.GetCurrentUser().Id;
-            Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
+            User user = securityServiceTeacher.GetCurrentUser();
+            string userId = user.Id;
+            Roles userRole = user.Role;
 
             if (userRole == Roles.Admin && userId != id)
             {

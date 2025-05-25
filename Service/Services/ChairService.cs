@@ -13,7 +13,8 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-	public class ChairService: IService<ChairDto, int>, IQueryLogicGeneric<ChairDto,int>
+	public class ChairService: IService<ChairDto, int>, 
+		IQueryLogicGeneric<ChairDto,int> ,IServiceChair
 	{
 
 		private readonly IRepository<Chair, int> repository;
@@ -27,8 +28,32 @@ namespace Service.Services
 		{
 			return mapper.Map<Chair, ChairDto>(await repository.AddItem(mapper.Map<ChairDto, Chair>(item)));
 		}
+        public async Task<List<ChairDto>> AllChairsOfClass(int classId, Roles role, string userId)
+        {
+            List<Chair> chairs = (await repository.GetAll())
+                .Where(ch => ch.ClassId == classId)
+                //
+                .ToList();
 
-		public async Task<ChairDto> DeleteItem(int id)
+            if (!chairs.Any())
+                return null;
+
+            Class cls = chairs.First().Class;
+            if (cls == null)
+                return null;
+
+            bool hasAccess = role switch
+            {
+                Roles.Master => true,
+                Roles.Admin => cls.TeacherId == userId,
+                Roles.User => cls.Students?.Any(s => s.Id == userId) == true,
+                Roles.AuthorizedUser => cls.Students?.Any(s => s.Id == userId) == true,
+                _ => false // כל רול אחר שלא ידוע – אין גישה
+            };
+
+            return hasAccess ? mapper.Map<List<ChairDto>>(chairs) : null;
+        }
+        public async Task<ChairDto> DeleteItem(int id)
 		{
 			return mapper.Map<Chair, ChairDto>(await repository.DeleteItem(id));
 		}

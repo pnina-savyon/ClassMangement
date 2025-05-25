@@ -18,16 +18,18 @@ namespace ClassMangement.Controllers
         private readonly ISecurity<Teacher, UserLogin> securityServiceTeacher;
         private readonly ISecurity<Student, UserLogin> securityServiceStudent;
         private readonly IQueryLogicGeneric<ChairDto, int> serviceQueryLogicGeneric;
+        private readonly IServiceChair serviceChair;
         private readonly IConfiguration config;
 
         public ChairController(IService<ChairDto, int> service, IConfiguration config, ISecurity<Teacher, UserLogin> securityServiceTeacher,
-            ISecurity<Student, UserLogin> securityServiceStudent,IQueryLogicGeneric<ChairDto, int> serviceQueryLogicGeneric)
+            ISecurity<Student, UserLogin> securityServiceStudent,IQueryLogicGeneric<ChairDto, int> serviceQueryLogicGeneric, IServiceChair serviceChair)
         {
             this.service = service;
             this.config = config;
             this.securityServiceTeacher = securityServiceTeacher;
             this.securityServiceStudent = securityServiceStudent;
             this.serviceQueryLogicGeneric = serviceQueryLogicGeneric;
+            this.serviceChair = serviceChair;
         }
         // GET: api/<ChairController>
         [HttpGet]
@@ -42,16 +44,37 @@ namespace ClassMangement.Controllers
         [Authorize]
         public async Task<ActionResult<ChairDto>> Get(int id)
         {
-            User userDto = securityServiceTeacher.GetCurrentUser();
+            User? teacherUser = securityServiceTeacher.GetCurrentUser();
+            User? studentUser = securityServiceStudent.GetCurrentUser();
+            User? userDto = teacherUser ?? studentUser;
+
             string userId = userDto.Id;
             Roles userRole = userDto.Role;
-          
+
             ChairDto chairDto = await serviceQueryLogicGeneric.GetByIdLogic(id, userRole, userId);
 
             if (chairDto == null)
                 return NotFound();
 
             return Ok(chairDto);
+        }
+
+        [HttpGet("AllChairsOfClass/{classId}")]
+        [Authorize]
+        public async Task<ActionResult<List<ChairDto>>> GetAllChairsOfClass(int classId)
+        {
+            User? teacherUser = securityServiceTeacher.GetCurrentUser();
+            User? studentUser = securityServiceStudent.GetCurrentUser();
+            User? userDto = teacherUser ?? studentUser;
+
+            string userId = userDto.Id;
+            Roles userRole = userDto.Role;
+
+            List<ChairDto> chairsDto = await serviceChair.AllChairsOfClass(classId, userRole, userId);
+            if (chairsDto == null)
+                 return NotFound();
+
+            return Ok(chairsDto);
         }
 
         // POST api/<ChairController>
@@ -87,8 +110,9 @@ namespace ClassMangement.Controllers
         [Authorize(Roles = $"{nameof(Roles.Master)} ,{nameof(Roles.Admin)}")]
         public async Task<ActionResult<ChairDto>> Delete(int id)
         {
-            string userId = securityServiceTeacher.GetCurrentUser().Id;
-            Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
+            User user = securityServiceTeacher.GetCurrentUser();    
+            string userId = user.Id;
+            Roles userRole = user.Role;
 
             ChairDto updated = await serviceQueryLogicGeneric.DeleteLogic(id, userRole, userId);
 

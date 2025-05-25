@@ -35,13 +35,16 @@ namespace Repository.Repositories
 
 		public async Task<List<Chair>> GetAll()
 		{
-			return await this.context.Chairs.ToListAsync();
+			return await this.context.Chairs
+                  .Include(c => c.Class)
+				  .ToListAsync();
 		}
 
 		public async Task<Chair> GetById(int id)
 		{
 			return await this.context.Chairs
 				.Include(ch => ch.Class)
+				.ThenInclude(c=>c.Students)
 				.Include(ch => ch.CurrentStudent)
 				.FirstOrDefaultAsync(ch => ch.Id == id);
 		}

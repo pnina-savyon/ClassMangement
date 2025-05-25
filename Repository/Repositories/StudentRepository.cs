@@ -37,7 +37,9 @@ namespace Repository.Repositories
 
         public override async Task<List<Student>> GetAll()
         {
-            return await this.context.Students.ToListAsync();
+            return await this.context.Students
+                .Include(s => s.Class)
+                .ToListAsync();
         }
 
         public override async Task<Student> GetById(string id)

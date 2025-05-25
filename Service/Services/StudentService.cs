@@ -14,7 +14,8 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class StudentService : UserService<Student, StudentDto>, IQueryLogicUpdate<StudentConfidentialInfoDto,string>,IQueryLogicForFewFunctions<StudentDto,string>
+    public class StudentService : UserService<Student, StudentDto>, IQueryLogicUpdate<StudentConfidentialInfoDto,string>,
+        IQueryLogicForFewFunctions<StudentDto,string>, IServiceStudent
     {
         //service מכיר גם את common וגם , ריפוזיטורי?
         //לשנות את סדר הכרת השכבות - קומון, ריפו, סרביס
@@ -104,5 +105,30 @@ namespace Service.Services
 			return mapper.Map<Student, StudentConfidentialInfoDto>(await repository.UpdateItem(id, mapper.Map<StudentConfidentialInfoDto, Student>(value)));
 
 		}
-	}
+
+        public async Task<List<StudentDto>> AllStudentsOfClass(int classId, Roles role, string userId)
+        {
+            List<Student> students = (await repository.GetAll())
+                .Where(ch => ch.ClassId == classId)
+                .ToList();
+
+            if (!students.Any())
+                return null;
+
+            Class cls = students.First().Class;
+            if (cls == null)
+                return null;
+
+            bool hasAccess = role switch
+            {
+                Roles.Master => true,
+                Roles.Admin => cls.TeacherId == userId,
+                Roles.User => cls.Students?.Any(s => s.Id == userId) == true,
+                Roles.AuthorizedUser => cls.Students?.Any(s => s.Id == userId) == true,
+                _ => false // כל רול אחר שלא ידוע – אין גישה
+            };
+
+            return hasAccess ? mapper.Map<List<StudentDto>>(students) : null;
+        }
+    }
 }

@@ -21,7 +21,6 @@ namespace Service.Services
 		{
 			this.repository = repository;
 			this.mapper = mapper;
-
 		}
 		public async Task<ClassDto> AddItem(ClassDto item)
 		{
