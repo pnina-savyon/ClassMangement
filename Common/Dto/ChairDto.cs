@@ -9,6 +9,9 @@ namespace Common.Dto
 	public class ChairDto
 	{
 		public int? Id { get; set; }
+		public int? ClassId { get; set; }	
+		public string? StudentId { get; set; }
+
 		public int? Row { get; set; }
 
 		public int? Column { get; set; }

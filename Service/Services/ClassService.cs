@@ -55,10 +55,12 @@ namespace Service.Services
 		public async Task<ClassDto> GetByIdLogic(int id, Roles role, string userId)
 		{
 			Class c = await repository.GetById(id);
+			if (c == null || c.TeacherId == null)
+				return null;
 			string teacherId = c.TeacherId;
 			if (role == Roles.Admin)
 				return teacherId == userId ? await GetById(id) : null;
-
+		
 			return c.Students.Any(s => s.Id == userId) ? await GetById(id) : null;
 		}
 

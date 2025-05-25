@@ -1,4 +1,5 @@
 ﻿using Common.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repository.Entities;
 using Repository.Entities.Enums;
@@ -15,55 +16,86 @@ namespace ClassMangement.Controllers
     {
         private readonly IService<ChairDto, int> service;
         private readonly ISecurity<Teacher, UserLogin> securityServiceTeacher;
+        private readonly ISecurity<Student, UserLogin> securityServiceStudent;
+        private readonly IQueryLogicGeneric<ChairDto, int> serviceQueryLogicGeneric;
         private readonly IConfiguration config;
 
-        public ChairController(IService<ChairDto, int> service, IConfiguration config, ISecurity<Teacher, UserLogin> securityServiceTeacher)
+        public ChairController(IService<ChairDto, int> service, IConfiguration config, ISecurity<Teacher, UserLogin> securityServiceTeacher,
+            ISecurity<Student, UserLogin> securityServiceStudent,IQueryLogicGeneric<ChairDto, int> serviceQueryLogicGeneric)
         {
             this.service = service;
             this.config = config;
             this.securityServiceTeacher = securityServiceTeacher;
+            this.securityServiceStudent = securityServiceStudent;
+            this.serviceQueryLogicGeneric = serviceQueryLogicGeneric;
         }
         // GET: api/<ChairController>
         [HttpGet]
-        public List<ChairDto> Get()
+        [Authorize(Roles = $"{nameof(Roles.Master)}")]
+        public async Task<ActionResult<List<ChairDto>>> Get()
         {
-            return service.GetAll();
+            return await service.GetAll();
         }
 
         // GET api/<ChairController>/5
         [HttpGet("{id}")]
-        public ChairDto Get(int id)
+        [Authorize]
+        public async Task<ActionResult<ChairDto>> Get(int id)
         {
-            return service.GetById(id);
+            User userDto = securityServiceTeacher.GetCurrentUser();
+            string userId = userDto.Id;
+            Roles userRole = userDto.Role;
+          
+            ChairDto chairDto = await serviceQueryLogicGeneric.GetByIdLogic(id, userRole, userId);
+
+            if (chairDto == null)
+                return NotFound();
+
+            return Ok(chairDto);
         }
 
         // POST api/<ChairController>
         [HttpPost]
-        public ChairDto Post([FromBody] ChairDto value)
+        [Authorize(Roles = $"{nameof(Roles.Master)} ,{nameof(Roles.Admin)}")]
+        public async Task<ActionResult<ChairDto>> Post([FromForm] ChairDto value)
         {
-            return service.AddItem(value);
+            ChairDto created = await service.AddItem(value);
+
+            if (created == null)
+                return BadRequest();
+
+            return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
         }
 
         // PUT api/<ChairController>/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] ChairDto value)
+        [Authorize(Roles = $"{nameof(Roles.Admin)}")]
+        public async Task<ActionResult<ChairDto>> Put(int id, [FromForm] ChairDto value)
         {
-           //
-            ChairDto updated = service.UpdateItem(id, value);
+            string userId = securityServiceTeacher.GetCurrentUser().Id;
+
+            ChairDto updated = await serviceQueryLogicGeneric.UpdateLogic(id, userId, value);
+
             if (updated == null)
-                return NotFound(); 
+                return NotFound();
+
             return Ok(updated);
         }
 
         // DELETE api/<ChairController>/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [Authorize(Roles = $"{nameof(Roles.Master)} ,{nameof(Roles.Admin)}")]
+        public async Task<ActionResult<ChairDto>> Delete(int id)
         {
-            //
-            ChairDto deleted = service.DeleteItem(id);
-            if (deleted == null)
+            string userId = securityServiceTeacher.GetCurrentUser().Id;
+            Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
+
+            ChairDto updated = await serviceQueryLogicGeneric.DeleteLogic(id, userRole, userId);
+
+            if (updated == null)
                 return NotFound();
-            return Ok(deleted);
+
+            return Ok(updated);
         }
     }
 }

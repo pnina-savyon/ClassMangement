@@ -37,18 +37,19 @@ namespace Service.Services
 			services.AddScoped<IQueryLogicForFewFunctions<StudentDto,string>, StudentService>();
 
 			services.AddScoped<IQueryLogicGeneric<ClassDto, int>, ClassService>();
+            services.AddScoped<IQueryLogicGeneric<ChairDto, int>, ChairService>();
 
 
-			//services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService>();
+            //services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService>();
 
-			//services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService<User, UserDto>>();
+            //services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService<User, UserDto>>();
 
 
-			//
-			//services.AddScoped<IService<UserDto, string>, UserService>();
+            //
+            //services.AddScoped<IService<UserDto, string>, UserService>();
 
-			//...כאן נגדיר את תלויות הservice
-			services.AddAutoMapper(typeof(DtoEntityMapper));
+            //...כאן נגדיר את תלויות הservice
+            services.AddAutoMapper(typeof(DtoEntityMapper));
 			return services;
 		}
 	}

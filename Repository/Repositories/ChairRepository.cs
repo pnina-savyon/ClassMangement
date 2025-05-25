@@ -40,16 +40,19 @@ namespace Repository.Repositories
 
 		public async Task<Chair> GetById(int id)
 		{
-			return await this.context.Chairs.FirstOrDefaultAsync(x => x.Id == id);
+			return await this.context.Chairs
+				.Include(ch => ch.Class)
+				.Include(ch => ch.CurrentStudent)
+				.FirstOrDefaultAsync(ch => ch.Id == id);
 		}
 
 		public async Task<Chair> UpdateItem(int id, Chair item)
 		{
 			Chair chair = await GetById(id);
-			chair.StudentId = item.StudentId;
-			chair.CurrentStudent = item.CurrentStudent;
-			chair.Row = item.Row;
-			chair.Column = item.Column;
+			chair.StudentId = item.StudentId != null ? item.StudentId : chair.StudentId;
+			chair.CurrentStudent = item.CurrentStudent != null ? item.CurrentStudent : chair.CurrentStudent;
+			chair.Row = item.Row != 0 ? item.Row : chair.Row;
+			chair.Column = item.Column != 0 ? item.Column : chair.Column;
 			chair.IsNearTheDoor = item.IsNearTheDoor;
 			chair.IsNearTheWindow = item.IsNearTheWindow;
 			await this.context.Save();

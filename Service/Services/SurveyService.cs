@@ -52,7 +52,7 @@ namespace Service.Services
 		public async Task<SurveyDto> GetByIdLogic(int id, Roles role, string userId)
 		{
 			if (role == Roles.Master)
-				return GetById(id);
+				return await GetById(id);
 			Survey s = await repository.GetById(id);
 			if (s == null || s.Class == null || s.Class.TeacherId == null)
 				return null;

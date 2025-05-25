@@ -20,7 +20,7 @@ namespace ClassMangement.Controllers
         private readonly IConfiguration config;
 
         public ClassController(IService<ClassDto, int> service, IConfiguration config, ISecurity<Teacher, UserLogin> securityServiceTeacher, ISecurity<Student, UserLogin> securityServiceStudent,
-            IQueryLogicGeneric<ClassDto, int> serviceQueryLogic)
+            IQueryLogicGeneric<ClassDto, int> serviceQueryLogicGeneric)
         {
             this.service = service;
             this.config = config;
@@ -42,10 +42,10 @@ namespace ClassMangement.Controllers
         [Authorize]
         public async Task<ActionResult<ClassDto>> Get(int id)
         {
-            string userId = securityServiceTeacher.GetCurrentUser().Id;
-            Roles userRole = securityServiceTeacher.GetCurrentUser().Role;
+            User userDto = securityServiceTeacher.GetCurrentUser();
+            string userId = userDto.Id;
+            Roles userRole = userDto.Role;
 
-            //
             ClassDto classDto = await serviceQueryLogicGeneric.GetByIdLogic(id, userRole, userId);
 
             if (classDto == null)
@@ -56,6 +56,7 @@ namespace ClassMangement.Controllers
 
         // POST api/<ClassController>
         [HttpPost]
+        [Authorize(Roles = $"{nameof(Roles.Master)} ,{nameof(Roles.Admin)}")]
         public async Task<ActionResult<ClassDto>> Post([FromForm] ClassDto value)
         {
             ClassDto created = await service.AddItem(value);
