@@ -62,8 +62,8 @@ namespace Repository.Repositories
             Chair chair = await GetById(id);
             chair.StudentId = item.StudentId != null ? item.StudentId : chair.StudentId;
             chair.CurrentStudent = item.CurrentStudent != null ? item.CurrentStudent : chair.CurrentStudent;
-            chair.Row = item.Row != 0 ? item.Row : chair.Row;
-            chair.Column = item.Column != 0 ? item.Column : chair.Column;
+            chair.IsCenteral = item.IsCenteral;
+            chair.IsFront = item.IsFront;
             chair.IsNearTheDoor = item.IsNearTheDoor;
             chair.IsNearTheWindow = item.IsNearTheWindow;
             await this.context.Save();

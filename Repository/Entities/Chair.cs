@@ -22,10 +22,10 @@ namespace Repository.Entities
 		[ForeignKey("StudentId")]
 		public virtual Student? CurrentStudent { get; set; }
 
-		public int Row { get; set; }
-
-		public int Column { get; set; }
-
+		public bool IsCenteral{ get; set; }
+		
+		public bool IsFront{ get; set; }
+		
 		public bool IsNearTheDoor { get; set; }
 
 		public bool IsNearTheWindow { get; set; }

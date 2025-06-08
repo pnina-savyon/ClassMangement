@@ -19,13 +19,15 @@ namespace Repository.Entities
 		[ForeignKey("ChairId")]
 		public virtual Chair? CurrentChair { get; set; }
 
-		public Levels StatusSocial { get; set; } 
+		public Levels MoralLevel { get; set; }
+		public Levels StatusSocial { get; set; }
 		public Levels AttentionLevel { get; set; } 
 		public string? ImageUrl { get; set; }
 		public int? Priority { get; set; }
 		[NotMapped]
 		public virtual List<int>? HistoryChairs { get; set; }
 		public virtual ICollection<Student>? FavoriteFriends { get; set; }
+		public virtual ICollection<Student>? NonFavoriteFriends { get; set; }
 
 		public virtual ICollection<Mark>? Marks { get; set; }
 

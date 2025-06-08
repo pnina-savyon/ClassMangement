@@ -72,8 +72,10 @@ namespace Repository.Repositories
             student.Address = item.Address != null ? item.Address : student.Address;
             student.Priority = item.Priority != 0 ? item.Priority : student.Priority;
             student.StatusSocial = item.StatusSocial != 0 ? item.StatusSocial : student.StatusSocial;
-            student.FavoriteFriends = item.FavoriteFriends != null ? item.FavoriteFriends : student.FavoriteFriends;
-            student.ClassId = item.ClassId != 0 ? item.ClassId : student.ClassId;
+			student.MoralLevel = item.MoralLevel != 0 ? item.MoralLevel : student.MoralLevel;
+			student.FavoriteFriends = item.FavoriteFriends != null ? item.FavoriteFriends : student.FavoriteFriends;
+			student.NonFavoriteFriends = item.NonFavoriteFriends != null ? item.NonFavoriteFriends : student.NonFavoriteFriends;
+			student.ClassId = item.ClassId != 0 ? item.ClassId : student.ClassId;
             student.Role = item.Role != 0 ? item.Role : student.Role;
             student.AttentionLevel = item.AttentionLevel != 0 ? item.AttentionLevel : student.AttentionLevel;
             student.ImageUrl = item.ImageUrl != null ? item.ImageUrl : student.ImageUrl;
