@@ -13,6 +13,7 @@ namespace Repository.Entities
 	{
 		[Key]
 		public int Id { get; set; }
+		public int SerialNumberByClass { get; set; }
 		public int ClassId { get; set; }
 
 		[ForeignKey("ClassId")]
