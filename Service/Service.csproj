@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="SeatAllocation\Logic\" />
+    <Folder Include="SeatAllocation\Logic\Rules\" />
   </ItemGroup>
 
 </Project>
