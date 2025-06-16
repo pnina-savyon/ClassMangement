@@ -12,7 +12,7 @@ using static System.Formats.Asn1.AsnWriter;
 
 namespace Service.SeatAllocation.Logic.Rules
 {
-	public class BackPositionOverrideInFront : IScoringRule
+	public class BackSeatOverrideInFront : IScoringRule
 	{
 		public LinearExpr GetScore(Student student, IntVar studentChairVar, StudentContext context)
 		{

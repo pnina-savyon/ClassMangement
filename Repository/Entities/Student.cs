@@ -24,6 +24,7 @@ namespace Repository.Entities
 		public Levels AttentionLevel { get; set; } 
 		public string? ImageUrl { get; set; }
 		public int? Priority { get; set; }
+		//?
 		[NotMapped]
 		public virtual List<int>? HistoryChairs { get; set; }
 		public virtual ICollection<Student>? FavoriteFriends { get; set; }

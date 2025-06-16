@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using Google.OrTools.Sat;
 
 
-
 namespace Service.SeatAllocation.Logic.Rules
 {
 	public class LowAttentionLevelInCenter : IScoringRule
@@ -34,10 +33,7 @@ namespace Service.SeatAllocation.Logic.Rules
 					terms.Add(isMatch * score); 
 				}
 			}
-
 			return LinearExpr.Sum(terms);
 		}
-
-
 	}
 }
