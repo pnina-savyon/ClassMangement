@@ -12,33 +12,34 @@ namespace Service.SeatAllocation.Logic.Solver
 {
 	public class StudentContext
 	{
-		private readonly IRepository<Chair, int> repositoryChair;
-		private List<Student> students { get;}
-		private List<Chair> chairs { get; }
-		private Dictionary<int, IntVar> studentChairVars { get; }
-		private CpModel model { get; }
+        public List<Student> Students { get; private set; }
+		public List<Chair> Chairs { get; private set; }
+		public CpModel Model { get; private set; }
+		public Dictionary<string, IntVar> StudentChairVars { get; private set; }
+		public LinearExprBuilder Objective { get; private set; }
+		public int NumStudents => Students?.Count ?? 0;
+		public int NumChairs => Chairs?.Count ?? 0;
 
-		//
-		public StudentContext(IRepository<Chair, int> repositoryChair ,List<Student> students, List<Chair> chairs, CpModel model)
+		public StudentContext(List<Student> students, List<Chair> chairs, CpModel model, Dictionary<string, IntVar> studentChairVars, LinearExprBuilder objective)
 		{
-			this.repositoryChair = repositoryChair;
-			this.students = students;//?? throw new ArgumentNullException(nameof(students));
-			this.chairs = chairs;// ?? throw new ArgumentNullException(nameof(chairs));
-			this.model = model;//?? throw new ArgumentNullException(nameof(model));
-			this.studentChairVars = new Dictionary<int, IntVar>();
+			Students = students;
+			Chairs = chairs;
+			Model = model;
+			StudentChairVars = studentChairVars;
+			Objective = objective;
 		}
 
+		//public bool AreChairsNear(int chairId1, int chairId2)
+		//{
+		//	// החישוב לפי Row/Column
+		//	return false;
+		//}
 
-
-		public bool AreChairsNear(int chairId1, int chairId2)
-		{
-			// החישוב לפי Row/Column
-			return false;
-		}
-
-		public Chair GetChairById(int id)
-		{
-			return null;// repositoryChair.GetById(id);
-		}
+		//public Chair GetChairById(int id)
+		//{
+		//	return null;// repositoryChair.GetById(id);
+		//}
+		//private readonly IRepository<Chair, int> repositoryChair;
+		//public Class Class { get; set; }
 	}
 }

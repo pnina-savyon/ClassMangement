@@ -1,6 +1,4 @@
-﻿using Google.OrTools.ConstraintSolver;
-using Google.OrTools.LinearSolver;
-using Google.OrTools.Sat;
+﻿using Google.OrTools.Sat;
 using Repository.Entities;
 using Service.SeatAllocation.Logic.Solver;
 using System;
@@ -11,10 +9,8 @@ using System.Threading.Tasks;
 
 namespace Service.SeatAllocation.Interfaces
 {
-	public interface IConstraintRule
+	public interface IScoringRule
 	{
-		void Apply(CpModel model, StudentContext context);
-
-
+       LinearExpr GetScore(Student student, IntVar studentChairVar, StudentContext context);
 	}
 }
