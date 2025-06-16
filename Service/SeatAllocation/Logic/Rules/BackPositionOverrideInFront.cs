@@ -19,7 +19,7 @@ namespace Service.SeatAllocation.Logic.Rules
 			if(student.CurrentChair.IsFront)
 				return LinearExpr.Constant(0);
 
-			int score = (int)(student.Priority * 11);
+			int score = student.CurrentChair.IsFront? (int)(student.Priority * -3): (int)(student.Priority * 11);
 			List<LinearExpr> terms = new List<LinearExpr>();
 
 			foreach (Chair chair in context.Chairs)
