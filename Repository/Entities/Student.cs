@@ -24,10 +24,19 @@ namespace Repository.Entities
 		public Levels AttentionLevel { get; set; } 
 		public string? ImageUrl { get; set; }
 		public int? Priority { get; set; }
-		//?
-		[NotMapped]
-		public virtual List<int>? HistoryChairs { get; set; }
-		public virtual ICollection<Student>? FavoriteFriends { get; set; }
+
+		//
+        public string? HistoryChairsJson { get; set; }
+
+        [NotMapped]
+        public List<int> HistoryChairs
+        {
+            get => string.IsNullOrEmpty(HistoryChairsJson)
+                ? new List<int>()
+                : System.Text.Json.JsonSerializer.Deserialize<List<int>>(HistoryChairsJson);
+            set => HistoryChairsJson = System.Text.Json.JsonSerializer.Serialize(value);
+        }
+        public virtual ICollection<Student>? FavoriteFriends { get; set; }
 		public virtual ICollection<Student>? NonFavoriteFriends { get; set; }
 		public virtual ICollection<Mark>? Marks { get; set; }
 		public virtual ICollection<DailyAttendance>? DailyAttendances { get; set; }

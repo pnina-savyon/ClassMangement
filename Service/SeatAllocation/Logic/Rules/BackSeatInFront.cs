@@ -8,22 +8,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Service.SeatAllocation.Logic.Rules
 {
-	public class LowAttentionRestrictionNearWindowOrDoor : IScoringRule
+	public class BackSeatInFront : IScoringRule
 	{
 		public LinearExpr GetScore(Student student, IntVar studentChairVar, StudentContext context)
 		{
-			if (student.AttentionLevel != Levels.E && student.AttentionLevel != Levels.D)
-				return LinearExpr.Constant(0);
-
-			int score = student.AttentionLevel == Levels.E ? -4 : -3;
+			int score = student.CurrentChair.IsFront? (student.Priority ?? 1) * -3: (student.Priority ?? 1) * 11;
 			List<LinearExpr> terms = new List<LinearExpr>();
 
 			foreach (Chair chair in context.Chairs)
 			{
-				if (chair.IsNearTheDoor || chair.IsNearTheWindow)
+				if (chair.IsFront)
 				{
 					BoolVar isMatch = context.Model.NewBoolVar($"student_{student.Id}_chair_{chair.Id}");
 					context.Model.Add(studentChairVar == chair.Id).OnlyEnforceIf(isMatch);
@@ -32,7 +30,6 @@ namespace Service.SeatAllocation.Logic.Rules
 					terms.Add(isMatch * score);
 				}
 			}
-
 			return LinearExpr.Sum(terms);
 		}
 	}

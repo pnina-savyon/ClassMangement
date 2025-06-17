@@ -8,23 +8,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace Service.SeatAllocation.Logic.Rules
 {
-	public class BackSeatOverrideInFront : IScoringRule
+	public class LowAttentionLevelNotNearWindowOrDoor : IScoringRule
 	{
 		public LinearExpr GetScore(Student student, IntVar studentChairVar, StudentContext context)
 		{
-			if(student.CurrentChair.IsFront)
+			if (student.AttentionLevel != Levels.E && student.AttentionLevel != Levels.D)
 				return LinearExpr.Constant(0);
 
-			int score = student.CurrentChair.IsFront? (int)(student.Priority * -3): (int)(student.Priority * 11);
+			int score = student.AttentionLevel == Levels.E ? -4 : -3;
 			List<LinearExpr> terms = new List<LinearExpr>();
 
 			foreach (Chair chair in context.Chairs)
 			{
-				if (chair.IsFront)
+				if (chair.IsNearTheDoor || chair.IsNearTheWindow)
 				{
 					BoolVar isMatch = context.Model.NewBoolVar($"student_{student.Id}_chair_{chair.Id}");
 					context.Model.Add(studentChairVar == chair.Id).OnlyEnforceIf(isMatch);

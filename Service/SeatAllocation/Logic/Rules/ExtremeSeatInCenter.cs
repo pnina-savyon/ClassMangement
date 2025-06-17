@@ -16,11 +16,8 @@ namespace Service.SeatAllocation.Logic.Rules
     {
         public LinearExpr GetScore(Student student, IntVar studentChairVar, StudentContext context)
         {
-            //האם להוסיף אפשרות של 0?
-
-            //יש מרכזי יש לא מרכזי ויש קיצוני - אז להחליט את זה כאן?
             //int?
-            int score = (student.CurrentChair.IsCenteral ? 10 : -3) * (int)(student.Priority);
+            int score = (student.CurrentChair.IsCenteral ? -3 : 10) * (student.Priority ?? 1);
 
             List<LinearExpr> terms = new List<LinearExpr>();      
             foreach (Chair chair in context.Chairs)
@@ -37,5 +34,4 @@ namespace Service.SeatAllocation.Logic.Rules
             return LinearExpr.Sum(terms);
         }
     }
-    
 }

@@ -20,26 +20,27 @@ namespace Service.SeatAllocation.Logic.Solver
 		public int NumStudents => Students?.Count ?? 0;
 		public int NumChairs => Chairs?.Count ?? 0;
 
-		public StudentContext(List<Student> students, List<Chair> chairs, CpModel model, Dictionary<string, IntVar> studentChairVars, LinearExprBuilder objective)
+        public StudentContext(List<Student> students, List<Chair> chairs)
 		{
 			Students = students;
 			Chairs = chairs;
-			Model = model;
-			StudentChairVars = studentChairVars;
-			Objective = objective;
-		}
+            Model = new CpModel();
+            //
+            StudentChairVars = new Dictionary<string, IntVar>();
+			Objective = LinearExpr.NewBuilder();
+        }
 
-		//public bool AreChairsNear(int chairId1, int chairId2)
-		//{
-		//	// החישוב לפי Row/Column
-		//	return false;
-		//}
+        //public bool AreChairsNear(int chairId1, int chairId2)
+        //{
+        //	// החישוב לפי Row/Column
+        //	return false;
+        //}
 
-		//public Chair GetChairById(int id)
-		//{
-		//	return null;// repositoryChair.GetById(id);
-		//}
-		//private readonly IRepository<Chair, int> repositoryChair;
-		//public Class Class { get; set; }
-	}
+        //public Chair GetChairById(int id)
+        //{
+        //	return null;// repositoryChair.GetById(id);
+        //}
+        //private readonly IRepository<Chair, int> repositoryChair;
+        //public Class Class { get; set; }
+    }
 }

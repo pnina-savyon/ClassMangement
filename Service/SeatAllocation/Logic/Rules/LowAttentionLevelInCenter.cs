@@ -16,11 +16,16 @@ namespace Service.SeatAllocation.Logic.Rules
 	{
 		public LinearExpr GetScore(Student student, IntVar studentChairVar, StudentContext context)
 		{
-			if (student.AttentionLevel != Levels.E && student.AttentionLevel != Levels.D)
+			//priority
+			if ((student.AttentionLevel != Levels.E && student.AttentionLevel != Levels.D)
+				|| (student.MoralLevel != Levels.E && student.MoralLevel != Levels.D))
 				return LinearExpr.Constant(0);
 
 			int score = student.AttentionLevel == Levels.E ? 10 : 8;
-			List<LinearExpr> terms = new List<LinearExpr>();
+			//?? וכן האם -5 וכן האם בכלל ההגדרה יפה ונכונה?
+			score = student.MoralLevel == Levels.E || student.MoralLevel == Levels.D ? -5 : score;
+
+            List<LinearExpr> terms = new List<LinearExpr>();
 
 			foreach (Chair chair in context.Chairs)
 			{

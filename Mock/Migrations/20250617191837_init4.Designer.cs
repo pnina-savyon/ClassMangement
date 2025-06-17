@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mock;
 
@@ -11,9 +12,11 @@ using Mock;
 namespace Mock.Migrations
 {
     [DbContext(typeof(Database))]
-    partial class DatabaseModelSnapshot : ModelSnapshot
+    [Migration("20250617191837_init4")]
+    partial class init4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,9 +32,6 @@ namespace Mock.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("ChairId")
-                        .HasColumnType("int");
 
                     b.Property<int>("ClassId")
                         .HasColumnType("int");
@@ -55,8 +55,6 @@ namespace Mock.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ChairId");
 
                     b.HasIndex("ClassId");
 
@@ -328,10 +326,6 @@ namespace Mock.Migrations
 
             modelBuilder.Entity("Repository.Entities.Chair", b =>
                 {
-                    b.HasOne("Repository.Entities.Chair", null)
-                        .WithMany("NearbyChairs")
-                        .HasForeignKey("ChairId");
-
                     b.HasOne("Repository.Entities.Class", "Class")
                         .WithMany("Chairs")
                         .HasForeignKey("ClassId")
@@ -445,11 +439,6 @@ namespace Mock.Migrations
                     b.Navigation("Class");
 
                     b.Navigation("CurrentChair");
-                });
-
-            modelBuilder.Entity("Repository.Entities.Chair", b =>
-                {
-                    b.Navigation("NearbyChairs");
                 });
 
             modelBuilder.Entity("Repository.Entities.Class", b =>

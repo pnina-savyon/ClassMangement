@@ -51,6 +51,7 @@ namespace Repository.Repositories
         public async Task<Chair> GetById(int id)
         {
             return await this.context.Chairs
+                .Include(ch => ch.NearbyChairs)
                 .Include(ch => ch.Class)
                 .ThenInclude(c => c.Students)
                 .Include(ch => ch.CurrentStudent)
@@ -66,6 +67,7 @@ namespace Repository.Repositories
             chair.IsFront = item.IsFront;
             chair.IsNearTheDoor = item.IsNearTheDoor;
             chair.IsNearTheWindow = item.IsNearTheWindow;
+            chair.NearbyChairs = item.NearbyChairs != null ? item.NearbyChairs : chair.NearbyChairs;
             await this.context.Save();
             return chair;
         }

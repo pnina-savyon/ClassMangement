@@ -53,6 +53,8 @@ namespace Repository.Repositories
         public override async Task<Student> GetById(string id)
         {
             return await this.context.Students
+                //.Include(s => s.HistoryChairsJson)  
+                .Include(s=>s.HistoryChairs)
                 .Include(s => s.Class)
                 .ThenInclude(c => c.Teacher)
                 .FirstOrDefaultAsync(s => s.Id == id);

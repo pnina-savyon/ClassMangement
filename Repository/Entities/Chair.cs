@@ -30,5 +30,8 @@ namespace Repository.Entities
 		public bool IsNearTheDoor { get; set; }
 
 		public bool IsNearTheWindow { get; set; }
-	}
+
+        public virtual ICollection<Chair>? NearbyChairs { get; set; }
+
+    }
 }
