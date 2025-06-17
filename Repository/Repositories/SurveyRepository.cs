@@ -49,9 +49,9 @@ namespace Repository.Repositories
 		{
 			//האם לעדכן גם את ה-class כולו???
 			Survey survey = await GetById(id);
-			survey.ClassId = item.ClassId;
-			survey.QuestionContent = item.QuestionContent;
-			survey.Answers = item.Answers;
+			survey.ClassId = item.ClassId != 0 ? item.ClassId : survey.ClassId;
+			survey.QuestionContent = item.QuestionContent != null ? item.QuestionContent : survey.QuestionContent;
+			survey.Answers = item.Answers == null ? survey.Answers : item.Answers;
 
 			await this.context.Save();
 			return survey;

@@ -12,6 +12,10 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
+	//פונקציות שיש בהן צורך
+	// שליפת כל הסקריםשישכים לכיתה
+	// הוספת תשובה לסקר איך עושים את זה 
+
 	public class SurveyService: IService<SurveyDto, int>, IQueryLogicGeneric<SurveyDto, int>
 	{
 		//service מכיר גם את common וגם , ריפוזיטורי?

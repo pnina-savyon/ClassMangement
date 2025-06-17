@@ -33,7 +33,8 @@ namespace ClassMangement.Controllers
 			List<SurveyDto> survey = await service.GetAll();
 			return Ok(survey);
 		}
-
+		
+		// האם תלמיד שישך לכיתה לא יכול לראות את הסקר?
 		// GET api/<SurveyController>/5
 		[HttpGet("{id}")]
 		[Authorize(Roles = $"{nameof(Roles.Master)},{nameof(Roles.Admin)}")]
@@ -60,6 +61,7 @@ namespace ClassMangement.Controllers
 			return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
 		}
 
+		// רק לכיתה סקר שישך למורה
 		// PUT api/<SurveyController>/5
 		[HttpPut("{id}")]
 		[Authorize(Roles = $"{nameof(Roles.Master)},{nameof(Roles.Admin)}")]
@@ -78,6 +80,7 @@ namespace ClassMangement.Controllers
 			return Ok(updated);
 		}
 
+		// כמו עידכון
 		// DELETE api/<SurveyController>/5
 		[HttpDelete("{id}")]
 		[Authorize(Roles = $"{nameof(Roles.Master)},{nameof(Roles.Admin)}")]
