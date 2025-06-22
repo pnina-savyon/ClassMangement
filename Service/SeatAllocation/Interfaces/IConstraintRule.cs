@@ -14,7 +14,6 @@ namespace Service.SeatAllocation.Interfaces
 	public interface IConstraintRule
 	{
 		void Apply(CpModel model, StudentContext context);
-
-
+		void Apply();
 	}
 }

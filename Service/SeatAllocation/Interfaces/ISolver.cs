@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace Service.SeatAllocation.Interfaces
 {
-	public interface IRuleSet
+	public interface ISolver
 	{
-		IEnumerable<IConstraintRule> GetConstraintRules();
-		IEnumerable<IScoringRule> GetScoringRules();
-
-
+		public Task SolverFunc();
 	}
 }

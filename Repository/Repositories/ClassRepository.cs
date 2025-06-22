@@ -45,6 +45,7 @@ namespace Repository.Repositories
             return await this.context.Classes
                 .Include(c => c.Teacher)
                 .Include(c => c.Students)
+                .Include(c => c.Chairs)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 

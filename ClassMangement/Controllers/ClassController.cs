@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Repository.Entities;
 using Repository.Entities.Enums;
 using Service.Interfaces;
+using Service.SeatAllocation.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,17 +18,21 @@ namespace ClassMangement.Controllers
         private readonly IQueryLogicGeneric<ClassDto, int> serviceQueryLogicGeneric;
         private readonly ISecurity<Student, UserLogin> securityServiceStudent;
         private readonly ISecurity<Teacher, UserLogin> securityServiceTeacher;
-        private readonly IConfiguration config;
+		private readonly ISolver solverInlayStudentsInSeats;
+
+		private readonly IConfiguration config;
 
         public ClassController(IService<ClassDto, int> service, IConfiguration config, ISecurity<Teacher, UserLogin> securityServiceTeacher, ISecurity<Student, UserLogin> securityServiceStudent,
-            IQueryLogicGeneric<ClassDto, int> serviceQueryLogicGeneric)
+            IQueryLogicGeneric<ClassDto, int> serviceQueryLogicGeneric, ISolver solverInlayStudentsInSeats )
         {
             this.service = service;
             this.config = config;
             this.securityServiceStudent = securityServiceStudent;
             this.securityServiceTeacher = securityServiceTeacher;
             this.serviceQueryLogicGeneric = serviceQueryLogicGeneric;
-        }
+			this.solverInlayStudentsInSeats = solverInlayStudentsInSeats;
+
+		}
         // GET: api/<ClassController>
         [HttpGet]
         [Authorize(Roles = $"{nameof(Roles.Master)}")]
