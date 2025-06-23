@@ -33,24 +33,24 @@ namespace Service.SeatAllocation.Logic.Solver
         }
 
 
+        public IEnumerable<IConstraintRule> GetConstraintRules()
+        {
+            List<IConstraintRule> constraintRules = new List<IConstraintRule>();
+            constraintRules.Add(new AllDifferentConstraintRule());
+            return constraintRules;
+        }
 
-		public IEnumerable<IConstraintRule> GetConstraintRules()
-		{
-			IEnumerable<IConstraintRule> constraintRules = new List<IConstraintRule>();
-			constraintRules.Append(new AllDifferentConstraintRule());
-			return constraintRules;
-		}
 
-		public IEnumerable<IScoringRule> GetScoringRules()
+        public IEnumerable<IScoringRule> GetScoringRules()
 		{
-			IEnumerable<IScoringRule> scoringRules = new List<IScoringRule>();
-			scoringRules.Append(new BackSeatInFront());
-			scoringRules.Append(new ExtremeSeatInCenter());
-			scoringRules.Append(new FavoriteFriendsInNearbySeat());
-			scoringRules.Append(new HistorySeatsNotRepeat());
-			scoringRules.Append(new LowAttentionLevelInCenter());
-			scoringRules.Append(new LowAttentionLevelNotNearWindowOrDoor());
-			scoringRules.Append(new NonFavoriteFriendsNotNearBySeat());
+			List<IScoringRule> scoringRules = new List<IScoringRule>();
+			scoringRules.Add(new BackSeatInFront());
+			scoringRules.Add(new ExtremeSeatInCenter());
+			scoringRules.Add(new FavoriteFriendsInNearbySeat());
+			scoringRules.Add(new HistorySeatsNotRepeat());
+			scoringRules.Add(new LowAttentionLevelInCenter());
+			scoringRules.Add(new LowAttentionLevelNotNearWindowOrDoor());
+			scoringRules.Add(new NonFavoriteFriendsNotNearBySeat());
 
 			return scoringRules;
 		}

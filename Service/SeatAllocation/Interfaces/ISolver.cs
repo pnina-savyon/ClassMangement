@@ -8,6 +8,8 @@ namespace Service.SeatAllocation.Interfaces
 {
 	public interface ISolver
 	{
-		public Task SolverFunc();
+		Task BuildSolver();
+
+        Task SolverFunc(int classId);
 	}
 }

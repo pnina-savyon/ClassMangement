@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Service.SeatAllocation.Logic.Rules
 {
-	internal class AllDifferentConstraintRule : IConstraintRule
+	public class AllDifferentConstraintRule : IConstraintRule
 	{
 		public void Apply(CpModel model, StudentContext context)
 		{

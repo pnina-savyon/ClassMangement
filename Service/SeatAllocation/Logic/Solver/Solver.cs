@@ -1,5 +1,6 @@
 ﻿using Google.OrTools.LinearSolver;
 using Google.OrTools.Sat;
+using Microsoft.Extensions.Logging;
 using Repository.Entities;
 using Repository.Interfaces;
 using Repository.Repositories;
@@ -19,18 +20,19 @@ namespace Service.SeatAllocation.Logic.Solver
 		private IRepository<Class,int> ClassRepository { get; set; }
         private int ClassId { get;  set; }
 
+        private readonly ILogger<Solver> _logger;
 
-        public Solver(IRepository<Class, int> classRepository, int classId)
-		{
-			ClassRepository = classRepository;
-			ClassId = classId;
-		}
-		public async Task BuildSolver()
+        public Solver(IRepository<Class, int> classRepository, ILogger<Solver> logger)
+        {
+            ClassRepository = classRepository;
+            _logger = logger;
+        }
+
+        public async Task BuildSolver()
 		{
 			Class c = await ClassRepository.GetById(ClassId);
 			studentContext = new StudentContext(c.Students.ToList(), c.Chairs.ToList());
-
-			IEnumerable<IConstraintRule> constraintRules = studentContext.GetConstraintRules();
+            IEnumerable<IConstraintRule> constraintRules = studentContext.GetConstraintRules();
 			IEnumerable<IScoringRule> scoringRules = studentContext.GetScoringRules();
 			foreach(IConstraintRule constraintRule in constraintRules)
 			{
@@ -45,9 +47,11 @@ namespace Service.SeatAllocation.Logic.Solver
 				}
 			}
 		}
-		public async Task SolverFunc()
+		public async Task SolverFunc(int classId)
 		{
-			await BuildSolver();		
+            ClassId = classId;
+			await BuildSolver();	
+			
 			studentContext.Model.Maximize(studentContext.Objective);
 			CpSolver solver = new CpSolver();
 			CpSolverStatus status = solver.Solve(studentContext.Model);
@@ -55,13 +59,21 @@ namespace Service.SeatAllocation.Logic.Solver
 			{
 				foreach (Student student in studentContext.Students)
 				{
-					Console.WriteLine("The student: " + student.Name+"in chair: " + studentContext.StudentChairVars[student.Id]);
+                    //Console.WriteLine("The student: " + student.Name+"in chair: " + studentContext.StudentChairVars[student.Id]);
+                    //_logger.LogInformation("The student: {StudentName} in chair: {ChairVar}", student.Name, studentContext.StudentChairVars[student.Id].Domain);
+                    _logger.LogInformation(
+                        "The student: {StudentName} in chair: {ChairVar}, status: {Status}",
+                        student.Name,
+                        solver.Value(studentContext.StudentChairVars[student.Id]),
+                        status);
+
+
                 }
-				//מעבר על dictationary
-			}
+                //מעבר על dictationary
+            }
 			else
 			{
-				Console.WriteLine("solution not found, status:"+status);
+                _logger.LogInformation("solution not found, status:"+status);
 			}
 		}
 	}

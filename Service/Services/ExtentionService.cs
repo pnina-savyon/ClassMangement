@@ -5,6 +5,8 @@ using Repository.Entities;
 using Repository.Interfaces;
 using Repository.Repositories;
 using Service.Interfaces;
+using Service.SeatAllocation.Interfaces;
+using Service.SeatAllocation.Logic.Solver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +44,9 @@ namespace Service.Services
 
             services.AddScoped<IQueryLogicGeneric<ClassDto, int>, ClassService>();
             services.AddScoped<IQueryLogicGeneric<ChairDto, int>, ChairService>();
+
+            services.AddScoped<ISolver, Solver>();
+
 
 
             //services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService>();
