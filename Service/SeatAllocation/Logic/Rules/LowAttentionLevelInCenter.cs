@@ -18,8 +18,10 @@ namespace Service.SeatAllocation.Logic.Rules
 		{
 			//priority
 			if ((student.AttentionLevel != Levels.E && student.AttentionLevel != Levels.D)
-				|| (student.MoralLevel != Levels.E && student.MoralLevel != Levels.D))
+				|| (student.MoralLevel == Levels.E || student.MoralLevel == Levels.D))
 				return LinearExpr.Constant(0);
+			//למורל לא מינוס?
+			//== or !=?
 
 			int score = student.AttentionLevel == Levels.E ? 10 : 8;
 			//?? וכן האם -5 וכן האם בכלל ההגדרה יפה ונכונה?
