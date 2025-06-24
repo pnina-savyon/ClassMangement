@@ -5,6 +5,7 @@ using Repository.Entities;
 using Repository.Entities.Enums;
 using Service.Interfaces;
 using Service.SeatAllocation.Interfaces;
+using Service.SeatAllocation.Logic.Solver;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,7 +22,6 @@ namespace ClassMangement.Controllers
 		private readonly IConfiguration config;
 
         private readonly ISolver solverInlayStudentsInSeats;
-
 
         public ClassController(IService<ClassDto, int> service, IConfiguration config, ISecurity<Teacher, UserLogin> securityServiceTeacher, ISecurity<Student, UserLogin> securityServiceStudent,
             IQueryLogicGeneric<ClassDto, int> serviceQueryLogicGeneric, ISolver solverInlayStudentsInSeats)
@@ -75,7 +75,7 @@ namespace ClassMangement.Controllers
             //Roles userRole = userDto.Role;
 
             //ClassDto classDto = await serviceQueryLogicGeneric.GetByIdLogic(id, userRole, userId);
-
+            
             await solverInlayStudentsInSeats.SolverFunc(classId);
             //if (classDto == null)
             //    return NotFound();

@@ -21,17 +21,26 @@ namespace Service.SeatAllocation.Logic.Solver
         private int ClassId { get;  set; }
 
         private readonly ILogger<Solver> _logger;
+        private readonly ISeatingAllocationInputValidator seatingAllocationInputValidator;
 
-        public Solver(IRepository<Class, int> classRepository, ILogger<Solver> logger)
+
+        public Solver(IRepository<Class, int> classRepository, ILogger<Solver> logger
+			, ISeatingAllocationInputValidator seatingAllocationInputValidator)
         {
             ClassRepository = classRepository;
             _logger = logger;
+            this.seatingAllocationInputValidator = seatingAllocationInputValidator;
         }
 
         public async Task BuildSolver()
 		{
-			Class c = await ClassRepository.GetById(ClassId);
-			studentContext = new StudentContext(c.Students.ToList(), c.Chairs.ToList());
+            Class c = await ClassRepository.GetById(ClassId);
+
+			//validators chacking
+			if (!seatingAllocationInputValidator.IsValidInput(c.Students.ToList(), c.Chairs.ToList(), c))
+				return;
+
+            studentContext = new StudentContext(c.Students.ToList(), c.Chairs.ToList());
             IEnumerable<IConstraintRule> constraintRules = studentContext.GetConstraintRules();
 			IEnumerable<IScoringRule> scoringRules = studentContext.GetScoringRules();
 			foreach(IConstraintRule constraintRule in constraintRules)
