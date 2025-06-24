@@ -16,6 +16,9 @@ namespace Service.SeatAllocation.Logic.Rules
 	{
 		public LinearExpr GetScore(Student student, IntVar studentChairVar, StudentContext context)
 		{
+			if (student.CurrentChair == null)
+				return LinearExpr.Constant(0);
+
 			int score = student.CurrentChair.IsFront? (student.Priority ?? 1) * -3: (student.Priority ?? 1) * 11;
 			List<LinearExpr> terms = new List<LinearExpr>();
 

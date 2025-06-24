@@ -34,10 +34,7 @@ namespace Service.SeatAllocation.Logic.Solver
 			studentContext = new StudentContext(c.Students.ToList(), c.Chairs.ToList());
             IEnumerable<IConstraintRule> constraintRules = studentContext.GetConstraintRules();
 			IEnumerable<IScoringRule> scoringRules = studentContext.GetScoringRules();
-			foreach(IConstraintRule constraintRule in constraintRules)
-			{
-				constraintRule.Apply(studentContext.Model,studentContext);
-			}
+
 			foreach(Student student in studentContext.Students)
 			{
 				studentContext.StudentChairVars[student.Id] = studentContext.Model.NewIntVar(1,studentContext.NumChairs, $"chair_of_student_{student.Id}");
@@ -45,6 +42,11 @@ namespace Service.SeatAllocation.Logic.Solver
 				{
 					scoringRule.GetScore(student, studentContext.StudentChairVars[student.Id], studentContext);
 				}
+			}
+
+			foreach (IConstraintRule constraintRule in constraintRules)
+			{
+				constraintRule.Apply(studentContext.Model, studentContext);
 			}
 		}
 		public async Task SolverFunc(int classId)

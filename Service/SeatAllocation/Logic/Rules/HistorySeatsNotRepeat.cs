@@ -32,7 +32,7 @@ namespace Service.SeatAllocation.Logic.Rules
                 else
                 {
                     score = -4 * (student.Priority ?? 1);
-                    foreach (int chairHistoryId in student.HistoryChairs)
+                    foreach (int chairHistoryId in student.HistoryChairs ?? new List<int>())
                     {
                         if (chairHistoryId == chair.Id)
                         {
