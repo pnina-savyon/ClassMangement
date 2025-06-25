@@ -96,6 +96,8 @@ namespace Mock
 				.WithMany()
 				.UsingEntity(j => j.ToTable("ChairNearbyChairs"));
 
+
+
 		}
 
 		public async Task Save()
