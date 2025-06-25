@@ -1,15 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Repository.Entities;
 using Repository.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mock
 {
-	public class Database: DbContext, IContext
+	public class Database : DbContext, IContext
 	{
 		public DbSet<Student> Students { get; set; }
 		//public DbSet<Teacher> Teacher { get; set; }
@@ -32,6 +27,7 @@ namespace Mock
 				.HasValue<Student>("Student")
 				.HasValue<Teacher>("Teacher");
 
+			// הגדרת הקשרים בין תלמיד לכיתה 
 			// מניעת מחיקת שרשרת (Cascade) בין Student ל-Class
 			modelBuilder.Entity<Student>()
 				.HasOne(s => s.Class)
@@ -39,23 +35,81 @@ namespace Mock
 				.HasForeignKey(s => s.ClassId)
 				.OnDelete(DeleteBehavior.Restrict); // או DeleteBehavior.NoAction
 
+			// הגדרת הקשרים בין תלמיד לכיסא
 			// מניעת מחיקת שרשרת עם Chair
 			modelBuilder.Entity<Student>()
 				.HasOne(s => s.CurrentChair)
 				.WithMany()
 				.HasForeignKey(s => s.ChairId)
 				.OnDelete(DeleteBehavior.Restrict);
+
+			// יצירת טבלאות בשביל למפות את הקשרים בין תלמיד לחברים
+			modelBuilder.Entity<Student>()
+		.HasMany(s => s.FavoriteFriends)
+		.WithMany()
+		.UsingEntity<Dictionary<string, object>>(
+			"StudentFavoriteFriends",
+			j => j.HasOne<Student>()
+				  .WithMany()
+				  .HasForeignKey("FriendId")
+				  .OnDelete(DeleteBehavior.Restrict),
+			j => j.HasOne<Student>()
+				  .WithMany()
+				  .HasForeignKey("StudentId")
+				  .OnDelete(DeleteBehavior.Cascade)
+		);
+
+			// קשר רבים-לרבים בין תלמידים לחברים לא מועדפים
+			modelBuilder.Entity<Student>()
+				.HasMany(s => s.NonFavoriteFriends)
+				.WithMany()
+				.UsingEntity<Dictionary<string, object>>(
+					"StudentNonFavoriteFriends",
+					j => j.HasOne<Student>()
+						  .WithMany()
+						  .HasForeignKey("NonFriendId")
+						  .OnDelete(DeleteBehavior.Restrict),
+					j => j.HasOne<Student>()
+						  .WithMany()
+						  .HasForeignKey("StudentId")
+						  .OnDelete(DeleteBehavior.Cascade)
+				);
+
+
+			// הגדרת הקשר בין כיתה למורה
+			modelBuilder.Entity<Class>()
+				.HasOne(c => c.Teacher)
+				.WithMany(t => t.Classes)
+				.HasForeignKey(c => c.TeacherId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			// הגדרת הקשר בין כיסא לכיתה 
+			modelBuilder.Entity<Chair>()
+				.HasOne(ch => ch.Class)
+				.WithMany(c => c.Chairs)
+				.HasForeignKey(ch => ch.ClassId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			// יצרירת מחלקה למפות את הקשר בין כיסא לכיסאות שכנים
+			modelBuilder.Entity<Chair>()
+				.HasMany(c => c.NearbyChairs)
+				.WithMany()
+				.UsingEntity(j => j.ToTable("ChairNearbyChairs"));
+
+
+
 		}
 
 		public async Task Save()
 		{
 			await SaveChangesAsync();
-        }
+		}
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-            optionsBuilder.UseSqlServer("Server=DESKTOP-1VUANBN;Database=ClassManagementDB;trusted_connection=true;TrustServerCertificate=true");
+            optionsBuilder.UseSqlServer("Server=WX1097573;Database=ClassManagementDB;trusted_connection=true;TrustServerCertificate=true");
 		}
-        //WX1097573
-    }
+		//WX1097573
+		//DESKTOP-1VUANBN
+	}
 }

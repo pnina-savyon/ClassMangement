@@ -17,13 +17,12 @@ namespace Service.SeatAllocation.Logic.Rules
         {
             int score = (student.AttentionLevel == Levels.E ||
                 student.AttentionLevel == Levels.D ? -16 : -14) * (student.Priority ?? 1);
-
+            
             foreach (Chair chair in context.Chairs)
             {
-                foreach (Chair nearByChair in chair.NearbyChairs)
+                foreach (Chair nearByChair in chair.NearbyChairs ?? new List<Chair>())
                 {
-                    //student.NonFavoriteFriends ?? new List<Student>()
-                    foreach (Student nonFavoriteFriend in student.NonFavoriteFriends)
+                    foreach (Student nonFavoriteFriend in student.NonFavoriteFriends ?? new List<Student>())
                     {
                         BoolVar both = context.Model.NewBoolVar($"student_{student.Id}_with_friend_{nonFavoriteFriend.Id}_near_{nearByChair.Id}");
                         context.Model.Add(context.StudentChairVars[student.Id] == chair.Id).OnlyEnforceIf(both);

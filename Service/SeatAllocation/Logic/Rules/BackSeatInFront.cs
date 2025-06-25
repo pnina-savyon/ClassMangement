@@ -16,10 +16,10 @@ namespace Service.SeatAllocation.Logic.Rules
 	{
 		public LinearExpr GetScore(Student student, IntVar studentChairVar, StudentContext context)
 		{
-            if (student.MoralLevel == Levels.E || student.MoralLevel == Levels.D)
-                return LinearExpr.Constant(0);
+			if (student.CurrentChair == null)
+				return LinearExpr.Constant(0);
 
-            int score = student.CurrentChair.IsFront? (student.Priority ?? 1) * -3: (student.Priority ?? 1) * 11;
+			int score = student.CurrentChair.IsFront? (student.Priority ?? 1) * -3: (student.Priority ?? 1) * 11;
 			List<LinearExpr> terms = new List<LinearExpr>();
 
             foreach (Chair chair in context.Chairs)
