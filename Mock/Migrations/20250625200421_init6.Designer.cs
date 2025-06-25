@@ -12,7 +12,7 @@ using Mock;
 namespace Mock.Migrations
 {
     [DbContext(typeof(Database))]
-    [Migration("20250624183804_init6")]
+    [Migration("20250625200421_init6")]
     partial class init6
     {
         /// <inheritdoc />
@@ -25,6 +25,21 @@ namespace Mock.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ChairChair", b =>
+                {
+                    b.Property<int>("ChairId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NearbyChairsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ChairId", "NearbyChairsId");
+
+                    b.HasIndex("NearbyChairsId");
+
+                    b.ToTable("ChairNearbyChairs", (string)null);
+                });
+
             modelBuilder.Entity("Repository.Entities.Chair", b =>
                 {
                     b.Property<int>("Id")
@@ -32,9 +47,6 @@ namespace Mock.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("ChairId")
-                        .HasColumnType("int");
 
                     b.Property<int>("ClassId")
                         .HasColumnType("int");
@@ -58,8 +70,6 @@ namespace Mock.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ChairId");
 
                     b.HasIndex("ClassId");
 
@@ -267,19 +277,34 @@ namespace Mock.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("StudentStudent", b =>
+            modelBuilder.Entity("StudentFavoriteFriends", b =>
                 {
-                    b.Property<string>("FavoriteFriendsId")
+                    b.Property<string>("FriendId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("NonFavoriteFriendsId")
+                    b.Property<string>("StudentId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("FavoriteFriendsId", "NonFavoriteFriendsId");
+                    b.HasKey("FriendId", "StudentId");
 
-                    b.HasIndex("NonFavoriteFriendsId");
+                    b.HasIndex("StudentId");
 
-                    b.ToTable("StudentStudent");
+                    b.ToTable("StudentFavoriteFriends");
+                });
+
+            modelBuilder.Entity("StudentNonFavoriteFriends", b =>
+                {
+                    b.Property<string>("NonFriendId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("StudentId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("NonFriendId", "StudentId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentNonFavoriteFriends");
                 });
 
             modelBuilder.Entity("Repository.Entities.Student", b =>
@@ -329,12 +354,23 @@ namespace Mock.Migrations
                     b.HasDiscriminator().HasValue("Teacher");
                 });
 
-            modelBuilder.Entity("Repository.Entities.Chair", b =>
+            modelBuilder.Entity("ChairChair", b =>
                 {
                     b.HasOne("Repository.Entities.Chair", null)
-                        .WithMany("NearbyChairs")
-                        .HasForeignKey("ChairId");
+                        .WithMany()
+                        .HasForeignKey("ChairId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
+                    b.HasOne("Repository.Entities.Chair", null)
+                        .WithMany()
+                        .HasForeignKey("NearbyChairsId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Repository.Entities.Chair", b =>
+                {
                     b.HasOne("Repository.Entities.Class", "Class")
                         .WithMany("Chairs")
                         .HasForeignKey("ClassId")
@@ -355,7 +391,7 @@ namespace Mock.Migrations
                     b.HasOne("Repository.Entities.Teacher", "Teacher")
                         .WithMany("Classes")
                         .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Teacher");
@@ -413,18 +449,33 @@ namespace Mock.Migrations
                     b.Navigation("Survey");
                 });
 
-            modelBuilder.Entity("StudentStudent", b =>
+            modelBuilder.Entity("StudentFavoriteFriends", b =>
                 {
                     b.HasOne("Repository.Entities.Student", null)
                         .WithMany()
-                        .HasForeignKey("FavoriteFriendsId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("FriendId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Repository.Entities.Student", null)
                         .WithMany()
-                        .HasForeignKey("NonFavoriteFriendsId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("StudentNonFavoriteFriends", b =>
+                {
+                    b.HasOne("Repository.Entities.Student", null)
+                        .WithMany()
+                        .HasForeignKey("NonFriendId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Repository.Entities.Student", null)
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -448,11 +499,6 @@ namespace Mock.Migrations
                     b.Navigation("Class");
 
                     b.Navigation("CurrentChair");
-                });
-
-            modelBuilder.Entity("Repository.Entities.Chair", b =>
-                {
-                    b.Navigation("NearbyChairs");
                 });
 
             modelBuilder.Entity("Repository.Entities.Class", b =>
