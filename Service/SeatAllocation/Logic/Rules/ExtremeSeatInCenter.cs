@@ -7,6 +7,7 @@ using Service.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,11 +17,13 @@ namespace Service.SeatAllocation.Logic.Rules
     {
         public LinearExpr GetScore(Student student, IntVar studentChairVar, StudentContext context)
         {
-            //int?
-            int score = (student.CurrentChair.IsCenteral ? -3 : 10) * (student.Priority ?? 1);
+			//int? אין אפשרות אחרת
+			if (student.CurrentChair == null)
+				return LinearExpr.Constant(0);
+			int score = (student.CurrentChair.IsCenteral ? -3 : 10) * (student.Priority ?? 1);
 
             List<LinearExpr> terms = new List<LinearExpr>();      
-            foreach (Chair chair in context.Chairs)
+            foreach (Chair chair in context.Chairs ?? new List<Chair>())
             {
                 if (!chair.IsCenteral)
                 {

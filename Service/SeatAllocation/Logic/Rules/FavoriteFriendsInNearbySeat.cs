@@ -23,7 +23,7 @@ namespace Service.SeatAllocation.Logic.Rules
 
             foreach (Chair chair in context.Chairs)
             {
-                foreach (Chair nearByChair in chair.NearbyChairs)
+                foreach (Chair nearByChair in chair.NearbyChairs ?? new List<Chair>())
                 {
                     foreach (Student favoriteFriend in student.FavoriteFriends ?? new List<Student>())
                     {

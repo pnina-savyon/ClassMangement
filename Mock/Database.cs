@@ -1,15 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Repository.Entities;
 using Repository.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mock
 {
-	public class Database: DbContext, IContext
+	public class Database : DbContext, IContext
 	{
 		public DbSet<Student> Students { get; set; }
 		//public DbSet<Teacher> Teacher { get; set; }
@@ -107,8 +102,8 @@ namespace Mock
 
 		public async Task Save()
 		{
-            await SaveChangesAsync();
-        }
+			await SaveChangesAsync();
+		}
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
