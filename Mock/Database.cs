@@ -45,9 +45,9 @@ namespace Mock
 
 			// יצירת טבלאות בשביל למפות את הקשרים בין תלמיד לחברים
 			modelBuilder.Entity<Student>()
-		.HasMany(s => s.FavoriteFriends)
-		.WithMany()
-		.UsingEntity<Dictionary<string, object>>(
+				.HasMany(s => s.FavoriteFriends)
+				.WithMany()
+				.UsingEntity<Dictionary<string, object>>(
 			"StudentFavoriteFriends",
 			j => j.HasOne<Student>()
 				  .WithMany()
@@ -94,7 +94,19 @@ namespace Mock
 			modelBuilder.Entity<Chair>()
 				.HasMany(c => c.NearbyChairs)
 				.WithMany()
-				.UsingEntity(j => j.ToTable("ChairNearbyChairs"));
+				.UsingEntity<Dictionary<string, object>>(
+					"ChairNearbyChairs",
+					j => j.HasOne<Chair>()
+						  .WithMany()
+						  .HasForeignKey("NearbyChairId")
+						  .OnDelete(DeleteBehavior.Restrict), // לא למחוק את השכן בטעות
+					j => j.HasOne<Chair>()
+						  .WithMany()
+						  .HasForeignKey("ChairId")
+						  .OnDelete(DeleteBehavior.Cascade) // כשמוחקים את הכיסא – מוחקים את הקשר בלבד
+				);
+
+
 
 
 
