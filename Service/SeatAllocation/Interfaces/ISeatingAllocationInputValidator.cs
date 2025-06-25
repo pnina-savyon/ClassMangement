@@ -9,6 +9,6 @@ namespace Service.SeatAllocation.Interfaces
 {
     public interface ISeatingAllocationInputValidator
     {
-        bool IsValidInput(List<Student> students, List<Chair> chairs, Class schoolClass)
+        bool IsValidInput(List<Student> students, List<Chair> chairs, Class schoolClass);
     }
 }

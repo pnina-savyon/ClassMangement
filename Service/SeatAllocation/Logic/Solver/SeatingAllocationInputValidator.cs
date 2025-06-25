@@ -41,8 +41,7 @@ namespace Service.SeatAllocation.Logic.Solver
                 if (student.StatusSocial == null)
                     return false;
 
-                if (student.FavoriteFriends == null || student.NonFavoriteFriends == null)
-                    return false;
+                //תוכן שגוי לא צריך לבדוק מראש.
             }
 
             foreach (var chair in chairs)
