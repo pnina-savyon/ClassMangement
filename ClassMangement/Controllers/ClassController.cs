@@ -65,7 +65,7 @@ namespace ClassMangement.Controllers
         // GET api/<ClassController>/5
         [HttpGet("SolverInlayStudentsInSeats/{classId}")]
         [Authorize]
-        public async Task SolverInlayStudentsInSeats(int classId)
+        public async Task<IActionResult> SolverInlayStudentsInSeats(int classId)
         {
             //User? teacherUser = securityServiceTeacher.GetCurrentUser();
             //User? studentUser = securityServiceStudent.GetCurrentUser();
@@ -77,6 +77,7 @@ namespace ClassMangement.Controllers
             //ClassDto classDto = await serviceQueryLogicGeneric.GetByIdLogic(id, userRole, userId);
             
             await solverInlayStudentsInSeats.SolverFunc(classId);
+            return Ok();
             //if (classDto == null)
             //    return NotFound();
 

@@ -36,10 +36,6 @@ namespace Service.SeatAllocation.Logic.Solver
 		{
             Class c = await ClassRepository.GetById(ClassId);
 
-			//validators chacking
-			if (!seatingAllocationInputValidator.IsValidInput(c.Students.ToList(), c.Chairs.ToList(), c))
-				return;
-
             studentContext = new StudentContext(c.Students.ToList(), c.Chairs.ToList());
             IEnumerable<IConstraintRule> constraintRules = studentContext.GetConstraintRules();
 			IEnumerable<IScoringRule> scoringRules = studentContext.GetScoringRules();
@@ -59,7 +55,13 @@ namespace Service.SeatAllocation.Logic.Solver
 		public async Task SolverFunc(int classId)
 		{
             ClassId = classId;
-			await BuildSolver();	
+
+            //validators chacking
+            Class c = await ClassRepository.GetById(ClassId);
+            if (!seatingAllocationInputValidator.IsValidInput(c.Students.ToList(), c.Chairs.ToList(), c))
+                return;
+
+            await BuildSolver();	
 			
 			studentContext.Model.Maximize(studentContext.Objective);
 			CpSolver solver = new CpSolver();
