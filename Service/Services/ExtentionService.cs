@@ -46,6 +46,7 @@ namespace Service.Services
             services.AddScoped<IQueryLogicGeneric<ChairDto, int>, ChairService>();
 
             services.AddScoped<ISolver, Solver>();
+            services.AddScoped<ISeatingAllocationInputValidator,SeatingAllocationInputValidator>();
 
 
 
