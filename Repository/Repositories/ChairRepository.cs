@@ -37,8 +37,12 @@ namespace Repository.Repositories
         public async Task<Chair> DeleteItem(int id)
         {
             Chair item = await GetById(id);
-            this.context.Chairs.Remove(item);
-            await this.context.Save();
+            if (item != null)
+            {
+                item.NearbyChairs.Clear();
+				this.context.Chairs.Remove(item);
+				await this.context.Save();
+			}
             return item;
         }
 

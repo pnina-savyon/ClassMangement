@@ -44,11 +44,11 @@ namespace Repository.Repositories
             return await this.context.Classes
                 .Include(c => c.Teacher)
                 .Include(c => c.Students)
-                .Include(c => c.Chairs)
-                    .ThenInclude(ch => ch.NearbyChairs)
-                .Include(c => c.Chairs)
-                    .ThenInclude(ch => ch.NearbyOfChairs)
-                .FirstOrDefaultAsync(c => c.Id == id);
+						.ThenInclude(s => s.FavoriteFriends)
+		                .ThenInclude(s => s.NonFavoriteFriends)
+				.Include(c => c.Chairs)
+						.ThenInclude(ch => ch.NearbyChairs)
+				.FirstOrDefaultAsync(c => c.Id == id);
         }
 
 
