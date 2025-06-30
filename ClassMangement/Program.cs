@@ -1,4 +1,5 @@
 using ClassMangement.Controllers;
+using ClassMangement.Seeders;
 using Common.Dto;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -9,6 +10,7 @@ using Repository.Interfaces;
 using Repository.Repositories;
 using Service.Interfaces;
 using Service.Services;
+using System;
 using System.Text;
 
 // TODO: 
@@ -89,12 +91,42 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+Console.WriteLine($" ENVIRONMENT: {app.Environment.EnvironmentName}");
 if (app.Environment.IsDevelopment())
 {
-	app.UseSwagger();
-	app.UseSwaggerUI();
+    using (var scope = app.Services.CreateScope())
+    {
+		//בעיקרון עדיף Icontext אבל זה דורש כמה שינויים עבור כך.
+        var context = scope.ServiceProvider.GetRequiredService<Database>(); // או IContext
+
+        var sqlPath = Path.Combine(AppContext.BaseDirectory, "SeedData", "initial_data.sql");
+        SqlSeeder.CheckSeederWorks(context, sqlPath);
+
+        if (File.Exists(sqlPath))
+        {
+            if (!context.Classes.Any()) // או Students וכו'
+            {
+                SqlSeeder.RunSqlFromFile(context, sqlPath);
+            }
+        }
+        else
+        {
+			Console.WriteLine(" קובץ SQL לא נמצא: " + sqlPath);
+        }
+    }
+
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+//// Configure the HTTP request pipeline.
+//if (app.Environment.IsDevelopment())
+//{
+//	app.UseSwagger();
+//	app.UseSwaggerUI();
+//}
+
+// Configure the HTTP request pipeline.
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHttpsRedirection();

@@ -56,11 +56,13 @@ namespace Repository.Repositories
         {
             return await this.context.Chairs
                 .Include(ch => ch.NearbyChairs)
+                .Include(ch => ch.NearbyOfChairs)
                 .Include(ch => ch.Class)
-                .ThenInclude(c => c.Students)
+                    .ThenInclude(c => c.Students)
                 .Include(ch => ch.CurrentStudent)
                 .FirstOrDefaultAsync(ch => ch.Id == id);
         }
+
 
         public async Task<Chair> UpdateItem(int id, Chair item)
         {
