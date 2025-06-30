@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Repository.Entities;
 using Repository.Entities.Enums;
+using Repository.Interfaces;
 using Service.SeatAllocation.Interfaces;
 using Service.SeatAllocation.Logic.Solver;
 using System;
@@ -15,22 +16,24 @@ namespace Service.SeatAllocation.Logic.Rules
 {
     public class FavoriteFriendsInNearbySeat : IScoringRule
     {
-		public int CalculateActualScore(Student student, int assignedChairId, StudentContext context, CpSolver solver)
+		
+
+		public int CalculateActualScore(Student student, Chair assignedChair, StudentContext context, CpSolver solver)
 		{
 			int score = (student.StatusSocial == Levels.E || student.StatusSocial == Levels.D ? 15 : 13)
 						+ (student.Priority ?? 0);
 			int totalScore = 0;
 
-			Chair? assignedChair = context.Chairs.FirstOrDefault(c => c.Id == assignedChairId);
 			if (assignedChair == null) return 0;
 
 			foreach (Chair nearby in assignedChair.NearbyChairs ?? new List<Chair>())
 			{
 				foreach (Student friend in student.FavoriteFriends ?? new List<Student>())
 				{
+                    //continue
 					if (!context.StudentChairVars.ContainsKey(friend.Id)) continue;
 
-					int friendChairId = (int)solver.Value(context.StudentChairVars[friend.Id]);
+					var friendChairId = solver.Value(context.StudentChairVars[friend.Id]);
 					if (friendChairId == nearby.Id)
 						totalScore += score;
 				}

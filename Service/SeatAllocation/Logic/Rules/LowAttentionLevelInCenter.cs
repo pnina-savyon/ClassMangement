@@ -14,7 +14,7 @@ namespace Service.SeatAllocation.Logic.Rules
 {
 	public class LowAttentionLevelInCenter : IScoringRule
 	{
-		public int CalculateActualScore(Student student, int assignedChairId, StudentContext context, CpSolver solver)
+		public int CalculateActualScore(Student student, Chair assignedChair, StudentContext context, CpSolver solver)
 		{
 			// תנאי סף – רק תלמידים עם רמת קשב נמוכה ורמת מוסר גבוהה
 			bool isLowAttention = student.AttentionLevel == Levels.E || student.AttentionLevel == Levels.D;
@@ -37,7 +37,6 @@ namespace Service.SeatAllocation.Logic.Rules
 			score += student.Priority ?? 0;
 
 			// בדיקה אם הכיסא המוקצה הוא מקדימה
-			Chair? assignedChair = context.Chairs.FirstOrDefault(c => c.Id == assignedChairId);
 			if (assignedChair == null || !assignedChair.IsFront && !assignedChair.IsCenteral)
 				return 0;
 			return score;
@@ -70,7 +69,11 @@ namespace Service.SeatAllocation.Logic.Rules
 					context.Model.Add(studentChairVar == chair.Id).OnlyEnforceIf(isMatch);
 					context.Model.Add(studentChairVar != chair.Id).OnlyEnforceIf(isMatch.Not());
 
-					terms.Add(isMatch * score); 
+
+					if (chair.IsFront)
+						terms.Add(isMatch * score);
+					if (chair.IsCenteral)
+						terms.Add(isMatch * score);	
 				}
 			}
 			return LinearExpr.Sum(terms);

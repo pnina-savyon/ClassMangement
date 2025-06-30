@@ -12,15 +12,15 @@ namespace Service.SeatAllocation.Logic.Rules
 {
     public class HistorySeatsNotRepeat : IScoringRule
     {
-		public int CalculateActualScore(Student student, int assignedChairId, StudentContext context, CpSolver solver)
+		public int CalculateActualScore(Student student, Chair assignedChair, StudentContext context, CpSolver solver)
 		{
 
-			if (student.ChairId == assignedChairId)
+			if (student.ChairId == assignedChair.Id)
 			{
 				return -7 + (student.Priority ?? 0);
 			}
 
-			if (student.HistoryChairs.Contains(assignedChairId))
+			if (student.HistoryChairs.Contains(assignedChair.Id))
 			{
 				return -4 + (student.Priority ?? 0);
 			}

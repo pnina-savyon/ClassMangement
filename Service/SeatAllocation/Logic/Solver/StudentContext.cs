@@ -23,8 +23,10 @@ namespace Service.SeatAllocation.Logic.Solver
         public LinearExprBuilder Objective { get; private set; }
 		public int NumStudents => Students?.Count ?? 0;
 		public int NumChairs => Chairs?.Count ?? 0;
+		public List<IScoringRule> ScoringRules { get; set; }
 
-        public StudentContext(List<Student> students, List<Chair> chairs)
+
+		public StudentContext(List<Student> students, List<Chair> chairs)
 		{
 			Students = students;
 			Chairs = chairs;
@@ -32,6 +34,7 @@ namespace Service.SeatAllocation.Logic.Solver
             //
             StudentChairVars = new Dictionary<string, IntVar>();
 			StudentScores = new Dictionary<string, int>();
+			InlayChairOfStudent = new Dictionary<string, int>();
 
 			Objective = LinearExpr.NewBuilder();
         }

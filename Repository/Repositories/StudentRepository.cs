@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Repository.Repositories
 {
     public class StudentRepository : UserRepository<Student>, IRepositoryAllById<Student, int>
-    {
+	{
         private readonly IContext context;
 
         public StudentRepository(IContext context)
@@ -99,5 +99,8 @@ namespace Repository.Repositories
             await this.context.Save();
             return student;
         }
-    }
+
+		
+
+	}
 }

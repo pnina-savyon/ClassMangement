@@ -1,4 +1,5 @@
 ﻿using Google.OrTools.Sat;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using Repository.Entities;
 using Repository.Interfaces;
@@ -14,22 +15,26 @@ using System.Threading.Tasks;
 
 namespace Service.SeatAllocation.Logic.Solver
 {
-	public class Solver : ISolver
+    public class Solver : ISolver
 	{
 		private StudentContext studentContext { get; set; }
 		private IRepository<Class,int> ClassRepository { get; set; }
         private int ClassId { get;  set; }
-
+		
         private readonly ILogger<Solver> _logger;
         private readonly ISeatingAllocationInputValidator seatingAllocationInputValidator;
+		private IPostSolverAnalysis postSolverAnalysis { get; set; }
 
 
-        public Solver(IRepository<Class, int> classRepository, ILogger<Solver> logger
-			, ISeatingAllocationInputValidator seatingAllocationInputValidator)
+
+		public Solver(IRepository<Class, int> classRepository, ILogger<Solver> logger
+			, ISeatingAllocationInputValidator seatingAllocationInputValidator,
+				IPostSolverAnalysis postSolverAnalysis)
         {
             ClassRepository = classRepository;
             _logger = logger;
             this.seatingAllocationInputValidator = seatingAllocationInputValidator;
+			this.postSolverAnalysis = postSolverAnalysis;	
         }
 
         public async Task BuildSolver()
@@ -39,14 +44,16 @@ namespace Service.SeatAllocation.Logic.Solver
             studentContext = new StudentContext(c.Students.ToList(), c.Chairs.ToList());
             IEnumerable<IConstraintRule> constraintRules = studentContext.GetConstraintRules();
 			IEnumerable<IScoringRule> scoringRules = studentContext.GetScoringRules();
-            foreach (Student student in studentContext.Students)
+			studentContext.ScoringRules = scoringRules.ToList();//
+
+			foreach (Student student in studentContext.Students)
             {
                 if (!studentContext.StudentChairVars.ContainsKey(student.Id))
                 {
                     studentContext.StudentChairVars[student.Id] = studentContext.Model.NewIntVar(1, studentContext.NumChairs, $"chair_of_student_{student.Id}");
                 }
             }
-            foreach (Student student in studentContext.Students)
+			foreach (Student student in studentContext.Students)
 			{
 				foreach (IScoringRule scoringRule in scoringRules)
 				{
@@ -76,6 +83,8 @@ namespace Service.SeatAllocation.Logic.Solver
 			CpSolverStatus status = solver.Solve(studentContext.Model);
 			if (status == CpSolverStatus.Optimal || status == CpSolverStatus.Feasible)
 			{
+				
+
 				foreach (Student student in studentContext.Students)
 				{
                     //Console.WriteLine("The student: " + student.Name+"in chair: " + studentContext.StudentChairVars[student.Id]);
@@ -88,12 +97,15 @@ namespace Service.SeatAllocation.Logic.Solver
 					
 						studentContext.InlayChairOfStudent[student.Id] = (int)solver.Value(studentContext.StudentChairVars[student.Id]);
                 }
-                //מעבר על dictationary
-            }
+				postSolverAnalysis.APICalculatePriority(studentContext, solver);
+				await postSolverAnalysis.UpdateStudentAndChairs();
+				//מעבר על dictationary
+			}
 			else
 			{
                 _logger.LogInformation("solution not found, status:"+status);
 			}
+
 		}
 	}
 

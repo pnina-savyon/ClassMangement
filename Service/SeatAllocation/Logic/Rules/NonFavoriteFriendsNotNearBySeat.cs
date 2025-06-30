@@ -13,12 +13,11 @@ namespace Service.SeatAllocation.Logic.Rules
 {
     public class NonFavoriteFriendsNotNearBySeat : IScoringRule
     {
-		public int CalculateActualScore(Student student, int assignedChairId, StudentContext context, CpSolver solver)
+		public int CalculateActualScore(Student student, Chair assignedChair, StudentContext context, CpSolver solver)
 		{
 			int score = (student.AttentionLevel == Levels.E || student.AttentionLevel == Levels.D ? -16 : -14) + (student.Priority ?? 1);
 			int totalScore = 0;
 
-			Chair? assignedChair = context.Chairs.FirstOrDefault(c => c.Id == assignedChairId);
 			if (assignedChair == null)
 				return 0;
 

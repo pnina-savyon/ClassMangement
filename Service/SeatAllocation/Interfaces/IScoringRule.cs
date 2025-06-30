@@ -12,7 +12,7 @@ namespace Service.SeatAllocation.Interfaces
 	public interface IScoringRule
 	{
 		LinearExpr GetScore(Student student, IntVar studentChairVar, StudentContext context);
-		int CalculateActualScore(Student student, int assignedChairId, StudentContext context, CpSolver solver);
+		int CalculateActualScore(Student student, Chair assignedChair, StudentContext context, CpSolver solver);
 	}
 }
 

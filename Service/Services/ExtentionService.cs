@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-	public static class ExtentionService
+    public static class ExtentionService
 	{
 		public static IServiceCollection AddServices(this IServiceCollection services)
 		{
@@ -47,19 +47,20 @@ namespace Service.Services
 
             services.AddScoped<ISolver, Solver>();
             services.AddScoped<ISeatingAllocationInputValidator,SeatingAllocationInputValidator>();
+			services.AddScoped<IPostSolverAnalysis, PostSolveAnalysis>();
 
 
 
-            //services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService>();
+			//services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService>();
 
-            //services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService<User, UserDto>>();
+			//services.AddScoped<ISecurity<UserDto, UserLogin>, SecurityService<User, UserDto>>();
 
 
-            //
-            //services.AddScoped<IService<UserDto, string>, UserService>();
+			//
+			//services.AddScoped<IService<UserDto, string>, UserService>();
 
-            //...כאן נגדיר את תלויות הservice
-            services.AddAutoMapper(typeof(DtoEntityMapper));
+			//...כאן נגדיר את תלויות הservice
+			services.AddAutoMapper(typeof(DtoEntityMapper));
 			return services;
 		}
 	}

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Repository.Repositories
 {
     public class ChairRepository : IRepository<Chair, int>, IRepositoryAllById<Chair, int>
-    {
+	{
 
         private readonly IContext context;
 
@@ -85,5 +85,7 @@ namespace Repository.Repositories
             await this.context.Save();
             return chair;
         }
-    }
+
+		
+	}
 }

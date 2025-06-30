@@ -14,7 +14,7 @@ namespace Service.SeatAllocation.Logic.Rules
 	public class LowAttentionLevelNotNearWindowOrDoor : IScoringRule
 	{
 
-		public int CalculateActualScore(Student student, int assignedChairId, StudentContext context, CpSolver solver)
+		public int CalculateActualScore(Student student, Chair assignedChair, StudentContext context, CpSolver solver)
 		{
 			if (student.AttentionLevel != Levels.E && student.AttentionLevel != Levels.D)
 				return 0;
@@ -22,7 +22,6 @@ namespace Service.SeatAllocation.Logic.Rules
 			int score = student.AttentionLevel == Levels.E ? -4 : -3;
 			score += student.Priority ?? 1;
 
-			Chair? assignedChair = context.Chairs.FirstOrDefault(c => c.Id == assignedChairId);
 			if (assignedChair == null)
 				return 0;
 
