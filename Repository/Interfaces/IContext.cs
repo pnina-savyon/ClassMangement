@@ -20,6 +20,8 @@ namespace Repository.Interfaces
 		public DbSet<Survey> Surveys { get; set; }
 		public DbSet<SurveyAnswer> SurveyAnswers { get; set; }
 
+		Task<int> ExecuteSqlAsync(string sql, params object[] parameters);
+
 		public Task Save();
 	}
 }

@@ -30,8 +30,9 @@ namespace Repository.Repositories
             Student item = await GetById(id);
             if (item != null)
             {
-				item.FavoriteFriends.Clear();
-				item.NonFavoriteFriends.Clear();
+                await context.ExecuteSqlAsync("DELETE FROM StudentFavoriteFriends WHERE FriendId = {0} OR StudentId = {0}", id);
+				await context.ExecuteSqlAsync("DELETE FROM StudentNonFavoriteFriends WHERE NonFriendId = {0} OR StudentId = {0}",id);
+
 				this.context.Students.Remove(item);
                 await this.context.Save();
             }

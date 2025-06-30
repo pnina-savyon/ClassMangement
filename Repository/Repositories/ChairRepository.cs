@@ -4,6 +4,7 @@ using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -39,7 +40,16 @@ namespace Repository.Repositories
             Chair item = await GetById(id);
             if (item != null)
             {
-                item.NearbyChairs.Clear();
+				foreach (Chair otherChair in item.NearbyOfChairs.ToList())
+				{
+					otherChair.NearbyChairs.Remove(item);
+				}
+
+				foreach (Chair otherChair in item.NearbyChairs.ToList())
+				{
+					otherChair.NearbyOfChairs.Remove(item);
+				}
+
 				this.context.Chairs.Remove(item);
 				await this.context.Save();
 			}

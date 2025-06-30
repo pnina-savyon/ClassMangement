@@ -134,11 +134,18 @@ namespace Mock
             await SaveChangesAsync();
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+
+		public async Task<int> ExecuteSqlAsync(string sql, params object[] parameters)
+		{
+			return await this.Database.ExecuteSqlRawAsync(sql, parameters);
+		}
+
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=WX1097573;Database=ClassManagementDB3;trusted_connection=true;TrustServerCertificate=true");
         }
-        //WX1097573
-        //DESKTOP-1VUANBN
-    }
+
+		//WX1097573
+		//DESKTOP-1VUANBN
+	}
 }
