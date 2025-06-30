@@ -14,24 +14,57 @@ namespace Service.SeatAllocation.Logic.Rules
 {
 	public class LowAttentionLevelInCenter : IScoringRule
 	{
+		public int CalculateActualScore(Student student, int assignedChairId, StudentContext context, CpSolver solver)
+		{
+			// תנאי סף – רק תלמידים עם רמת קשב נמוכה ורמת מוסר גבוהה
+			bool isLowAttention = student.AttentionLevel == Levels.E || student.AttentionLevel == Levels.D;
+			bool isHighMoral = student.MoralLevel == Levels.A || student.MoralLevel == Levels.B;
+
+			if (!isLowAttention && !isHighMoral)
+				return 0;
+
+			int score = 0;
+
+			// ניקוד לפי רמת קשב
+			if(isLowAttention)
+				score += student.AttentionLevel == Levels.E ? 10 : 8;
+
+			// ניקוד לפי רמת מוסר
+			if(isHighMoral)
+				score += student.MoralLevel == Levels.A ? 14 : 12;
+
+			// הוספת עדיפות
+			score += student.Priority ?? 0;
+
+			// בדיקה אם הכיסא המוקצה הוא מקדימה
+			Chair? assignedChair = context.Chairs.FirstOrDefault(c => c.Id == assignedChairId);
+			if (assignedChair == null || !assignedChair.IsFront && !assignedChair.IsCenteral)
+				return 0;
+			return score;
+		}
+
 		public LinearExpr GetScore(Student student, IntVar studentChairVar, StudentContext context)
 		{
-			//priority
 			if ((student.AttentionLevel != Levels.E && student.AttentionLevel != Levels.D)
-				|| (student.MoralLevel == Levels.E || student.MoralLevel == Levels.D))
+				&& (student.MoralLevel == Levels.E || student.MoralLevel == Levels.D || student.MoralLevel == Levels.C))
 				return LinearExpr.Constant(0);
-			//למורל לא מינוס?
-			//== or !=?
 
-			int score = student.AttentionLevel == Levels.E ? 10 : 8;
-			//?? וכן האם -5 וכן האם בכלל ההגדרה יפה ונכונה?
-			score = student.MoralLevel == Levels.E || student.MoralLevel == Levels.D ? -5 : score;
+			int score = 0;
+			// AttentionLevel = E  - 10
+			// AttentionLevel = D - 8
+			// MoralLevel = A - 14
+			// MoralLevel = B - 12
 
-            List<LinearExpr> terms = new List<LinearExpr>();
+			score += student.AttentionLevel == Levels.E ? 10 : student.AttentionLevel == Levels.D ? 8 :0;
+			score += student.MoralLevel == Levels.A ? 14 : student.MoralLevel == Levels.B ? 12 : 0;
+			score += student.Priority ?? 1;
+
+
+			List<LinearExpr> terms = new List<LinearExpr>();
 
 			foreach (Chair chair in context.Chairs)
 			{
-				if (chair.IsFront)
+				if (chair.IsFront || chair.IsCenteral)
 				{
 					BoolVar isMatch = context.Model.NewBoolVar($"student_{student.Id}_chair_{chair.Id}");
 					context.Model.Add(studentChairVar == chair.Id).OnlyEnforceIf(isMatch);

@@ -15,12 +15,30 @@ namespace Service.SeatAllocation.Logic.Rules
 {
     public class ExtremeSeatInCenter : IScoringRule
     {
-        public LinearExpr GetScore(Student student, IntVar studentChairVar, StudentContext context)
+		public int CalculateActualScore(Student student, int assignedChairId, StudentContext context, CpSolver solver)
+		{
+			if (student.CurrentChair == null)
+				return 0;
+
+			Chair? assignedChair = context.Chairs.FirstOrDefault(c => c.Id == assignedChairId);
+			if (assignedChair == null || !assignedChair.IsCenteral)
+				return 0;
+
+			int score = student.CurrentChair.IsCenteral ? -3 : 10;
+			if (student.Priority != null)
+				score += student.Priority.Value;
+
+			return score;
+		}
+
+
+
+		public LinearExpr GetScore(Student student, IntVar studentChairVar, StudentContext context)
         {
 			//int? אין אפשרות אחרת
 			if (student.CurrentChair == null)
 				return LinearExpr.Constant(0);
-			int score = (student.CurrentChair.IsCenteral ? -3 : 10) * (student.Priority ?? 1);
+			int score = (student.CurrentChair.IsCenteral ? -3 : 10) + (student.Priority ?? 1);
 
             List<LinearExpr> terms = new List<LinearExpr>();      
             foreach (Chair chair in context.Chairs ?? new List<Chair>())

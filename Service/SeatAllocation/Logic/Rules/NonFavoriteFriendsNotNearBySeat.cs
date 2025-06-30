@@ -13,10 +13,37 @@ namespace Service.SeatAllocation.Logic.Rules
 {
     public class NonFavoriteFriendsNotNearBySeat : IScoringRule
     {
-        public LinearExpr GetScore(Student student, IntVar studentChairVar, StudentContext context)
+		public int CalculateActualScore(Student student, int assignedChairId, StudentContext context, CpSolver solver)
+		{
+			int score = (student.AttentionLevel == Levels.E || student.AttentionLevel == Levels.D ? -16 : -14) + (student.Priority ?? 1);
+			int totalScore = 0;
+
+			Chair? assignedChair = context.Chairs.FirstOrDefault(c => c.Id == assignedChairId);
+			if (assignedChair == null)
+				return 0;
+
+			foreach (Chair nearby in assignedChair.NearbyChairs ?? new List<Chair>())
+			{
+				foreach (Student nonFavorite in student.NonFavoriteFriends ?? new List<Student>())
+				{
+					if (!context.StudentChairVars.ContainsKey(nonFavorite.Id))
+						continue;
+
+					int friendChairId = (int)solver.Value(context.StudentChairVars[nonFavorite.Id]);
+					if (friendChairId == nearby.Id)
+						totalScore += score;
+				}
+			}
+
+			return totalScore;
+		}
+
+
+
+		public LinearExpr GetScore(Student student, IntVar studentChairVar, StudentContext context)
         {
             int score = (student.AttentionLevel == Levels.E ||
-                student.AttentionLevel == Levels.D ? -16 : -14) * (student.Priority ?? 1);
+                student.AttentionLevel == Levels.D ? -16 : -14) + (student.Priority ?? 1);
             
             List<LinearExpr> terms = new List<LinearExpr>();
             foreach (Chair chair in context.Chairs)

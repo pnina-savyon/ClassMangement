@@ -12,7 +12,25 @@ namespace Service.SeatAllocation.Logic.Rules
 {
     public class HistorySeatsNotRepeat : IScoringRule
     {
-        public LinearExpr GetScore(Student student, IntVar studentChairVar, StudentContext context)
+		public int CalculateActualScore(Student student, int assignedChairId, StudentContext context, CpSolver solver)
+		{
+
+			if (student.ChairId == assignedChairId)
+			{
+				return -7 + (student.Priority ?? 0);
+			}
+
+			if (student.HistoryChairs.Contains(assignedChairId))
+			{
+				return -4 + (student.Priority ?? 0);
+			}
+
+			return 0;
+		}
+
+
+
+		public LinearExpr GetScore(Student student, IntVar studentChairVar, StudentContext context)
         {
             //current
             int score = 0;
@@ -22,7 +40,7 @@ namespace Service.SeatAllocation.Logic.Rules
             {
                 if (student.ChairId == chair.Id)
                 {
-                    score = -7 * (student.Priority ?? 1);
+                    score = -7 + (student.Priority ?? 1);
 
                     BoolVar isMatch = context.Model.NewBoolVar($"student_{student.Id}_chair_{chair.Id}");
                     context.Model.Add(studentChairVar == chair.Id).OnlyEnforceIf(isMatch);
@@ -31,7 +49,7 @@ namespace Service.SeatAllocation.Logic.Rules
                 }
                 else
                 {
-                    score = -4 * (student.Priority ?? 1);
+                    score = -4 + (student.Priority ?? 1);
                     foreach (int chairHistoryId in student.HistoryChairs ?? new List<int>())
                     {
                         if (chairHistoryId == chair.Id)

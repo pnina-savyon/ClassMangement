@@ -18,6 +18,7 @@ namespace Service.SeatAllocation.Logic.Solver
 		public List<Chair> Chairs { get; private set; }
 		public CpModel Model { get; private set; }
 		public Dictionary<string, IntVar> StudentChairVars { get; private set; }
+		public Dictionary<string, int> StudentScores { get; };
 		public LinearExprBuilder Objective { get; private set; }
 		public int NumStudents => Students?.Count ?? 0;
 		public int NumChairs => Chairs?.Count ?? 0;
@@ -29,6 +30,8 @@ namespace Service.SeatAllocation.Logic.Solver
             Model = new CpModel();
             //
             StudentChairVars = new Dictionary<string, IntVar>();
+			StudentScores = new Dictionary<string, int>();
+
 			Objective = LinearExpr.NewBuilder();
         }
 
