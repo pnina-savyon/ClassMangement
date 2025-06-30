@@ -85,6 +85,8 @@ namespace Service.SeatAllocation.Logic.Solver
                         student.Name,
                         solver.Value(studentContext.StudentChairVars[student.Id]),
                         status);
+					
+						studentContext.InlayChairOfStudent[student.Id] = (int)solver.Value(studentContext.StudentChairVars[student.Id]);
                 }
                 //מעבר על dictationary
             }
