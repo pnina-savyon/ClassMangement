@@ -95,10 +95,10 @@ var app = builder.Build();
 Console.WriteLine($" ENVIRONMENT: {app.Environment.EnvironmentName}");
 if (app.Environment.IsDevelopment())
 {
-     using (var scope = app.Services.CreateScope())
-      {
+	using (var scope = app.Services.CreateScope())
+	{
 		//בעיקרון עדיף Icontext אבל זה דורש כמה שינויים עבור כך.
-          var context = scope.ServiceProvider.GetRequiredService<Database>(); // או IContext
+		var context = scope.ServiceProvider.GetRequiredService<Database>(); // או IContext
 
 		var sqlPath = Path.Combine(AppContext.BaseDirectory, "SeedData", "initial_data.sql");
 		SqlSeeder.CheckSeederWorks(context, sqlPath);
@@ -114,26 +114,27 @@ if (app.Environment.IsDevelopment())
 		{
 			Console.WriteLine(" קובץ SQL לא נמצא: " + sqlPath);
 		}
-    }
+	}
 
 
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+	app.UseSwagger();
+		app.UseSwaggerUI();
+	}
 
-//// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//	app.UseSwagger();
-//	app.UseSwaggerUI();
-//}
+	//// Configure the HTTP request pipeline.
+	//if (app.Environment.IsDevelopment())
+	//{
+	//	app.UseSwagger();
+	//	app.UseSwaggerUI();
+	//}
 
-// Configure the HTTP request pipeline.
-app.UseAuthentication();
-app.UseAuthorization();
-app.UseHttpsRedirection();
-app.UseCors(MyAllowSpecificOrigins);
+	// Configure the HTTP request pipeline.
+	app.UseAuthentication();
+	app.UseAuthorization();
+	app.UseHttpsRedirection();
+	app.UseCors(MyAllowSpecificOrigins);
 
-app.MapControllers();
+	app.MapControllers();
 
-app.Run();
+	app.Run();
+

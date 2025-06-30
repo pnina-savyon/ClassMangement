@@ -1,4 +1,4 @@
-use ClassManagementDB2
+--use ClassManagementDB3
 
 -- הכנסת מורה 
 INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone, Role,UserType)
@@ -97,43 +97,43 @@ INSERT INTO ChairNearbyChairs VALUES (@id12, @id11);
 -- הכנסת תלמידים
 --למה ליוזרס ולא לסטודנס?
 INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
-VALUES ('S1', 'pass1', 'Racheli havraham', '2004-09-01', 'Halprin 17', 'Racheli@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 2, 2, 2, NULL, 50,'[]');
+VALUES ('S1', 'pass1', 'Racheli havraham', '2004-09-01', 'Halprin 17', 'Racheli@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 2, 2, 2, NULL,5,'[]');
 
 INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
-VALUES ('S2', 'pass2', 'Yeudit awat', '2004-09-01', 'Halprin 17', 'Yeudit@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 3, 2, 2, NULL, 50,'[]');
+VALUES ('S2', 'pass2', 'Yeudit awat', '2004-09-01', 'Halprin 17', 'Yeudit@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 3, 2, 2, NULL, 5,'[]');
 
 INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
-VALUES ('S3', 'pass3', 'Chani Heytan', '2004-09-01', 'Halprin 17', 'Chani@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 4, 1, 2, NULL, 50,'[]');
+VALUES ('S3', 'pass3', 'Chani Heytan', '2004-09-01', 'Halprin 17', 'Chani@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 4, 1, 2, NULL, 5,'[]');
 
 INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
-VALUES ('S4', 'pass4', 'Hadas Bek', '2004-09-01', 'Halprin 17', 'Hadas@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 5, 1, 4, NULL, 50,'[]');
+VALUES ('S4', 'pass4', 'Hadas Bek', '2004-09-01', 'Halprin 17', 'Hadas@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 5, 1, 4, NULL, 5,'[]');
 
-
-
-INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
-VALUES ('S5', 'pass5', 'Shevi Bretler', '2004-09-01', 'Halprin 17', 'Shevi@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 2, 3, 4, NULL, 50,'[]');
-
-INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
-VALUES ('S6', 'pass6', 'Rachli Hainrich', '2004-09-01', 'Halprin 17', 'Rachli@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 2, 1, 1, NULL, 50,'[]');
-
-INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
-VALUES ('S7', 'pass7', 'Braci Levi', '2004-09-01', 'Halprin 17', 'Braci@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 3, 4, 1, NULL, 50,'[]');
-
-INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
-VALUES ('S8', 'pass8', 'Shuli Langberg', '2004-09-01', 'Halprin 17', 'Shuli@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 1, 1, 4, NULL, 50,'[]');
 
 
 INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
-VALUES ('S9', 'pass9', 'Zipora Pozen', '2004-09-01', 'Halprin 17', 'Zipora@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 1, 3, 2, NULL, 50,'[]');
+VALUES ('S5', 'pass5', 'Shevi Bretler', '2004-09-01', 'Halprin 17', 'Shevi@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 2, 3, 4, NULL, 5,'[]');
 
 INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
-VALUES ('S10', 'pass10', 'Chani Siton', '2004-09-01', 'Halprin 17', 'Chani@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 1, 3, 1, NULL, 50,'[]');
+VALUES ('S6', 'pass6', 'Rachli Hainrich', '2004-09-01', 'Halprin 17', 'Rachli@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 2, 1, 1, NULL, 5,'[]');
 
 INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
-VALUES ('S11', 'pass11', 'Rivka Siboni', '2004-09-01', 'Halprin 17', 'Rivka@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 2, 2, 4, NULL, 50,'[]');
+VALUES ('S7', 'pass7', 'Braci Levi', '2004-09-01', 'Halprin 17', 'Braci@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 3, 4, 1, NULL, 5,'[]');
 
 INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
-VALUES ('S12', 'pass12', 'Pnina Savyon', '2004-09-01', 'Halprin 17', 'Pnina@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 2, 2, 2, NULL, 50,'[]');
+VALUES ('S8', 'pass8', 'Shuli Langberg', '2004-09-01', 'Halprin 17', 'Shuli@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 1, 1, 4, NULL, 5,'[]');
+
+
+INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
+VALUES ('S9', 'pass9', 'Zipora Pozen', '2004-09-01', 'Halprin 17', 'Zipora@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 1, 3, 2, NULL, 5,'[]');
+
+INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
+VALUES ('S10', 'pass10', 'Chani Siton', '2004-09-01', 'Halprin 17', 'Chani@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 1, 3, 1, NULL, 5,'[]');
+
+INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
+VALUES ('S11', 'pass11', 'Rivka Siboni', '2004-09-01', 'Halprin 17', 'Rivka@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 2, 2, 4, NULL, 5,'[]');
+
+INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
+VALUES ('S12', 'pass12', 'Pnina Savyon', '2004-09-01', 'Halprin 17', 'Pnina@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 2, 2, 2, NULL, 5,'[]');
 
 -- הכנסת חברים מועדפים
 INSERT INTO StudentFavoriteFriends (StudentId, FriendId) VALUES ('S1', 'S9'); 
@@ -172,17 +172,17 @@ INSERT INTO StudentFavoriteFriends (StudentId, FriendId) VALUES ('S9', 'S8');
 INSERT INTO StudentFavoriteFriends (StudentId, FriendId) VALUES ('S9', 'S11'); 
 INSERT INTO StudentFavoriteFriends (StudentId, FriendId) VALUES ('S9', 'S1'); 
 
-INSERT INTO StudentFavoriteFriends (StudentId, FriendId) VALUES ('S10', 'S3'); 
-INSERT INTO StudentFavoriteFriends (StudentId, FriendId) VALUES ('S10', 'S9'); 
-INSERT INTO StudentFavoriteFriends (StudentId, FriendId) VALUES ('S10', 'S7'); 
+INSERT INTO StudentFavoriteFriends (StudentId, FriendId) VALUES ('S10', 'S1'); 
+INSERT INTO StudentFavoriteFriends (StudentId, FriendId) VALUES ('S10', 'S2'); 
+INSERT INTO StudentFavoriteFriends (StudentId, FriendId) VALUES ('S10', 'S8'); 
 
 INSERT INTO StudentFavoriteFriends (StudentId, FriendId) VALUES ('S11', 'S1'); 
 INSERT INTO StudentFavoriteFriends (StudentId, FriendId) VALUES ('S11', 'S2'); 
 INSERT INTO StudentFavoriteFriends (StudentId, FriendId) VALUES ('S11', 'S4'); 
 
+INSERT INTO StudentFavoriteFriends (StudentId, FriendId) VALUES ('S12', 'S3'); 
 INSERT INTO StudentFavoriteFriends (StudentId, FriendId) VALUES ('S12', 'S9'); 
-INSERT INTO StudentFavoriteFriends (StudentId, FriendId) VALUES ('S12', 'S11'); 
-INSERT INTO StudentFavoriteFriends (StudentId, FriendId) VALUES ('S12', 'S12'); 
+INSERT INTO StudentFavoriteFriends (StudentId, FriendId) VALUES ('S12', 'S7'); 
 
 -- הכנסת חברים לא מועדפים
 INSERT INTO StudentNonFavoriteFriends (StudentId, NonFriendId) VALUES ('S1', 'S2'); 

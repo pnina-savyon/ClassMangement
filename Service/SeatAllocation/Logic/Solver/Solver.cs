@@ -7,6 +7,7 @@ using Service.SeatAllocation.Interfaces;
 using Service.Services;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,10 +39,15 @@ namespace Service.SeatAllocation.Logic.Solver
             studentContext = new StudentContext(c.Students.ToList(), c.Chairs.ToList());
             IEnumerable<IConstraintRule> constraintRules = studentContext.GetConstraintRules();
 			IEnumerable<IScoringRule> scoringRules = studentContext.GetScoringRules();
-
-			foreach(Student student in studentContext.Students)
+            foreach (Student student in studentContext.Students)
+            {
+                if (!studentContext.StudentChairVars.ContainsKey(student.Id))
+                {
+                    studentContext.StudentChairVars[student.Id] = studentContext.Model.NewIntVar(1, studentContext.NumChairs, $"chair_of_student_{student.Id}");
+                }
+            }
+            foreach (Student student in studentContext.Students)
 			{
-				studentContext.StudentChairVars[student.Id] = studentContext.Model.NewIntVar(1,studentContext.NumChairs, $"chair_of_student_{student.Id}");
 				foreach (IScoringRule scoringRule in scoringRules)
 				{
                     LinearExpr scoreExpr = scoringRule.GetScore(student, studentContext.StudentChairVars[student.Id], studentContext);
