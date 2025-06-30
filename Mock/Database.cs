@@ -20,7 +20,7 @@ namespace Mock
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
-
+			//
 			// ירושה של Student ו-Teacher מ-User
 			modelBuilder.Entity<User>()
 				.HasDiscriminator<string>("UserType")

@@ -30,7 +30,9 @@ namespace Repository.Repositories
             Student item = await GetById(id);
             if (item != null)
             {
-                this.context.Students.Remove(item);
+				item.FavoriteFriends.Clear();
+				item.NonFavoriteFriends.Clear();
+				this.context.Students.Remove(item);
                 await this.context.Save();
             }
             return item;
@@ -45,8 +47,13 @@ namespace Repository.Repositories
         public async Task<List<Student>> GetAllItemOfId(int id)
         {
             return await context.Students
-                .Include(s => s.Class)
-                .Where(s => s.ClassId == id)
+				.Include(s => s.FavoriteFriends)
+				.Include(s => s.NonFavoriteFriends)
+				.Include(s => s.Class)
+				.ThenInclude(c => c.Chairs)
+				.ThenInclude(ch => ch.NearbyChairs)
+
+				.Where(s => s.ClassId == id)
                 .ToListAsync();
         }
 
@@ -55,7 +62,9 @@ namespace Repository.Repositories
             return await this.context.Students
                 //.Include(s => s.HistoryChairsJson)  
                 .Include(s=>s.HistoryChairs)
-                .Include(s => s.Class)
+				.Include(s => s.NonFavoriteFriends)
+				.Include(s => s.FavoriteFriends)
+				.Include(s => s.Class)
                 .ThenInclude(c => c.Teacher)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
