@@ -17,6 +17,8 @@ namespace ClassMangement.Seeders
 
             var sql = File.ReadAllText(fullPath);
             context.Database.ExecuteSqlRaw(sql);
+
+            context.Database.CloseConnection();
         }
 
         public static void CheckSeederWorks(Database context, string relativePath)

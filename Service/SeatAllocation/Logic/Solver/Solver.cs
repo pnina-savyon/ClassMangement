@@ -1,5 +1,4 @@
-﻿using Google.OrTools.LinearSolver;
-using Google.OrTools.Sat;
+﻿using Google.OrTools.Sat;
 using Microsoft.Extensions.Logging;
 using Repository.Entities;
 using Repository.Interfaces;
@@ -45,13 +44,14 @@ namespace Service.SeatAllocation.Logic.Solver
 				studentContext.StudentChairVars[student.Id] = studentContext.Model.NewIntVar(1,studentContext.NumChairs, $"chair_of_student_{student.Id}");
 				foreach (IScoringRule scoringRule in scoringRules)
 				{
-					scoringRule.GetScore(student, studentContext.StudentChairVars[student.Id], studentContext);
-				}
+                    LinearExpr scoreExpr = scoringRule.GetScore(student, studentContext.StudentChairVars[student.Id], studentContext);
+                    studentContext.Objective.Add(scoreExpr);
+                }
 			}
 
 			foreach (IConstraintRule constraintRule in constraintRules)
 			{
-				constraintRule.Apply(studentContext.Model, studentContext);
+				 constraintRule.Apply(studentContext.Model, studentContext);
 			}
 		}
 		public async Task SolverFunc(int classId)
@@ -79,8 +79,6 @@ namespace Service.SeatAllocation.Logic.Solver
                         student.Name,
                         solver.Value(studentContext.StudentChairVars[student.Id]),
                         status);
-
-
                 }
                 //מעבר על dictationary
             }

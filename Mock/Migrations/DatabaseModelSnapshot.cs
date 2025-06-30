@@ -34,7 +34,7 @@ namespace Mock.Migrations
 
                     b.HasIndex("NearbyChairId");
 
-                    b.ToTable("ChairNearbyChairs");
+                    b.ToTable("ChairNearbyChairs", (string)null);
                 });
 
             modelBuilder.Entity("Repository.Entities.Chair", b =>

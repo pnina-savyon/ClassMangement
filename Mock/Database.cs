@@ -127,10 +127,6 @@ namespace Mock
                           .OnDelete(DeleteBehavior.Cascade),
                     j => j.ToTable("ChairNearbyChairs")
                 );
-
-
-
-
         }
 
         public async Task Save()
@@ -140,7 +136,7 @@ namespace Mock
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=WX1097573;Database=ClassManagementDB2;trusted_connection=true;TrustServerCertificate=true");
+            optionsBuilder.UseSqlServer("Server=DESKTOP-1VUANBN;Database=ClassManagementDB3;trusted_connection=true;TrustServerCertificate=true");
         }
         //WX1097573
         //DESKTOP-1VUANBN

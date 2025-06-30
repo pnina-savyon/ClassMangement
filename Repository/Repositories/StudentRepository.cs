@@ -60,12 +60,13 @@ namespace Repository.Repositories
         public override async Task<Student> GetById(string id)
         {
             return await this.context.Students
-                //.Include(s => s.HistoryChairsJson)  
-                .Include(s=>s.HistoryChairs)
 				.Include(s => s.NonFavoriteFriends)
 				.Include(s => s.FavoriteFriends)
 				.Include(s => s.Class)
                 .ThenInclude(c => c.Teacher)
+                .Include(s => s.CurrentChair)
+                .ThenInclude(ch => ch.NearbyChairs)
+                .ThenInclude(ch => ch.NearbyOfChairs)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 

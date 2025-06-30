@@ -18,6 +18,7 @@ namespace Service.SeatAllocation.Logic.Rules
             int score = (student.AttentionLevel == Levels.E ||
                 student.AttentionLevel == Levels.D ? -16 : -14) * (student.Priority ?? 1);
             
+            List<LinearExpr> terms = new List<LinearExpr>();
             foreach (Chair chair in context.Chairs)
             {
                 foreach (Chair nearByChair in chair.NearbyChairs ?? new List<Chair>())
@@ -27,12 +28,13 @@ namespace Service.SeatAllocation.Logic.Rules
                         BoolVar both = context.Model.NewBoolVar($"student_{student.Id}_with_friend_{nonFavoriteFriend.Id}_near_{nearByChair.Id}");
                         context.Model.Add(context.StudentChairVars[student.Id] == chair.Id).OnlyEnforceIf(both);
                         context.Model.Add(context.StudentChairVars[nonFavoriteFriend.Id] == nearByChair.Id).OnlyEnforceIf(both);
-                        context.Objective.AddTerm(both, score);
+                        //context.Objective.AddTerm(both, score);
+                        terms.Add(both*score);
                     }
                 }
             }
             //
-            return LinearExpr.Constant(0);
+            return LinearExpr.Sum(terms);
         }
     }
 }
