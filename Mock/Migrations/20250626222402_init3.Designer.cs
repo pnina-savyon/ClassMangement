@@ -12,8 +12,8 @@ using Mock;
 namespace Mock.Migrations
 {
     [DbContext(typeof(Database))]
-    [Migration("20250625200421_init6")]
-    partial class init6
+    [Migration("20250626222402_init3")]
+    partial class init3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,17 +25,17 @@ namespace Mock.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ChairChair", b =>
+            modelBuilder.Entity("ChairNearbyChairs", b =>
                 {
                     b.Property<int>("ChairId")
                         .HasColumnType("int");
 
-                    b.Property<int>("NearbyChairsId")
+                    b.Property<int>("NearbyChairId")
                         .HasColumnType("int");
 
-                    b.HasKey("ChairId", "NearbyChairsId");
+                    b.HasKey("ChairId", "NearbyChairId");
 
-                    b.HasIndex("NearbyChairsId");
+                    b.HasIndex("NearbyChairId");
 
                     b.ToTable("ChairNearbyChairs", (string)null);
                 });
@@ -270,7 +270,7 @@ namespace Mock.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("Users", (string)null);
 
                     b.HasDiscriminator<string>("UserType").HasValue("User");
 
@@ -354,7 +354,7 @@ namespace Mock.Migrations
                     b.HasDiscriminator().HasValue("Teacher");
                 });
 
-            modelBuilder.Entity("ChairChair", b =>
+            modelBuilder.Entity("ChairNearbyChairs", b =>
                 {
                     b.HasOne("Repository.Entities.Chair", null)
                         .WithMany()
@@ -364,8 +364,8 @@ namespace Mock.Migrations
 
                     b.HasOne("Repository.Entities.Chair", null)
                         .WithMany()
-                        .HasForeignKey("NearbyChairsId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .HasForeignKey("NearbyChairId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

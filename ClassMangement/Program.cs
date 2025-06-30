@@ -100,6 +100,8 @@ if (app.Environment.IsDevelopment())
         var context = scope.ServiceProvider.GetRequiredService<Database>(); // ае IContext
 
         var sqlPath = Path.Combine(AppContext.BaseDirectory, "SeedData", "initial_data.sql");
+        SqlSeeder.CheckSeederWorks(context, sqlPath);
+
         if (File.Exists(sqlPath))
         {
             if (!context.Classes.Any()) // ае Students еле'
@@ -109,10 +111,9 @@ if (app.Environment.IsDevelopment())
         }
         else
         {
-            Console.WriteLine(" чебх SQL ма роца: " + sqlPath);
+			Console.WriteLine(" чебх SQL ма роца: " + sqlPath);
         }
     }
-
 
     app.UseSwagger();
     app.UseSwaggerUI();

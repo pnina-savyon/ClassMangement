@@ -33,5 +33,8 @@ namespace Repository.Entities
 
         public virtual ICollection<Chair>? NearbyChairs { get; set; }
 
+        public virtual ICollection<Chair>? NearbyOfChairs { get; set; }
+
+
     }
 }

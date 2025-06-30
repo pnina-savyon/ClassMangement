@@ -22,10 +22,16 @@ namespace Mock
             base.OnModelCreating(modelBuilder);
 
             // ירושה של Student ו-Teacher מ-User
+            //modelBuilder.Entity<User>()
+            //    .HasDiscriminator<string>("UserType")
+            //    .HasValue<Student>("Student")
+            //    .HasValue<Teacher>("Teacher");
             modelBuilder.Entity<User>()
-                .HasDiscriminator<string>("UserType")
-                .HasValue<Student>("Student")
-                .HasValue<Teacher>("Teacher");
+    .ToTable("Users")  // ← הנה ההוספה המומלצת
+    .HasDiscriminator<string>("UserType")
+    .HasValue<Student>("Student")
+    .HasValue<Teacher>("Teacher");
+
 
             // הגדרת הקשרים בין תלמיד לכיתה 
             // מניעת מחיקת שרשרת (Cascade) בין Student ל-Class
@@ -91,20 +97,40 @@ namespace Mock
                 .OnDelete(DeleteBehavior.Cascade);
 
             // יצרירת מחלקה למפות את הקשר בין כיסא לכיסאות שכנים
+            //modelBuilder.Entity<Chair>()
+            //    .HasMany(c => c.NearbyChairs)
+            //    .WithMany()
+            //    .UsingEntity<Dictionary<string, object>>(
+            //        "ChairNearbyChairs",
+            //        j => j.HasOne<Chair>()
+            //              .WithMany()
+            //              .HasForeignKey("NearbyChairId")
+            //              .OnDelete(DeleteBehavior.Restrict), // לא למחוק את השכן בטעות
+            //        j => j.HasOne<Chair>()
+            //              .WithMany()
+            //              .HasForeignKey("ChairId")
+            //              .OnDelete(DeleteBehavior.Cascade) // כשמוחקים את הכיסא – מוחקים את הקשר בלבד
+            //    );
+
             modelBuilder.Entity<Chair>()
                 .HasMany(c => c.NearbyChairs)
-                .WithMany()
+                .WithMany(c => c.NearbyOfChairs) // הצד ההפוך
                 .UsingEntity<Dictionary<string, object>>(
                     "ChairNearbyChairs",
                     j => j.HasOne<Chair>()
                           .WithMany()
                           .HasForeignKey("NearbyChairId")
-                          .OnDelete(DeleteBehavior.Restrict), // לא למחוק את השכן בטעות
+                          .OnDelete(DeleteBehavior.Restrict),
                     j => j.HasOne<Chair>()
                           .WithMany()
                           .HasForeignKey("ChairId")
-                          .OnDelete(DeleteBehavior.Cascade) // כשמוחקים את הכיסא – מוחקים את הקשר בלבד
+                          .OnDelete(DeleteBehavior.Cascade),
+                    j => j.ToTable("ChairNearbyChairs")
                 );
+
+
+
+
         }
 
         public async Task Save()
@@ -114,7 +140,7 @@ namespace Mock
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=DESKTOP-1VUANBN;Database=ClassManagementDB;trusted_connection=true;TrustServerCertificate=true");
+            optionsBuilder.UseSqlServer("Server=WX1097573;Database=ClassManagementDB2;trusted_connection=true;TrustServerCertificate=true");
         }
         //WX1097573
         //DESKTOP-1VUANBN

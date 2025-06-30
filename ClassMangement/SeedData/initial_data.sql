@@ -1,138 +1,138 @@
-use ClassManagementDB
+use ClassManagementDB2
 
 -- הכנסת מורה 
-INSERT INTO [User] (Id, Password, Name, DateOfBirth, Address, Email, Phone, Role,UserType)
+INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone, Role,UserType)
 VALUES ('T1', '123456', 'Sari fridman', '1990-09-01', 'Hahavat Shalom 12', '12sr445@gmail.com', '052-7654321', 2,  'Teacher');
 
 -- הכנסת כיתה
 
-INSERT INTO Classes (Password, Name,TeacherId, CountOfStudents)
-VALUES ('8214', 'A1', 'T1', 12);
+--INSERT INTO Classes (Password, Name,TeacherId, CountOfStudents)
+--VALUES ('8214', 'A1', 'T1', 12);
+SET IDENTITY_INSERT Classes ON;
+
+INSERT INTO Classes (Id, Password, Name, TeacherId, CountOfStudents)
+VALUES (1, '8214', 'A1', 'T1', 12);
+
+SET IDENTITY_INSERT Classes OFF;
+
+
 
 -- הכנסת כסאות
-INSERT INTO Chairs (SerialNumberByClass,ClassId,  IsCenteral, IsFront, IsNearTheDoor, IsNearTheWindow)
-VALUES (1, 1, 0, 1, 1, 0);
 
-INSERT INTO Chairs (SerialNumberByClass,ClassId,  IsCenteral, IsFront, IsNearTheDoor, IsNearTheWindow)
-VALUES (2, 1, 1, 1, 0, 0);
+INSERT INTO Chairs (SerialNumberByClass, ClassId, IsCenteral, IsFront, IsNearTheDoor, IsNearTheWindow)
+VALUES 
+(1, 1, 0, 1, 1, 0),
+(2, 1, 1, 1, 0, 0),
+(3, 1, 1, 1, 0, 0),
+(4, 1, 0, 1, 0, 1),
+(5, 1, 0, 0, 0, 0),
+(6, 1, 1, 0, 0, 0),
+(7, 1, 1, 0, 0, 0),
+(8, 1, 0, 0, 0, 1),
+(9, 1, 0, 0, 0, 0),
+(10, 1, 1, 0, 0, 0),
+(11, 1, 1, 0, 0, 0),
+(12, 1, 0, 0, 0, 1);
 
-INSERT INTO Chairs (SerialNumberByClass,ClassId,  IsCenteral, IsFront, IsNearTheDoor, IsNearTheWindow)
-VALUES (3, 1, 1, 1, 0, 0);
+DECLARE @id1 INT = (SELECT Id FROM Chairs WHERE SerialNumberByClass = 1 AND ClassId = 1);
+DECLARE @id2 INT = (SELECT Id FROM Chairs WHERE SerialNumberByClass = 2 AND ClassId = 1);
+DECLARE @id3 INT = (SELECT Id FROM Chairs WHERE SerialNumberByClass = 3 AND ClassId = 1);
+DECLARE @id4 INT = (SELECT Id FROM Chairs WHERE SerialNumberByClass = 4 AND ClassId = 1);
+DECLARE @id5 INT = (SELECT Id FROM Chairs WHERE SerialNumberByClass = 5 AND ClassId = 1);
+DECLARE @id6 INT = (SELECT Id FROM Chairs WHERE SerialNumberByClass = 6 AND ClassId = 1);
+DECLARE @id7 INT = (SELECT Id FROM Chairs WHERE SerialNumberByClass = 7 AND ClassId = 1);
+DECLARE @id8 INT = (SELECT Id FROM Chairs WHERE SerialNumberByClass = 8 AND ClassId = 1);
+DECLARE @id9 INT = (SELECT Id FROM Chairs WHERE SerialNumberByClass = 9 AND ClassId = 1);
+DECLARE @id10 INT = (SELECT Id FROM Chairs WHERE SerialNumberByClass = 10 AND ClassId = 1);
+DECLARE @id11 INT = (SELECT Id FROM Chairs WHERE SerialNumberByClass = 11 AND ClassId = 1);
+DECLARE @id12 INT = (SELECT Id FROM Chairs WHERE SerialNumberByClass = 12 AND ClassId = 1);
 
-INSERT INTO Chairs (SerialNumberByClass,ClassId,  IsCenteral, IsFront, IsNearTheDoor, IsNearTheWindow)
-VALUES (4, 1, 0, 1, 0, 1);
+-- שלב 3: הכנסת קשרי שכנות (ChairNearbyChairs)
+INSERT INTO ChairNearbyChairs VALUES (@id1, @id2);
+INSERT INTO ChairNearbyChairs VALUES (@id1, @id5);
 
+INSERT INTO ChairNearbyChairs VALUES (@id2, @id1);
+INSERT INTO ChairNearbyChairs VALUES (@id2, @id3);
+INSERT INTO ChairNearbyChairs VALUES (@id2, @id6);
 
-INSERT INTO Chairs (SerialNumberByClass,ClassId,  IsCenteral, IsFront, IsNearTheDoor, IsNearTheWindow)
-VALUES (5, 1, 0, 0, 0, 0);
+INSERT INTO ChairNearbyChairs VALUES (@id3, @id2);
+INSERT INTO ChairNearbyChairs VALUES (@id3, @id4);
+INSERT INTO ChairNearbyChairs VALUES (@id3, @id7);
 
-INSERT INTO Chairs (SerialNumberByClass,ClassId,  IsCenteral, IsFront, IsNearTheDoor, IsNearTheWindow)
-VALUES (6, 1, 1, 0, 0, 0);
+INSERT INTO ChairNearbyChairs VALUES (@id4, @id3);
+INSERT INTO ChairNearbyChairs VALUES (@id4, @id8);
 
-INSERT INTO Chairs (SerialNumberByClass,ClassId,  IsCenteral, IsFront, IsNearTheDoor, IsNearTheWindow)
-VALUES (7, 1, 1, 0, 0, 0);
+INSERT INTO ChairNearbyChairs VALUES (@id5, @id1);
+INSERT INTO ChairNearbyChairs VALUES (@id5, @id6);
+INSERT INTO ChairNearbyChairs VALUES (@id5, @id9);
 
-INSERT INTO Chairs (SerialNumberByClass,ClassId,  IsCenteral, IsFront, IsNearTheDoor, IsNearTheWindow)
-VALUES (8, 1, 0, 0, 0, 1);
+INSERT INTO ChairNearbyChairs VALUES (@id6, @id2);
+INSERT INTO ChairNearbyChairs VALUES (@id6, @id5);
+INSERT INTO ChairNearbyChairs VALUES (@id6, @id7);
+INSERT INTO ChairNearbyChairs VALUES (@id6, @id10);
 
+INSERT INTO ChairNearbyChairs VALUES (@id7, @id3);
+INSERT INTO ChairNearbyChairs VALUES (@id7, @id6);
+INSERT INTO ChairNearbyChairs VALUES (@id7, @id8);
+INSERT INTO ChairNearbyChairs VALUES (@id7, @id11);
 
-INSERT INTO Chairs (SerialNumberByClass,ClassId,  IsCenteral, IsFront, IsNearTheDoor, IsNearTheWindow)
-VALUES (9, 1, 0, 0, 0, 0);
+INSERT INTO ChairNearbyChairs VALUES (@id8, @id4);
+INSERT INTO ChairNearbyChairs VALUES (@id8, @id7);
+INSERT INTO ChairNearbyChairs VALUES (@id8, @id12);
 
-INSERT INTO Chairs (SerialNumberByClass,ClassId,  IsCenteral, IsFront, IsNearTheDoor, IsNearTheWindow)
-VALUES (10, 1, 1, 0, 0, 0);
+INSERT INTO ChairNearbyChairs VALUES (@id9, @id5);
+INSERT INTO ChairNearbyChairs VALUES (@id9, @id10);
 
-INSERT INTO Chairs (SerialNumberByClass,ClassId,  IsCenteral, IsFront, IsNearTheDoor, IsNearTheWindow)
-VALUES (11, 1, 1, 0, 0, 0);
+INSERT INTO ChairNearbyChairs VALUES (@id10, @id6);
+INSERT INTO ChairNearbyChairs VALUES (@id10, @id9);
+INSERT INTO ChairNearbyChairs VALUES (@id10, @id11);
 
-INSERT INTO Chairs (SerialNumberByClass,ClassId,  IsCenteral, IsFront, IsNearTheDoor, IsNearTheWindow)
-VALUES (12, 1, 0, 0, 0, 1);
+INSERT INTO ChairNearbyChairs VALUES (@id11, @id10);
+INSERT INTO ChairNearbyChairs VALUES (@id11, @id7);
+INSERT INTO ChairNearbyChairs VALUES (@id11, @id12);
 
---הכנסת כיסאות שכנים
-INSERT INTO ChairNearbyChairs VALUES (1, 2);
-INSERT INTO ChairNearbyChairs VALUES (1, 5);
-
-INSERT INTO ChairNearbyChairs VALUES (2, 1);
-INSERT INTO ChairNearbyChairs VALUES (2, 3);
-INSERT INTO ChairNearbyChairs VALUES (2, 6);
-
-INSERT INTO ChairNearbyChairs VALUES (3, 2);
-INSERT INTO ChairNearbyChairs VALUES (3, 4);
-INSERT INTO ChairNearbyChairs VALUES (3, 7);
-
-INSERT INTO ChairNearbyChairs VALUES (4, 3);
-INSERT INTO ChairNearbyChairs VALUES (4, 8);
-
-INSERT INTO ChairNearbyChairs VALUES (5, 1);
-INSERT INTO ChairNearbyChairs VALUES (5, 6);
-INSERT INTO ChairNearbyChairs VALUES (5, 9);
-
-INSERT INTO ChairNearbyChairs VALUES (6, 2);
-INSERT INTO ChairNearbyChairs VALUES (6, 5);
-INSERT INTO ChairNearbyChairs VALUES (6, 7);
-INSERT INTO ChairNearbyChairs VALUES (6, 10);
-
-INSERT INTO ChairNearbyChairs VALUES (7, 3);
-INSERT INTO ChairNearbyChairs VALUES (7, 6);
-INSERT INTO ChairNearbyChairs VALUES (7, 8);
-INSERT INTO ChairNearbyChairs VALUES (7, 11);
-
-INSERT INTO ChairNearbyChairs VALUES (8, 4);
-INSERT INTO ChairNearbyChairs VALUES (8, 7);
-INSERT INTO ChairNearbyChairs VALUES (8, 12);
-
-INSERT INTO ChairNearbyChairs VALUES (9, 5);
-INSERT INTO ChairNearbyChairs VALUES (9, 10);
-
-INSERT INTO ChairNearbyChairs VALUES (10, 6);
-INSERT INTO ChairNearbyChairs VALUES (10, 9);
-INSERT INTO ChairNearbyChairs VALUES (10, 11);
-
-INSERT INTO ChairNearbyChairs VALUES (11, 10);
-INSERT INTO ChairNearbyChairs VALUES (11, 7);
-INSERT INTO ChairNearbyChairs VALUES (11, 12);
-
-INSERT INTO ChairNearbyChairs VALUES (12, 8);
-INSERT INTO ChairNearbyChairs VALUES (12, 11); 
+INSERT INTO ChairNearbyChairs VALUES (@id12, @id8);
+INSERT INTO ChairNearbyChairs VALUES (@id12, @id11);
 
 -- הכנסת תלמידים
-INSERT INTO [User] (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
+--למה ליוזרס ולא לסטודנס?
+INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
 VALUES ('S1', 'pass1', 'Racheli havraham', '2004-09-01', 'Halprin 17', 'Racheli@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 2, 2, 2, NULL, 50,'[]');
 
-INSERT INTO [User] (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
+INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
 VALUES ('S2', 'pass2', 'Yeudit awat', '2004-09-01', 'Halprin 17', 'Yeudit@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 3, 2, 2, NULL, 50,'[]');
 
-INSERT INTO [User] (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
+INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
 VALUES ('S3', 'pass3', 'Chani Heytan', '2004-09-01', 'Halprin 17', 'Chani@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 4, 1, 2, NULL, 50,'[]');
 
-INSERT INTO [User] (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
+INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
 VALUES ('S4', 'pass4', 'Hadas Bek', '2004-09-01', 'Halprin 17', 'Hadas@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 5, 1, 4, NULL, 50,'[]');
 
 
 
-INSERT INTO [User] (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
+INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
 VALUES ('S5', 'pass5', 'Shevi Bretler', '2004-09-01', 'Halprin 17', 'Shevi@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 2, 3, 4, NULL, 50,'[]');
 
-INSERT INTO [User] (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
+INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
 VALUES ('S6', 'pass6', 'Rachli Hainrich', '2004-09-01', 'Halprin 17', 'Rachli@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 2, 1, 1, NULL, 50,'[]');
 
-INSERT INTO [User] (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
+INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
 VALUES ('S7', 'pass7', 'Braci Levi', '2004-09-01', 'Halprin 17', 'Braci@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 3, 4, 1, NULL, 50,'[]');
 
-INSERT INTO [User] (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
+INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
 VALUES ('S8', 'pass8', 'Shuli Langberg', '2004-09-01', 'Halprin 17', 'Shuli@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 1, 1, 4, NULL, 50,'[]');
 
 
-INSERT INTO [User] (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
+INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
 VALUES ('S9', 'pass9', 'Zipora Pozen', '2004-09-01', 'Halprin 17', 'Zipora@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 1, 3, 2, NULL, 50,'[]');
 
-INSERT INTO [User] (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
+INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
 VALUES ('S10', 'pass10', 'Chani Siton', '2004-09-01', 'Halprin 17', 'Chani@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 1, 3, 1, NULL, 50,'[]');
 
-INSERT INTO [User] (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
+INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
 VALUES ('S11', 'pass11', 'Rivka Siboni', '2004-09-01', 'Halprin 17', 'Rivka@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 2, 2, 4, NULL, 50,'[]');
 
-INSERT INTO [User] (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
+INSERT INTO Users (Id, Password, Name, DateOfBirth, Address, Email, Phone,Role,  UserType, ClassId, ChairId, MoralLevel, StatusSocial,  AttentionLevel, ImageUrl, Priority,HistoryChairsJson)
 VALUES ('S12', 'pass12', 'Pnina Savyon', '2004-09-01', 'Halprin 17', 'Pnina@gmail.com.com', '052-7654321', 4,  'Student',  1, NULL, 2, 2, 2, NULL, 50,'[]');
 
 -- הכנסת חברים מועדפים

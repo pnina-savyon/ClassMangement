@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Mock.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class init1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,21 +25,34 @@ namespace Mock.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Teachers",
+                name: "ChairNearbyChairs",
                 columns: table => new
                 {
-                    TeacherId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Role = table.Column<int>(type: "int", nullable: false)
+                    ChairId = table.Column<int>(type: "int", nullable: false),
+                    NearbyChairId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Teachers", x => x.TeacherId);
+                    table.PrimaryKey("PK_ChairNearbyChairs", x => new { x.ChairId, x.NearbyChairId });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Chairs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SerialNumberByClass = table.Column<int>(type: "int", nullable: false),
+                    ClassId = table.Column<int>(type: "int", nullable: false),
+                    StudentId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IsCenteral = table.Column<bool>(type: "bit", nullable: false),
+                    IsFront = table.Column<bool>(type: "bit", nullable: false),
+                    IsNearTheDoor = table.Column<bool>(type: "bit", nullable: false),
+                    IsNearTheWindow = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Chairs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -56,12 +69,6 @@ namespace Mock.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Classes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Classes_Teachers_TeacherId",
-                        column: x => x.TeacherId,
-                        principalTable: "Teachers",
-                        principalColumn: "TeacherId",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -106,71 +113,45 @@ namespace Mock.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Chairs",
+                name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ClassId = table.Column<int>(type: "int", nullable: false),
-                    StudentId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Row = table.Column<int>(type: "int", nullable: false),
-                    Column = table.Column<int>(type: "int", nullable: false),
-                    IsNearTheDoor = table.Column<bool>(type: "bit", nullable: false),
-                    IsNearTheWindow = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Chairs", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Chairs_Classes_ClassId",
-                        column: x => x.ClassId,
-                        principalTable: "Classes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Students",
-                columns: table => new
-                {
-                    StudentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClassId = table.Column<int>(type: "int", nullable: false),
-                    ChairId = table.Column<int>(type: "int", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StatusSocial = table.Column<int>(type: "int", nullable: false),
-                    AttentionLevel = table.Column<int>(type: "int", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Role = table.Column<int>(type: "int", nullable: false),
+                    UserType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ClassId = table.Column<int>(type: "int", nullable: true),
+                    ChairId = table.Column<int>(type: "int", nullable: true),
+                    MoralLevel = table.Column<int>(type: "int", nullable: true),
+                    StatusSocial = table.Column<int>(type: "int", nullable: true),
+                    AttentionLevel = table.Column<int>(type: "int", nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Priority = table.Column<int>(type: "int", nullable: true),
-                    StudentId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    HistoryChairsJson = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SurveyAnswerId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Students", x => x.StudentId);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Students_Chairs_ChairId",
+                        name: "FK_Users_Chairs_ChairId",
                         column: x => x.ChairId,
                         principalTable: "Chairs",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Students_Classes_ClassId",
+                        name: "FK_Users_Classes_ClassId",
                         column: x => x.ClassId,
                         principalTable: "Classes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Students_Students_StudentId1",
-                        column: x => x.StudentId1,
-                        principalTable: "Students",
-                        principalColumn: "StudentId");
-                    table.ForeignKey(
-                        name: "FK_Students_SurveyAnswers_SurveyAnswerId",
+                        name: "FK_Users_SurveyAnswers_SurveyAnswerId",
                         column: x => x.SurveyAnswerId,
                         principalTable: "SurveyAnswers",
                         principalColumn: "Id");
@@ -193,10 +174,10 @@ namespace Mock.Migrations
                 {
                     table.PrimaryKey("PK_DailyAttendances", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DailyAttendances_Students_StudentId",
+                        name: "FK_DailyAttendances_Users_StudentId",
                         column: x => x.StudentId,
-                        principalTable: "Students",
-                        principalColumn: "StudentId",
+                        principalTable: "Users",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -215,18 +196,71 @@ namespace Mock.Migrations
                 {
                     table.PrimaryKey("PK_Marks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Marks_Students_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Students",
-                        principalColumn: "StudentId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Marks_Subjects_SubjectId",
                         column: x => x.SubjectId,
                         principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Marks_Users_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "StudentFavoriteFriends",
+                columns: table => new
+                {
+                    FriendId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    StudentId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentFavoriteFriends", x => new { x.FriendId, x.StudentId });
+                    table.ForeignKey(
+                        name: "FK_StudentFavoriteFriends_Users_FriendId",
+                        column: x => x.FriendId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_StudentFavoriteFriends_Users_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentNonFavoriteFriends",
+                columns: table => new
+                {
+                    NonFriendId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    StudentId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentNonFavoriteFriends", x => new { x.NonFriendId, x.StudentId });
+                    table.ForeignKey(
+                        name: "FK_StudentNonFavoriteFriends_Users_NonFriendId",
+                        column: x => x.NonFriendId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_StudentNonFavoriteFriends_Users_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChairNearbyChairs_NearbyChairId",
+                table: "ChairNearbyChairs",
+                column: "NearbyChairId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Chairs_ClassId",
@@ -259,24 +293,14 @@ namespace Mock.Migrations
                 column: "SubjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Students_ChairId",
-                table: "Students",
-                column: "ChairId");
+                name: "IX_StudentFavoriteFriends_StudentId",
+                table: "StudentFavoriteFriends",
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Students_ClassId",
-                table: "Students",
-                column: "ClassId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Students_StudentId1",
-                table: "Students",
-                column: "StudentId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Students_SurveyAnswerId",
-                table: "Students",
-                column: "SurveyAnswerId");
+                name: "IX_StudentNonFavoriteFriends_StudentId",
+                table: "StudentNonFavoriteFriends",
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SurveyAnswers_SurveyId",
@@ -288,32 +312,78 @@ namespace Mock.Migrations
                 table: "Surveys",
                 column: "ClassId");
 
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_ChairId",
+                table: "Users",
+                column: "ChairId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_ClassId",
+                table: "Users",
+                column: "ClassId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_SurveyAnswerId",
+                table: "Users",
+                column: "SurveyAnswerId");
+
             migrationBuilder.AddForeignKey(
-                name: "FK_Chairs_Students_StudentId",
+                name: "FK_ChairNearbyChairs_Chairs_ChairId",
+                table: "ChairNearbyChairs",
+                column: "ChairId",
+                principalTable: "Chairs",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_ChairNearbyChairs_Chairs_NearbyChairId",
+                table: "ChairNearbyChairs",
+                column: "NearbyChairId",
+                principalTable: "Chairs",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Chairs_Classes_ClassId",
+                table: "Chairs",
+                column: "ClassId",
+                principalTable: "Classes",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Chairs_Users_StudentId",
                 table: "Chairs",
                 column: "StudentId",
-                principalTable: "Students",
-                principalColumn: "StudentId");
+                principalTable: "Users",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Classes_Users_TeacherId",
+                table: "Classes",
+                column: "TeacherId",
+                principalTable: "Users",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Chairs_Classes_ClassId",
-                table: "Chairs");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Students_Classes_ClassId",
-                table: "Students");
+                name: "FK_Users_Chairs_ChairId",
+                table: "Users");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Surveys_Classes_ClassId",
                 table: "Surveys");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Chairs_Students_StudentId",
-                table: "Chairs");
+                name: "FK_Users_Classes_ClassId",
+                table: "Users");
+
+            migrationBuilder.DropTable(
+                name: "ChairNearbyChairs");
 
             migrationBuilder.DropTable(
                 name: "DailyAttendances");
@@ -322,19 +392,22 @@ namespace Mock.Migrations
                 name: "Marks");
 
             migrationBuilder.DropTable(
+                name: "StudentFavoriteFriends");
+
+            migrationBuilder.DropTable(
+                name: "StudentNonFavoriteFriends");
+
+            migrationBuilder.DropTable(
                 name: "Subjects");
+
+            migrationBuilder.DropTable(
+                name: "Chairs");
 
             migrationBuilder.DropTable(
                 name: "Classes");
 
             migrationBuilder.DropTable(
-                name: "Teachers");
-
-            migrationBuilder.DropTable(
-                name: "Students");
-
-            migrationBuilder.DropTable(
-                name: "Chairs");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "SurveyAnswers");

@@ -41,13 +41,16 @@ namespace Repository.Repositories
 
         public async Task<Class> GetById(int id)
         {
-            //  
             return await this.context.Classes
                 .Include(c => c.Teacher)
                 .Include(c => c.Students)
                 .Include(c => c.Chairs)
+                    .ThenInclude(ch => ch.NearbyChairs)
+                .Include(c => c.Chairs)
+                    .ThenInclude(ch => ch.NearbyOfChairs)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
+
 
         public async Task<Class> UpdateItem(int id, Class item)
         {
