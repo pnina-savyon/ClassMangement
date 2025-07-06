@@ -15,12 +15,12 @@ namespace Service.SeatAllocation.Logic.Rules
 		public int CalculateActualScore(Student student, Chair assignedChair, StudentContext context, CpSolver solver)
 		{
 
-			if (student.ChairId == assignedChair.Id)
+			if (student.ChairId != null && student.ChairId == assignedChair.Id)
 			{
 				return -7 + (student.Priority ?? 0);
 			}
 
-			if (student.HistoryChairs.Contains(assignedChair.Id))
+			if (student.HistoryChairs != null && student.HistoryChairs.Contains(assignedChair.Id))
 			{
 				return -4 + (student.Priority ?? 0);
 			}
