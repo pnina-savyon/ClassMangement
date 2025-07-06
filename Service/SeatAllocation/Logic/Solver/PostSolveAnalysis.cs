@@ -127,6 +127,7 @@ namespace Service.SeatAllocation.Logic.Solver
 			{
 				student.Priority = priorities.ContainsKey(student.Id)? priorities[student.Id]:1;
 				student.ChairId = chairOfStudent.ContainsKey(student.Id)? chairOfStudent[student.Id]:0;
+				
 
 				List<int> history = student.HistoryChairs ?? new List<int>();
 				if (history.Count >= 3)

@@ -15,7 +15,8 @@ using System.Threading.Tasks;
 
 namespace Service.SeatAllocation.Logic.Solver
 {
-    public class Solver : ISolver
+	
+	public class Solver : ISolver
 	{
 		private StudentContext studentContext { get; set; }
 		private IRepository<Class,int> ClassRepository { get; set; }
@@ -94,8 +95,12 @@ namespace Service.SeatAllocation.Logic.Solver
                         student.Name,
                         solver.Value(studentContext.StudentChairVars[student.Id]),
                         status);
-					
-						studentContext.InlayChairOfStudent[student.Id] = (int)solver.Value(studentContext.StudentChairVars[student.Id]);
+
+					int serial = (int)solver.Value(studentContext.StudentChairVars[student.Id]);
+					int chairId = studentContext.SerialToChairId[serial];  // ← המרה
+					studentContext.InlayChairOfStudent[student.Id] = chairId;
+
+					//studentContext.InlayChairOfStudent[student.Id] = (int)solver.Value(studentContext.StudentChairVars[student.Id]);
                 }
 				postSolverAnalysis.APICalculatePriority(studentContext, solver);
 				await postSolverAnalysis.UpdateStudentAndChairs();

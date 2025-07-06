@@ -24,6 +24,8 @@ namespace Service.SeatAllocation.Logic.Solver
 		public int NumStudents => Students?.Count ?? 0;
 		public int NumChairs => Chairs?.Count ?? 0;
 		public List<IScoringRule> ScoringRules { get; set; }
+		public Dictionary<int, int> SerialToChairId { get;  set; }
+
 
 
 		public StudentContext(List<Student> students, List<Chair> chairs)
@@ -35,6 +37,8 @@ namespace Service.SeatAllocation.Logic.Solver
             StudentChairVars = new Dictionary<string, IntVar>();
 			StudentScores = new Dictionary<string, int>();
 			InlayChairOfStudent = new Dictionary<string, int>();
+
+			SerialToChairId = chairs.ToDictionary(c => c.SerialNumberByClass, c => c.Id);
 
 			Objective = LinearExpr.NewBuilder();
         }
