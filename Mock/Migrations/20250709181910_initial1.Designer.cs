@@ -12,8 +12,8 @@ using Mock;
 namespace Mock.Migrations
 {
     [DbContext(typeof(Database))]
-    [Migration("20250630133414_initial")]
-    partial class initial
+    [Migration("20250709181910_initial1")]
+    partial class initial1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
