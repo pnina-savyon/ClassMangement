@@ -16,10 +16,20 @@ namespace ClassMangement.Seeders
                 throw new FileNotFoundException($"SQL file not found: {fullPath}");
 
             var sql = File.ReadAllText(fullPath);
-            context.Database.ExecuteSqlRaw(sql);
 
-            context.Database.CloseConnection();
-        }
+			context.Database.OpenConnection();
+			try
+			{
+				context.Database.ExecuteSqlRaw(sql);
+			}
+			finally
+			{
+				context.Database.CloseConnection(); // תמיד ייסגר, גם אם נזרקה חריגה
+			}
+			//context.Database.ExecuteSqlRaw(sql);
+
+			//context.Database.CloseConnection();
+		}
 
         public static void CheckSeederWorks(Database context, string relativePath)
         {

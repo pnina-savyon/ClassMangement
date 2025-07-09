@@ -100,20 +100,40 @@ if (app.Environment.IsDevelopment())
 		//בעיקרון עדיף Icontext אבל זה דורש כמה שינויים עבור כך.
 		var context = scope.ServiceProvider.GetRequiredService<Database>(); // או IContext
 
-		var sqlPath = Path.Combine(AppContext.BaseDirectory, "SeedData", "initial_data.sql");
-		SqlSeeder.CheckSeederWorks(context, sqlPath);
+		var sqlPath1 = Path.Combine(AppContext.BaseDirectory, "SeedData", "initial_data1.sql");
+		var sqlPath2 = Path.Combine(AppContext.BaseDirectory, "SeedData", "initial_data2.sql");
 
-		if (File.Exists(sqlPath))
+		SqlSeeder.CheckSeederWorks(context, sqlPath1);
+		SqlSeeder.CheckSeederWorks(context, sqlPath2);
+
+		if (!context.Classes.Any())
 		{
-			if (!context.Classes.Any()) // או Students וכו'
-			{
-				SqlSeeder.RunSqlFromFile(context, sqlPath);
-			}
+			if (File.Exists(sqlPath1))
+				SqlSeeder.RunSqlFromFile(context, sqlPath1);
+			else
+				Console.WriteLine("קובץ SQL לא נמצא: " + sqlPath1);
+
+			if (File.Exists(sqlPath2))
+				SqlSeeder.RunSqlFromFile(context, sqlPath2);
+			else
+				Console.WriteLine("קובץ SQL לא נמצא: " + sqlPath2);
 		}
-		else
-		{
-			Console.WriteLine(" קובץ SQL לא נמצא: " + sqlPath);
-		}
+
+
+		//var sqlPath = Path.Combine(AppContext.BaseDirectory, "SeedData", "initial_data.sql");
+		//SqlSeeder.CheckSeederWorks(context, sqlPath);
+
+		//if (File.Exists(sqlPath))
+		//{
+		//	if (!context.Classes.Any()) // או Students וכו'
+		//	{
+		//		SqlSeeder.RunSqlFromFile(context, sqlPath);
+		//	}
+		//}
+		//else
+		//{
+		//	Console.WriteLine(" קובץ SQL לא נמצא: " + sqlPath);
+		//}
 	}
 
 

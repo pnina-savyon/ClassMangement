@@ -205,3 +205,4 @@ INSERT INTO StudentNonFavoriteFriends (StudentId, NonFriendId) VALUES ('S9', 'S1
 INSERT INTO StudentNonFavoriteFriends (StudentId, NonFriendId) VALUES ('S10', 'S5');
 
 INSERT INTO StudentNonFavoriteFriends (StudentId, NonFriendId) VALUES ('S11', 'S8');
+
