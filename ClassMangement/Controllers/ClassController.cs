@@ -22,9 +22,11 @@ namespace ClassMangement.Controllers
 		private readonly IConfiguration config;
 
         private readonly ISolver solverInlayStudentsInSeats;
+        private readonly IServiceClass serviceClass;
+
 
         public ClassController(IService<ClassDto, int> service, IConfiguration config, ISecurity<Teacher, UserLogin> securityServiceTeacher, ISecurity<Student, UserLogin> securityServiceStudent,
-            IQueryLogicGeneric<ClassDto, int> serviceQueryLogicGeneric, ISolver solverInlayStudentsInSeats)
+            IQueryLogicGeneric<ClassDto, int> serviceQueryLogicGeneric, ISolver solverInlayStudentsInSeats, IServiceClass serviceClass)
         {
             this.service = service;
             this.config = config;
@@ -32,6 +34,7 @@ namespace ClassMangement.Controllers
             this.securityServiceTeacher = securityServiceTeacher;
             this.serviceQueryLogicGeneric = serviceQueryLogicGeneric;
             this.solverInlayStudentsInSeats = solverInlayStudentsInSeats;
+            this.serviceClass = serviceClass;   
         }
         // GET: api/<ClassController>
         [HttpGet]
@@ -63,30 +66,43 @@ namespace ClassMangement.Controllers
         }
 
         // GET api/<ClassController>/5
-        [HttpGet("SolverInlayStudentsInSeats/{classId}")]
+        [HttpGet("GetChairsByClass/{classId}")]
         [Authorize]
+        public async Task<ActionResult<List<ClassDto>>> GetChairsByClass(int classId)
+        {
+            User? teacherUser = securityServiceTeacher.GetCurrentUser();
+            User? studentUser = securityServiceStudent.GetCurrentUser();
+            User? userDto = teacherUser ?? studentUser;
+
+            string userId = userDto.Id;
+            Roles userRole = userDto.Role;
+
+            List<ChairDto> classesDto = await serviceClass.AllChairsByClass(classId, userRole, userId);
+
+            if (classesDto == null)
+                return NotFound();
+
+            return Ok(classesDto);
+        }
+
+        // GET api/<ClassController>/5
+        [HttpGet("SolverInlayStudentsInSeats/{classId}")]
+        [Authorize(Roles = $"{nameof(Roles.Master)}, {nameof(Roles.Admin)}")]
         public async Task<IActionResult> SolverInlayStudentsInSeats(int classId)
         {
-            //User? teacherUser = securityServiceTeacher.GetCurrentUser();
-            //User? studentUser = securityServiceStudent.GetCurrentUser();
-            //User? userDto = teacherUser ?? studentUser;
+            string userId = securityServiceTeacher.GetCurrentUser().Id;
 
-            //string userId = userDto.Id;
-            //Roles userRole = userDto.Role;
+            ClassDto solvered = await serviceClass.SeatingAllocationLogic(classId, userId);
 
-            //ClassDto classDto = await serviceQueryLogicGeneric.GetByIdLogic(id, userRole, userId);
-            
-            await solverInlayStudentsInSeats.SolverFunc(classId);
-            return Ok();
-            //if (classDto == null)
-            //    return NotFound();
+            if (solvered == null)
+                return NotFound();
 
-            //return Ok(classDto);
+            return Ok(solvered);
         }
 
         // POST api/<ClassController>
         [HttpPost]
-        [Authorize(Roles = $"{nameof(Roles.Master)} ,{nameof(Roles.Admin)}")]
+        [Authorize(Roles = $"{nameof(Roles.Admin)}")]
         public async Task<ActionResult<ClassDto>> Post([FromForm] ClassDto value)
         {
             ClassDto created = await service.AddItem(value);

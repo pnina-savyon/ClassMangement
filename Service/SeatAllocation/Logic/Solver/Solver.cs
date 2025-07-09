@@ -68,18 +68,21 @@ namespace Service.SeatAllocation.Logic.Solver
 				 constraintRule.Apply(studentContext.Model, studentContext);
 			}
 		}
-		public async Task SolverFunc(int classId)
+		public async Task<Class> SolverFunc(int classId)
 		{
             ClassId = classId;
 
             //validators chacking
             Class c = await ClassRepository.GetById(ClassId);
             if (!seatingAllocationInputValidator.IsValidInput(c.Students.ToList(), c.Chairs.ToList(), c))
-                return;
+					return null;
 
-            await BuildSolver();	
-			
-			studentContext.Model.Maximize(studentContext.Objective);
+			//
+            //await postSolverAnalysis.CleanChairs(c.Chairs.ToList());
+
+            await BuildSolver();
+
+            studentContext.Model.Maximize(studentContext.Objective);
 			CpSolver solver = new CpSolver();
 			CpSolverStatus status = solver.Solve(studentContext.Model);
 			if (status == CpSolverStatus.Optimal || status == CpSolverStatus.Feasible)
@@ -111,6 +114,7 @@ namespace Service.SeatAllocation.Logic.Solver
                 _logger.LogInformation("solution not found, status:"+status);
 			}
 
+			return c;
 		}
 	}
 

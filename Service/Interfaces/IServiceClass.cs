@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace Service.Interfaces
 {
-    public interface IServiceChair
+    public interface IServiceClass
     {
-        Task<List<ChairDto>> AllChairsOfClass(int classId, Roles role, string userId);
-    }
+        Task<ClassDto> SeatingAllocationLogic(int classId, string userId);
+
+        Task<List<ChairDto>> AllChairsByClass(int classId, Roles role, string userId);    }
 }

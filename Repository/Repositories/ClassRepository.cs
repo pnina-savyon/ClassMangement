@@ -41,6 +41,7 @@ namespace Repository.Repositories
 
         public async Task<Class> GetById(int id)
         {
+            // .AsNoTracking()
             return await this.context.Classes
                 .Include(c => c.Teacher)
                 .Include(c => c.Students)

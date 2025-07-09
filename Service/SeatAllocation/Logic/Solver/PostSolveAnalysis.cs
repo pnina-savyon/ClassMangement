@@ -57,9 +57,11 @@ namespace Service.SeatAllocation.Logic.Solver
 				}
 
 				actualScores[student.Id] = score;
-			}
+                _logger.LogInformation($"===========scores: {score}");
 
-			return actualScores;
+            }
+
+            return actualScores;
 		}
 
 		public Dictionary<string, int> ComputeMaxScores()
@@ -74,15 +76,18 @@ namespace Service.SeatAllocation.Logic.Solver
 					int score = 0;
 					foreach (IScoringRule rule in scoringRules)
 					{
-						score += rule.CalculateActualScore(student, chair, context, null);
-					}
-					if (score > maxScore)
+						//solver
+						score += rule.CalculateActualScore(student, chair, context, solver);
+
+                    }
+                    if (score > maxScore)
 						maxScore = score;
 				}
 				maxScores[student.Id] = maxScore;
-			}
 
-			return maxScores;
+            }
+
+            return maxScores;
 		}
 
 		public int ComputeTotalScoreAllStudents()
@@ -105,7 +110,8 @@ namespace Service.SeatAllocation.Logic.Solver
 			int adjustment = (int)Math.Round((1.0 - combinedScore) * 10);
 			int newPriority = adjustment + (int)Math.Round(previousPriority * (combinedScore < 0.5 ? 1.0 : 0.3));
 
-			return Math.Clamp(newPriority, 1, 10);
+			//return Math.Clamp(newPriority, 1, 10);
+			return newPriority;
 		}
 
 		public Dictionary<string,int> AllStudentPrioritiesUpdated()
@@ -117,15 +123,23 @@ namespace Service.SeatAllocation.Logic.Solver
 				int max = maxScores.ContainsKey(student.Id) ? maxScores[student.Id] : 1;
 				int prev = student.Priority ?? 5;
 
-				priorities[student.Id] = ComputeNewPriority(actual, max, totalScoreAllStudents, prev);				
-			}
-			return priorities;
+				priorities[student.Id] = ComputeNewPriority(actual, max, totalScoreAllStudents, prev);
+                _logger.LogInformation($"\n---- Priority of student :{student.Id} _ {priorities[student.Id]}");
+
+            }
+            return priorities;
 		} 
 		public async Task UpdateStudentAndChairs()
 		{
 			foreach (Student student in students)
 			{
-				student.Priority = priorities.ContainsKey(student.Id)? priorities[student.Id]:1;
+                _logger.LogInformation($"Priorities keys: {string.Join(",", priorities.Keys)}");
+                _logger.LogInformation($"ChairOfStudent keys: {string.Join(",", chairOfStudent.Keys)}");
+                _logger.LogInformation($"Students: {string.Join(",", students.Select(s => s.Id))}");
+
+                //check
+                _logger.LogInformation($"Updating student {student.Name}: old priority = {student.Priority}, new priority = {priorities[student.Id]}");
+                student.Priority = priorities.ContainsKey(student.Id)? priorities[student.Id]:1;
 				student.ChairId = chairOfStudent.ContainsKey(student.Id)? chairOfStudent[student.Id]:0;
 				
 
@@ -136,15 +150,34 @@ namespace Service.SeatAllocation.Logic.Solver
 				}
 				history.Add(student.ChairId.Value);
 				student.HistoryChairs = history;
-				//repository student
-				await studentRepository.UpdateItem(student.Id, student);
+                //repository student
 
-				Chair chair = await chairRepository.GetById(student.ChairId.Value);
+				
+
+                await studentRepository.UpdateItem(student.Id, student);
+				//check
+                var updated = await studentRepository.GetById(student.Id);
+                _logger.LogInformation($"Student {updated.Name} saved with priority = {updated.Priority}");
+
+
+                Chair chair = await chairRepository.GetById(student.ChairId.Value);
 				chair.StudentId = student.Id;
 				await chairRepository.UpdateItem(chair.Id, chair);
-			}
-		}
-		public async Task APICalculatePriority(StudentContext context, CpSolver solver)
+            }
+        }
+
+        //public async Task CleanChairs(List<Chair> chairs)
+        //{
+        //    foreach (var chair in chairs)
+        //    {
+        //        chair.StudentId = null;
+        //        await chairRepository.UpdateItem(chair.Id, chair);
+        //        _logger.LogInformation($"Chair {chair.Id} cleaned. StudentId: {chair.StudentId}");
+
+        //    }
+        //}
+
+        public async Task APICalculatePriority(StudentContext context, CpSolver solver)
 		{
 			this.context = context;
 			this.solver = solver;
@@ -154,9 +187,12 @@ namespace Service.SeatAllocation.Logic.Solver
 			chairOfStudent = context.InlayChairOfStudent;
 			scoringRules = context.ScoringRules;
 			priorities = new Dictionary<string, int>();
-
-			//זימון כל הפונקציות
-			this.actualScores = await this.ComputeActualScores();
+			foreach (Student s in students)
+			{
+				priorities[s.Id] = 0;
+			}
+            //זימון כל הפונקציות
+            this.actualScores = await this.ComputeActualScores();
 			this.maxScores = this.ComputeMaxScores();
 			this.totalScoreAllStudents = this.ComputeTotalScoreAllStudents();
 			this.priorities = this.AllStudentPrioritiesUpdated();

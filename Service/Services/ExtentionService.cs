@@ -38,12 +38,13 @@ namespace Service.Services
             services.AddScoped<IQueryLogicUpdate<StudentConfidentialInfoDto,string>, StudentService>();
 			services.AddScoped<IQueryLogicForFewFunctions<StudentDto,string>, StudentService>();
             services.AddScoped<IServiceStudent, StudentService>();
-            services.AddScoped<IServiceChair, ChairService>();
+            services.AddScoped<IServiceClass, ClassService>();
 
 
 
             services.AddScoped<IQueryLogicGeneric<ClassDto, int>, ClassService>();
             services.AddScoped<IQueryLogicGeneric<ChairDto, int>, ChairService>();
+
 
             services.AddScoped<ISolver, Solver>();
             services.AddScoped<ISeatingAllocationInputValidator,SeatingAllocationInputValidator>();

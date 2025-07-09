@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Repository.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,6 @@ namespace Service.SeatAllocation.Interfaces
 	{
 		Task BuildSolver();
 
-        Task SolverFunc(int classId);
+        Task<Class> SolverFunc(int classId);
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using Google.OrTools.Sat;
+using Repository.Entities;
 using Service.SeatAllocation.Logic.Solver;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,6 @@ namespace Service.SeatAllocation.Interfaces
     {
         Task APICalculatePriority(StudentContext context, CpSolver solver);
         Task UpdateStudentAndChairs();
+        //Task CleanChairs(List<Chair> chairs);
     }
 }

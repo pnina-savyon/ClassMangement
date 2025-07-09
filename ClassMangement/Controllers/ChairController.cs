@@ -18,11 +18,11 @@ namespace ClassMangement.Controllers
         private readonly ISecurity<Teacher, UserLogin> securityServiceTeacher;
         private readonly ISecurity<Student, UserLogin> securityServiceStudent;
         private readonly IQueryLogicGeneric<ChairDto, int> serviceQueryLogicGeneric;
-        private readonly IServiceChair serviceChair;
+        private readonly IServiceClass serviceChair;
         private readonly IConfiguration config;
 
         public ChairController(IService<ChairDto, int> service, IConfiguration config, ISecurity<Teacher, UserLogin> securityServiceTeacher,
-            ISecurity<Student, UserLogin> securityServiceStudent,IQueryLogicGeneric<ChairDto, int> serviceQueryLogicGeneric, IServiceChair serviceChair)
+            ISecurity<Student, UserLogin> securityServiceStudent,IQueryLogicGeneric<ChairDto, int> serviceQueryLogicGeneric, IServiceClass serviceChair)
         {
             this.service = service;
             this.config = config;
@@ -57,24 +57,6 @@ namespace ClassMangement.Controllers
                 return NotFound();
 
             return Ok(chairDto);
-        }
-
-        [HttpGet("AllChairsOfClass/{classId}")]
-        [Authorize]
-        public async Task<ActionResult<List<ChairDto>>> GetAllChairsOfClass(int classId)
-        {
-            User? teacherUser = securityServiceTeacher.GetCurrentUser();
-            User? studentUser = securityServiceStudent.GetCurrentUser();
-            User? userDto = teacherUser ?? studentUser;
-
-            string userId = userDto.Id;
-            Roles userRole = userDto.Role;
-
-            List<ChairDto> chairsDto = await serviceChair.AllChairsOfClass(classId, userRole, userId);
-            if (chairsDto == null)
-                 return NotFound();
-
-            return Ok(chairsDto);
         }
 
         // POST api/<ChairController>
