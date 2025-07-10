@@ -11,6 +11,9 @@ namespace Service.Interfaces
     public interface IServiceClass
     {
         Task<ClassDto> SeatingAllocationLogic(int classId, string userId);
+		Task<List<ClassDto>> AllClassByTeacher(Roles role, string userId);
+		//Task<List<ChairDto>> AllChairsByClass(int classId, Roles role, string userId);
+	}
 
-        Task<List<ChairDto>> AllChairsByClass(int classId, Roles role, string userId);    }
 }
+

@@ -18,11 +18,11 @@ namespace ClassMangement.Controllers
         private readonly ISecurity<Teacher, UserLogin> securityServiceTeacher;
         private readonly ISecurity<Student, UserLogin> securityServiceStudent;
         private readonly IQueryLogicGeneric<ChairDto, int> serviceQueryLogicGeneric;
-        private readonly IServiceClass serviceChair;
         private readonly IConfiguration config;
+        private readonly IServiceChair serviceChair;
 
-        public ChairController(IService<ChairDto, int> service, IConfiguration config, ISecurity<Teacher, UserLogin> securityServiceTeacher,
-            ISecurity<Student, UserLogin> securityServiceStudent,IQueryLogicGeneric<ChairDto, int> serviceQueryLogicGeneric, IServiceClass serviceChair)
+		public ChairController(IService<ChairDto, int> service, IConfiguration config, ISecurity<Teacher, UserLogin> securityServiceTeacher,
+            ISecurity<Student, UserLogin> securityServiceStudent,IQueryLogicGeneric<ChairDto, int> serviceQueryLogicGeneric, IServiceChair serviceChair)
         {
             this.service = service;
             this.config = config;
@@ -59,8 +59,28 @@ namespace ClassMangement.Controllers
             return Ok(chairDto);
         }
 
-        // POST api/<ChairController>
-        [HttpPost]
+
+		[HttpGet("GetChairsByClass/{classId}")]
+		[Authorize(Roles = $"{nameof(Roles.Master)}, {nameof(Roles.Admin)}")]
+		public async Task<ActionResult<List<ChairDto>>> GetChairsByClass(int classId)
+		{
+			User? teacherUser = securityServiceTeacher.GetCurrentUser();
+			User? studentUser = securityServiceStudent.GetCurrentUser();
+			User? userDto = teacherUser ?? studentUser;
+
+			string userId = userDto.Id;
+			Roles userRole = userDto.Role;
+
+			List<ChairDto> classesDto = await serviceChair.AllChairsByClass(classId, userRole, userId);
+
+			if (classesDto == null)
+				return NotFound();
+
+			return Ok(classesDto);
+		}
+
+		// POST api/<ChairController>
+		[HttpPost]
         [Authorize(Roles = $"{nameof(Roles.Master)} ,{nameof(Roles.Admin)}")]
         public async Task<ActionResult<ChairDto>> Post([FromForm] ChairDto value)
         {

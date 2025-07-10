@@ -51,9 +51,8 @@ namespace Repository.Repositories
 				.Include(s => s.FavoriteFriends)
 				.Include(s => s.NonFavoriteFriends)
 				.Include(s => s.Class)
-				.ThenInclude(c => c.Chairs)
-				.ThenInclude(ch => ch.NearbyChairs)
-
+				.ThenInclude(c => c.Teacher)
+				.Include(s => s.CurrentChair)
 				.Where(s => s.ClassId == id)
                 .ToListAsync();
         }

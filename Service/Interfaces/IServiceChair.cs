@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace Service.Interfaces
 {
-    public interface IServiceStudent
-    {
-        Task<List<StudentDto>> AllStudentsOfClass(int classId, Roles role, string userId);
-    }
+	public interface IServiceChair
+	{
+		Task<List<ChairDto>> AllChairsByClass(int classId, Roles role, string userId);
+	}
 }

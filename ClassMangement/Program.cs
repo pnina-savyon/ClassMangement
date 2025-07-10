@@ -95,31 +95,31 @@ var app = builder.Build();
 Console.WriteLine($" ENVIRONMENT: {app.Environment.EnvironmentName}");
 if (app.Environment.IsDevelopment())
 {
-	using (var scope = app.Services.CreateScope())
-	{
-		//בעיקרון עדיף Icontext אבל זה דורש כמה שינויים עבור כך.
-		var context = scope.ServiceProvider.GetRequiredService<Database>(); // או IContext
+	//using (var scope = app.Services.CreateScope())
+	//{
+	//	//בעיקרון עדיף Icontext אבל זה דורש כמה שינויים עבור כך.
+	//	var context = scope.ServiceProvider.GetRequiredService<Database>(); // או IContext
 
-		var sqlPath = Path.Combine(AppContext.BaseDirectory, "SeedData", "initial_data.sql");
-		SqlSeeder.CheckSeederWorks(context, sqlPath);
+	//	var sqlPath = Path.Combine(AppContext.BaseDirectory, "SeedData", "initial_data.sql");
+	//	SqlSeeder.CheckSeederWorks(context, sqlPath);
 
-		if (File.Exists(sqlPath))
-		{
-			if (!context.Classes.Any()) // או Students וכו'
-			{
-				SqlSeeder.RunSqlFromFile(context, sqlPath);
-			}
-		}
-		else
-		{
-			Console.WriteLine(" קובץ SQL לא נמצא: " + sqlPath);
-		}
-	}
+	//	if (File.Exists(sqlPath))
+	//	{
+	//		if (!context.Classes.Any()) // או Students וכו'
+	//		{
+	//			SqlSeeder.RunSqlFromFile(context, sqlPath);
+	//		}
+	//	}
+	//	else
+	//	{
+	//		Console.WriteLine(" קובץ SQL לא נמצא: " + sqlPath);
+	//	}
+	//}
 
 
 	app.UseSwagger();
 		app.UseSwaggerUI();
-	}
+}
 
 	//// Configure the HTTP request pipeline.
 	//if (app.Environment.IsDevelopment())

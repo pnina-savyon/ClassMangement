@@ -39,10 +39,11 @@ namespace Service.Services
 			services.AddScoped<IQueryLogicForFewFunctions<StudentDto,string>, StudentService>();
             services.AddScoped<IServiceStudent, StudentService>();
             services.AddScoped<IServiceClass, ClassService>();
+			services.AddScoped<IServiceChair, ChairService>();
 
 
 
-            services.AddScoped<IQueryLogicGeneric<ClassDto, int>, ClassService>();
+			services.AddScoped<IQueryLogicGeneric<ClassDto, int>, ClassService>();
             services.AddScoped<IQueryLogicGeneric<ChairDto, int>, ChairService>();
 
 

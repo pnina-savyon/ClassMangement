@@ -18,10 +18,10 @@ namespace Service.Services
 		IServiceClass
 	{
 		private readonly IRepository<Class, int> repository;
-		IRepositoryAllById<Chair, int> repositoryAllById;
+		IRepositoryAllById<Class, string> repositoryAllById;
         private readonly IMapper mapper;
 		private readonly ISolver solver;
-		public ClassService(IRepository<Class, int> repository, IMapper mapper, ISolver solver, IRepositoryAllById<Chair, int> repositoryAllById)
+		public ClassService(IRepository<Class, int> repository, IMapper mapper, ISolver solver, IRepositoryAllById<Class, string> repositoryAllById)
 		{
 			this.repository = repository;
 			this.mapper = mapper;
@@ -45,14 +45,14 @@ namespace Service.Services
 		//	return c.Students.Any(s => s.Id == userId) ? mapper.Map<List<Chair>, List<ChairDto>>(c.Chairs.ToList()) : null;
   //      }
 
-        public async Task<List<ChairDto>> AllChairsByClass(int classId, Roles role, string userId)
+        public async Task<List<ClassDto>> AllClassByTeacher(Roles role, string userId)
         {
-            List<Chair> chairs = await repositoryAllById.GetAllItemOfId(classId);
+            List<Class> classes = await repositoryAllById.GetAllItemOfId(userId);
 
-            if (!chairs.Any())
+            if (!classes.Any())
                 return null;
 
-            Class cls = chairs.First().Class;
+            Class cls = classes.First();
             if (cls == null)
                 return null;
 
@@ -60,13 +60,14 @@ namespace Service.Services
             {
                 Roles.Master => true,
                 Roles.Admin => cls.TeacherId == userId,
-                Roles.User => cls.Students?.Any(s => s.Id == userId) == true,
-                Roles.AuthorizedUser => cls.Students?.Any(s => s.Id == userId) == true,
+                //Roles.User => cls.Students?.Any(s => s.Id == userId) == true,
+                //Roles.AuthorizedUser => cls.Students?.Any(s => s.Id == userId) == true,
                 _ => false // כל רול אחר שלא ידוע – אין גישה
             };
 
-            return hasAccess ? mapper.Map<List<ChairDto>>(chairs) : null;
+            return hasAccess ? mapper.Map<List<ClassDto>>(classes) : null;
         }
+
         public async Task<ClassDto> DeleteItem(int id)
 		{
 			return mapper.Map<Class, ClassDto>(await repository.DeleteItem(id));
@@ -123,5 +124,7 @@ namespace Service.Services
 
 			return teacherId == userId ? await UpdateItem(id, value) : null;
 		}
-    }
+
+		
+	}
 }

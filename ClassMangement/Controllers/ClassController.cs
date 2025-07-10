@@ -66,9 +66,9 @@ namespace ClassMangement.Controllers
         }
 
         // GET api/<ClassController>/5
-        [HttpGet("GetChairsByClass/{classId}")]
-        [Authorize]
-        public async Task<ActionResult<List<ClassDto>>> GetChairsByClass(int classId)
+        [HttpGet("GetClassesByTeacher/{teacherId}")]
+		[Authorize(Roles = $"{nameof(Roles.Master)}, {nameof(Roles.Admin)}")]
+		public async Task<ActionResult<List<ChairDto>>> GetClassesByTeacher(string teacherId)
         {
             User? teacherUser = securityServiceTeacher.GetCurrentUser();
             User? studentUser = securityServiceStudent.GetCurrentUser();
@@ -76,8 +76,10 @@ namespace ClassMangement.Controllers
 
             string userId = userDto.Id;
             Roles userRole = userDto.Role;
+			if (teacherId != userId)
+				return NotFound();
 
-            List<ChairDto> classesDto = await serviceClass.AllChairsByClass(classId, userRole, userId);
+			List<ClassDto> classesDto = await serviceClass.AllClassByTeacher(userRole, teacherId);
 
             if (classesDto == null)
                 return NotFound();

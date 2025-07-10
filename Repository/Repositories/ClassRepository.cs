@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace Repository.Repositories
 {
-    public class ClassRepository : IRepository<Class, int>
-    {
+    public class ClassRepository : IRepository<Class, int>, IRepositoryAllById<Class, string>
+	{
         private readonly IContext context;
 
         public ClassRepository(IContext context)
@@ -39,7 +39,21 @@ namespace Repository.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Class> GetById(int id)
+		public async Task<List<Class>> GetAllItemOfId(string id)
+		{
+            return await this.context.Classes
+                .Include(c => c.Teacher)
+				.Include(c => c.Students)
+				.ThenInclude(s => s.FavoriteFriends)
+				.ThenInclude(s => s.NonFavoriteFriends)
+				.Include(c => c.Chairs)
+				.ThenInclude(ch => ch.NearbyOfChairs)
+				.ThenInclude(ch => ch.NearbyChairs)
+				.Where(c => c.TeacherId == id)
+				.ToListAsync();
+		}
+
+		public async Task<Class> GetById(int id)
         {
             // .AsNoTracking()
             return await this.context.Classes
