@@ -20,7 +20,7 @@ namespace Common.Dto
 
 		public string? Email { get; set; }
 		public string? Phone { get; set; }
-		//public Roles Role { get; set; }
+		public Roles Role { get; set; }
 
 	}
 }
