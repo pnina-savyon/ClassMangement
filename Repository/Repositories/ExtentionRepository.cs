@@ -27,15 +27,17 @@ namespace Repository.Repositories
 
             services.AddScoped<IRepositoryAllById<Student, int>, StudentRepository>();
             services.AddScoped<IRepositoryAllById<Chair, int>, ChairRepository>();
+			services.AddScoped<IRepositoryAllById<Class, string>, ClassRepository>();
 
-            //services.AddScoped<IRepository<User, string>, >();
 
-            //
-            //services.AddScoped<IRepository<User, string>, UserRepository>();
+			//services.AddScoped<IRepository<User, string>, >();
 
-            //...כאן נגדיר את כל התלויות של הrepository
-            // services.AddScoped < IRepository < Product > ProductRepository > ();
-            return services;
+			//
+			//services.AddScoped<IRepository<User, string>, UserRepository>();
+
+			//...כאן נגדיר את כל התלויות של הrepository
+			// services.AddScoped < IRepository < Product > ProductRepository > ();
+			return services;
         }
     }
 }

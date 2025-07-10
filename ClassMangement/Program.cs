@@ -87,7 +87,7 @@ builder.Services.AddCors(options =>
 						  policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
 					  });
 });
-//
+
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
