@@ -106,7 +106,7 @@ namespace ClassMangement.Controllers
         // PUT api/<StudentController>/5
         [HttpPut("{id}")]
         [Authorize(Roles = $"{nameof(Roles.AuthorizedUser)},{nameof(Roles.User)}")]
-        public async Task<ActionResult<StudentDto>> Put(string id, [FromBody] StudentDto value)
+        public async Task<ActionResult<StudentDto>> Put(string id, [FromForm] StudentDto value)
         {
             User user = securityServiceStudent.GetCurrentUser();
             string userId = user.Id;

@@ -20,8 +20,8 @@ namespace Common.Dto
 		public byte[]? ArrImage { get; set; }
 		public IFormFile? fileImage { get; set; }
 
-        public ICollection<StudentDto>? FavoriteFriends { get; set; }
-        public ICollection<StudentDto>? NonFavoriteFriends { get; set; }
+		//public ICollection<StudentDto>? FavoriteFriends { get; set; }
+		//public ICollection<StudentDto>? NonFavoriteFriends { get; set; }
 
-    }
+	}
 }

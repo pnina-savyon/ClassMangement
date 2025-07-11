@@ -21,7 +21,7 @@ namespace Common.Dto
 
 		public bool? IsNearTheWindow { get; set; }
 
-        public ICollection<ChairDto>? NearbyChairs { get; set; }
+        //public ICollection<ChairDto>? NearbyChairs { get; set; }
 
     }
 }
