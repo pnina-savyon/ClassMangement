@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Repository.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,5 +20,8 @@ namespace Common.Dto
 		public bool? IsNearTheDoor { get; set; }
 
 		public bool? IsNearTheWindow { get; set; }
-	}
+
+        public ICollection<ChairDto>? NearbyChairs { get; set; }
+
+    }
 }

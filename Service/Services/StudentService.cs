@@ -48,14 +48,20 @@ namespace Service.Services
         }
         private async Task UploadImage(IFormFile file)
         {
-            //ניתוב לתמונה
-            var path = Path.Combine(Environment.CurrentDirectory, "Images/", file.FileName);
-            using (var stream = new FileStream(path, FileMode.Create))
+            var folderPath = Path.Combine(Environment.CurrentDirectory, "Images");
+
+            // ודא שהתיקייה קיימת
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            var filePath = Path.Combine(folderPath, file.FileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                //
                 await file.CopyToAsync(stream);
             }
         }
+
         public override async Task<StudentDto> AddItem(StudentDto item)
         {
             if (item.fileImage != null)

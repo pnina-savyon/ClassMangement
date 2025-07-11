@@ -61,7 +61,7 @@ namespace ClassMangement.Controllers
 
 
 		[HttpGet("GetChairsByClass/{classId}")]
-		[Authorize(Roles = $"{nameof(Roles.Master)}, {nameof(Roles.Admin)}")]
+		[Authorize(Roles = $"{nameof(Roles.Master)}, {nameof(Roles.Admin)},{nameof(Roles.User)}")]
 		public async Task<ActionResult<List<ChairDto>>> GetChairsByClass(int classId)
 		{
 			User? teacherUser = securityServiceTeacher.GetCurrentUser();

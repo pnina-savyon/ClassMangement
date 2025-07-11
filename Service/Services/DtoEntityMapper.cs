@@ -15,8 +15,14 @@ namespace Service.Services
 
         public DtoEntityMapper()
         {
-            CreateMap<Student, StudentDto>().ForMember("ArrImage", s => s.MapFrom(x => File.ReadAllBytes(path + x.ImageUrl)));          
-            CreateMap<StudentDto, Student>().ForMember("ImageUrl", s => s.MapFrom(x => x.fileImage.FileName));
+            //CreateMap<Student, StudentDto>().ForMember("ArrImage", s => s.MapFrom(x => File.ReadAllBytes(path + x.ImageUrl)));          
+            //CreateMap<StudentDto, Student>().ForMember("ImageUrl", s => s.MapFrom(x => x.fileImage.FileName));
+            CreateMap<Student, StudentDto>()
+    .ForMember(dest => dest.ArrImage, opt =>
+        opt.MapFrom(x => GetStudentImage(path, x.ImageUrl)));
+
+            CreateMap<StudentDto, Student>()
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(x => x.fileImage.FileName));
             CreateMap<Chair, ChairDto>().ReverseMap();
             CreateMap<Class, ClassDto>().ReverseMap();
             CreateMap<DailyAttendance, DailyAttendanceDto>().ReverseMap();
@@ -31,6 +37,17 @@ namespace Service.Services
 
 
 
+        }
+
+
+
+        private static byte[]? GetStudentImage(string basePath, string? imageName)
+        {
+            if (string.IsNullOrWhiteSpace(imageName))
+                return null;
+
+            var fullPath = Path.Combine(basePath, imageName);
+            return File.Exists(fullPath) ? File.ReadAllBytes(fullPath) : null;
         }
     }
 }

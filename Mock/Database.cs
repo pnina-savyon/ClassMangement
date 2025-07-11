@@ -142,7 +142,7 @@ namespace Mock
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=WX1097573;Database=ClassManagementDB11;trusted_connection=true;TrustServerCertificate=true");
+            optionsBuilder.UseSqlServer("Server=DESKTOP-1VUANBN;Database=ClassManagementDB3;trusted_connection=true;TrustServerCertificate=true");
         }
 
 		//WX1097573
